@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.eclipse.recommenders.privacy.rcp.datums" name="Private Datums" schema="schema/datums.exsd"/>
+   <extension
+         point="org.eclipse.recommenders.privacy.rcp.datums">
+      <datum
+            description="enable IP Address tracking"
+            id="org.eclipse.recommenders.privacy.rcp.ipAddress"
+            name="IP Address">
+      </datum>
+   </extension>
+   <extension
+         point="org.eclipse.recommenders.privacy.rcp.datums">
+      <datum
+            description="enable sending stack traces informations to remote server"
+            icon="icons/stacktrace.gif"
+            id="org.eclipse.recommenders.privacy.rcp.stacktraces"
+            name="Stack traces">
+      </datum>
+   </extension>
+   <extension
+         point="org.eclipse.recommenders.privacy.rcp.datums">
+      <datum
+            description="JVM version tracking"
+            icon="icons/jvm.gif"
+            id="org.eclipse.recommenders.privacy.rcp.jvm"
+            name="JVM version">
+      </datum>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage"
+            id="org.eclipse.recommenders.privacy.rcp.ui.preferencespage"
+            name="Privacy">
+      </page>
+   </extension>
+
+</plugin>
