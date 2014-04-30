@@ -18,21 +18,22 @@ import org.eclipse.swt.graphics.Image;
 public class DatumLabelProvider extends ColumnLabelProvider {
 
     @Override
-    public String getText(Object obj) {
-        return obj.toString();
+    public String getText(Object element) {
+        PrivateDatum datum = (PrivateDatum) element;
+        return datum.getName();
     }
 
     @Override
-    public Image getImage(Object obj) {
-        PrivateDatum item = (PrivateDatum) obj;
-        ImageDescriptor imageDescriptor = item.getIcon();
+    public Image getImage(Object element) {
+        PrivateDatum datum = (PrivateDatum) element;
+        ImageDescriptor imageDescriptor = datum.getIcon();
         Image image = imageDescriptor == null ? null : imageDescriptor.createImage();
         return image;
     }
 
     @Override
     public String getToolTipText(Object element) {
-        PrivateDatum item = (PrivateDatum) element;
-        return item.getDescription();
+        PrivateDatum datum = (PrivateDatum) element;
+        return datum.getDescription();
     }
 }

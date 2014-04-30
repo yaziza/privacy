@@ -48,7 +48,7 @@ public class PrivateDatum {
 
     @Override
     public String toString() {
-        return name;
+        return id;
     }
 
     @Override

@@ -19,8 +19,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.recommenders.privacy.rcp.PrivateDatum;
 import org.eclipse.recommenders.privacy.rcp.DatumRegistry;
+import org.eclipse.recommenders.privacy.rcp.PrivacySettingsService;
+import org.eclipse.recommenders.privacy.rcp.PrivateDatum;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,11 +35,16 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-    CheckboxTreeViewer globalPermissionsViewer;
-    Set<PrivateDatum> globalPermissionsInput;
+    private CheckboxTreeViewer globalPermissionsViewer;
+    private Set<PrivateDatum> globalPermissionsInput;
+
+    private DatumRegistry datumRegistry;
+    private PrivacySettingsService globalPreferences;
 
     @Override
     public void init(IWorkbench workbench) {
+        datumRegistry = new DatumRegistry();
+        globalPreferences = new PrivacySettingsService();
         setMessage("Privacy Configuration");
     }
 
@@ -78,8 +84,9 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                for (PrivateDatum item : globalPermissionsInput)
+                for (PrivateDatum item : globalPermissionsInput) {
                     globalPermissionsViewer.setSubtreeChecked(item, true);
+                }
             }
         });
 
@@ -90,8 +97,9 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                for (PrivateDatum item : globalPermissionsInput)
+                for (PrivateDatum item : globalPermissionsInput) {
                     globalPermissionsViewer.setSubtreeChecked(item, false);
+                }
             }
         });
     }
@@ -104,11 +112,14 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
                 fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, false).create());
         globalPermissionsViewer.setLabelProvider(new DatumLabelProvider());
         globalPermissionsViewer.setContentProvider(new DatumContentProvider());
-        DatumRegistry datumRegistry = new DatumRegistry();
         globalPermissionsInput = datumRegistry.readRegistredDatums();
         globalPermissionsViewer.setInput(globalPermissionsInput);
         globalPermissionsViewer.expandAll();
 
+        for (PrivateDatum datum : globalPermissionsInput) {
+            boolean allowed = globalPreferences.isAllowed(datum.getId());
+            globalPermissionsViewer.setChecked(datum, allowed);
+        }
         ColumnViewerToolTipSupport.enableFor(globalPermissionsViewer);
     }
 
@@ -122,5 +133,30 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
         new Label(composite, SWT.NONE).setText(title);
         return composite;
+    }
+
+    @Override
+    public void performApply() {
+        for (PrivateDatum datum : globalPermissionsInput) {
+            if (globalPermissionsViewer.getChecked(datum)) {
+                globalPreferences.allow(datum.getId());
+            } else {
+                globalPreferences.disallow(datum.getId());
+            }
+        }
+    }
+
+    @Override
+    public void performDefaults() {
+        for (PrivateDatum datum : globalPermissionsInput) {
+            globalPreferences.disallow(datum.getId());
+            globalPermissionsViewer.setSubtreeChecked(datum, false);
+        }
+    }
+
+    @Override
+    public boolean performOk() {
+        performApply();
+        return super.performOk();
     }
 }
