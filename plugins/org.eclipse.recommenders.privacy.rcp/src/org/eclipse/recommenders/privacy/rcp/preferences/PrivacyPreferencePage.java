@@ -73,7 +73,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
         layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
         composite.setLayout(layout);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        GridData data = new GridData(GridData.FILL_BOTH);
         data.horizontalSpan = 2;
         composite.setLayoutData(data);
 
@@ -130,7 +130,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
         layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
         composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         new Label(composite, SWT.NONE).setText(title);
         return composite;
     }
