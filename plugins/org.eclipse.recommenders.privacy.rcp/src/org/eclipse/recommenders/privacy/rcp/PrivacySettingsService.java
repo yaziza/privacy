@@ -19,32 +19,44 @@ import org.slf4j.LoggerFactory;
 public class PrivacySettingsService implements IPrivacySettingsService {
     private static final Logger LOG = LoggerFactory.getLogger(PrivacySettingsService.class);
 
-    @Override
-    public boolean isAllowed(String datumId) {
-        return getGlobalPermissionPreferences().getBoolean(datumId, false);
+    private final String qualifier;
+
+    public PrivacySettingsService() {
+        this(Constants.PREF_NODE_ID_GLOBAL_PERMISSIONS);
+    }
+
+    public PrivacySettingsService(String qualifier) {
+        this.qualifier = qualifier;
     }
 
     @Override
-    public void allow(String datumId) {
-        store(datumId, true);
+    public boolean isAllowed(String datumId, String principal) {
+        String key = datumId.concat("." + principal);
+        return getGlobalPermissionPreferences().getBoolean(key, false);
     }
 
     @Override
-    public void disallow(String datumId) {
-        store(datumId, false);
+    public void allow(String datumId, String principal) {
+        store(datumId, principal, true);
     }
 
-    private void store(String datumId, boolean value) {
-        IEclipsePreferences store = getGlobalPermissionPreferences();
-        store.putBoolean(datumId, value);
+    @Override
+    public void disallow(String datumId, String principal) {
+        store(datumId, principal, false);
+    }
+
+    private void store(String datumId, String principal, boolean value) {
+        String key = datumId.concat("." + principal);
+        IEclipsePreferences prefs = getGlobalPermissionPreferences();
+        prefs.putBoolean(key, value);
         try {
-            store.flush();
+            prefs.flush();
         } catch (BackingStoreException e) {
             LOG.error("Failed to flush preferences", e);
         }
     }
 
     private IEclipsePreferences getGlobalPermissionPreferences() {
-        return InstanceScope.INSTANCE.getNode(Constants.PREF_NODE_ID_PERMISSIONS);
+        return InstanceScope.INSTANCE.getNode(qualifier);
     }
 }

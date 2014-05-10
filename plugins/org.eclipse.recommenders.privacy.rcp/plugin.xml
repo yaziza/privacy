@@ -2,11 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.eclipse.recommenders.privacy.rcp.datums" name="Private Datums" schema="schema/datums.exsd"/>
+   <extension-point id="org.eclipse.recommenders.privacy.rcp.permissions" name="Permissions" schema="schema/permissions.exsd"/>
    <extension
          point="org.eclipse.recommenders.privacy.rcp.datums">
       <datum
             description="enable IP Address tracking"
-            id="org.eclipse.recommenders.privacy.rcp.ipAddress"
+            id="org.eclipse.recommenders.privacy.datums.ipAddress"
             name="IP Address">
       </datum>
    </extension>
@@ -15,7 +16,7 @@
       <datum
             description="enable sending stack traces informations to remote server"
             icon="icons/stacktrace.gif"
-            id="org.eclipse.recommenders.privacy.rcp.stacktraces"
+            id="org.eclipse.recommenders.privacy.datums.stacktraces"
             name="Stack traces">
       </datum>
    </extension>
@@ -24,7 +25,7 @@
       <datum
             description="JVM version tracking"
             icon="icons/jvm.gif"
-            id="org.eclipse.recommenders.privacy.rcp.jvm"
+            id="org.eclipse.recommenders.privacy.datums.jvm"
             name="JVM version">
       </datum>
    </extension>
@@ -36,6 +37,20 @@
             id="org.eclipse.recommenders.privacy.rcp.ui.preferencespage"
             name="Privacy">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.recommenders.privacy.rcp.permissions">
+      <permission
+            datumId="org.eclipse.recommenders.privacy.datums.ipAddress"
+            purpose="send ip address to my server">
+      </permission>
+   </extension>
+   <extension
+         point="org.eclipse.recommenders.privacy.rcp.permissions">
+      <permission
+            datumId="org.eclipse.recommenders.privacy.datums.stacktraces"
+            purpose="Stack trace purpose">
+      </permission>
    </extension>
 
 </plugin>

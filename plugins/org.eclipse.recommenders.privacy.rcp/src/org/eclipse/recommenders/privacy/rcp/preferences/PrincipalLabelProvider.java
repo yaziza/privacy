@@ -13,28 +13,25 @@ package org.eclipse.recommenders.privacy.rcp.preferences;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
-public class DatumLabelProvider extends ColumnLabelProvider {
+public class PrincipalLabelProvider extends ColumnLabelProvider {
 
     @Override
     public String getText(Object element) {
         if (element instanceof ICategory) {
-            ICategory datumCategory = (ICategory) element;
-            return datumCategory.getText();
+            ICategory principalCategory = (ICategory) element;
+            return principalCategory.getText();
         }
         PrivatePermission permision = (PrivatePermission) element;
-        return permision.getPluginId();
+        return permision.getDatumName();
     }
 
     @Override
     public Image getImage(Object element) {
         if (element instanceof ICategory) {
-            ICategory datumCategory = (ICategory) element;
-            return datumCategory.getImageDescriptor();
+            ICategory principalCategory = (ICategory) element;
+            return principalCategory.getImageDescriptor();
         }
         return null;
     }
@@ -42,21 +39,10 @@ public class DatumLabelProvider extends ColumnLabelProvider {
     @Override
     public String getToolTipText(Object element) {
         if (element instanceof ICategory) {
-            ICategory datumCategory = (ICategory) element;
-            return datumCategory.getTooltip();
+            ICategory principalCategory = (ICategory) element;
+            return principalCategory.getTooltip();
         }
         PrivatePermission permission = (PrivatePermission) element;
         return permission.getPurpose();
-    }
-
-    @Override
-    public Color getForeground(Object element) {
-        if (element instanceof ICategory) {
-            ICategory datumCategory = (ICategory) element;
-            boolean unused = datumCategory.getPermissions().isEmpty();
-            Color gray = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-            return unused ? gray : null;
-        }
-        return null;
     }
 }

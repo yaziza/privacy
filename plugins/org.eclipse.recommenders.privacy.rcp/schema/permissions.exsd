@@ -3,10 +3,10 @@
 <schema targetNamespace="org.eclipse.recommenders.privacy.rcp" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.recommenders.privacy.rcp" id="org.eclipse.recommenders.privacy.rcp.datums" name="Private Datums"/>
+         <meta.schema plugin="org.eclipse.recommenders.privacy.rcp" id="org.eclipse.recommenders.privacy.rcp.permissions" name="Permissions"/>
       </appinfo>
       <documentation>
-         This extension point allow third party plug-ins to register a private datum (e.g. IP address) with the privacy network.
+         This extension point allow third party plug-ins to request permission to access a private datum (e.g., the Stack-trace)
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="datum"/>
+            <element ref="permission"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,37 +47,20 @@
       </complexType>
    </element>
 
-   <element name="datum">
+   <element name="permission">
       <complexType>
-         <attribute name="id" type="string" use="required">
+         <attribute name="datumId" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique identifier
+                  The unique identifier of a private datum
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string" use="required">
+         <attribute name="purpose" type="string" use="required">
             <annotation>
                <documentation>
-                  A human-readable name
+                  Permission purpose
                </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="description" type="string" use="required">
-            <annotation>
-               <documentation>
-                  a long description of the private datum usage
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="icon" type="string">
-            <annotation>
-               <documentation>
-                  An option image for the permission &quot;opt-in&quot; popup dialog.
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="resource"/>
-               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -97,17 +80,15 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         The following is an example of the datum extension point usage:
+         The following is an example of the permission extension point usage:
 &lt;p&gt;
 &lt;pre&gt;
    &lt;extension
-         point=&quot;org.eclipse.recommenders.privacy.rcp.datums&quot;&gt;
-      &lt;datum
-            id=&quot;com.example.xyz.datums.somePrivateDatum&quot;
-            name=&quot;Datum Name&quot;
-            description=&quot;long description&quot;
-            icon=&quot;icons/test.gif&quot;&gt;
-      &lt;/datum&gt;
+         point=&quot;org.eclipse.recommenders.privacy.rcp.permissions&quot;&gt;
+      &lt;permission
+            datumId=&quot;com.example.xyz.datums.somePrivateDatumId&quot;
+            purpose=&quot;purpose&quot;&gt;
+      &lt;/permission&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
@@ -119,7 +100,7 @@
          <meta.section type="apiinfo"/>
       </appinfo>
       <documentation>
-         [TODO: Enter API information here.]
+         [Enter API information here.]
       </documentation>
    </annotation>
 
@@ -128,7 +109,7 @@
          <meta.section type="implementation"/>
       </appinfo>
       <documentation>
-         [TODO: Enter information about supplied implementation of this extension point.]
+         [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 

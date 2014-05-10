@@ -15,18 +15,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public class PrivateDatum {
+
     private final String id;
     private final String name;
     private final String description;
     private final ImageDescriptor icon;
 
     public PrivateDatum(String id, String name, String description, ImageDescriptor icon) {
-        checkNotNull(id);
-        checkNotNull(name);
-        checkNotNull(description);
-        this.id = id;
-        this.name = name;
-        this.description = description;
+        this.id = checkNotNull(id);
+        this.name = checkNotNull(name);
+        this.description = checkNotNull(description);
         this.icon = icon;
     }
 

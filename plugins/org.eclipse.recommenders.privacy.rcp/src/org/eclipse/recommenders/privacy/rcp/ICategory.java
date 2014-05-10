@@ -10,8 +10,17 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
-public class Constants {
-    public static final String BUNDLE_ID = "org.eclipse.recommenders.privacy";
+import java.util.Set;
 
-    public static final String PREF_NODE_ID_GLOBAL_PERMISSIONS = "org.eclipse.recommenders.privacy.permissions.prefs";
+import org.eclipse.swt.graphics.Image;
+
+public interface ICategory {
+
+    Set<PrivatePermission> getPermissions();
+
+    String getText();
+
+    Image getImageDescriptor();
+
+    String getTooltip();
 }

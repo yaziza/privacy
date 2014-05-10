@@ -13,24 +13,27 @@ package org.eclipse.recommenders.privacy.rcp;
 public interface IPrivacySettingsService {
 
     /**
-     * Test if the {@link PrivateDatum} with the given id is allowed.
+     * Tests if sending the {@link PrivateDatum} with ID {@code datumId} by the principal is allowed.
      * 
      * @param datumId
-     * @return returns <code>true</code> when the {@link PrivateDatum} is allowed
+     * @param principal
+     * @return returns <code>true</code> when the sending the {@link PrivateDatum} is allowed
      */
-    boolean isAllowed(String datumId);
+    boolean isAllowed(String datumId, String principal);
 
     /**
-     * Allow the {@link PrivateDatum} with the given id.
+     * Allow the principal to send the {@link PrivateDatum} with ID {@code datumId}.
      * 
      * @param datumId
+     * @param principal
      */
-    void allow(String datumId);
+    void allow(String datumId, String principal);
 
     /**
-     * Disallow the {@link PrivateDatum} with the given id.
+     * Disallow the principal to send the {@link PrivateDatum} with ID {@code datumId}.
      * 
      * @param datumId
+     * @param principal
      */
-    void disallow(String datumId);
+    void disallow(String datumId, String principal);
 }
