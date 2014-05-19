@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.recommenders</groupId>
+		<artifactId>features</artifactId>
+		<version>2.0.7</version>
+	</parent>
+	<groupId>org.eclipse.recommenders.privacy</groupId>
+	<artifactId>features</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>org.eclipse.recommenders.privacy.3rd.feature</module>
+		<module>org.eclipse.recommenders.privacy.rcp.feature</module>
+	</modules>
+	<properties>
+		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>
+	</properties>
+	<repositories>
+		<repository>
+			<id>repo.eclipse.org</id>
+			<url>https://repo.eclipse.org/content/repositories/recommenders/</url>
+		</repository>
+	</repositories>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>org.eclipse.recommenders.privacy</groupId>
+							<artifactId>luna</artifactId>
+							<version>${privacyVersion}</version>
+						</artifact>
+					</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
