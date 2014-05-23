@@ -24,117 +24,170 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 
 public class ExtensionReader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExtensionReader.class);
 
     private static final String DATUM_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.datums";
-    private static final String DATUM_EXTENSION = "datum";
-    private static final String ATTRIBUTE_ID = "id";
-    private static final String ATTRIBUTE_NAME = "name";
-    private static final String ATTRIBUTE_DESCRIPTION = "description";
-    private static final String ATTRIBUTE_ICON = "icon";
+    private static final String DATUM_ELEMENT = "datum";
+    private static final String DATUM_ID_ATTRIBUTE = "datumId";
+
+    private static final String PRINCIPAL_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.principals";
+    private static final String PRINCIPAL_ELEMENT = "principal";
+    private static final String PRINCIPAL_ID_ATTRIBUTE = "principalId";
 
     private static final String PERMISSION_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.permissions";
-    private static final String PERMISSION_EXTENSION = "permission";
-    private static final String ATTRIBUTE_DATUM_ID = "datumId";
-    private static final String ATTRIBUTE_PURPOSE = "purpose";
+    private static final String PERMISSION_ELEMENT = "permission";
 
-    private Set<DatumCategory> datumCategorySet = new HashSet<DatumCategory>();
-    private Set<PrincipalCategory> principalCategorySet = new HashSet<PrincipalCategory>();
+    private static final String ID_ATTRIBUTE = "id";
+    private static final String NAME_ATTRIBUTE = "name";
+    private static final String DESCRIPTION_ATTRIBUTE = "description";
+    private static final String ICON_ATTRIBUTE = "icon";
+    private static final String PURPOSE_ATTRIBUTE = "purpose";
+    private static final String POLICY_URI_ATTRIBUTE = "policyUri";
 
-    private Map<String, PrincipalCategory> principalCategoryMap = new HashMap<String, PrincipalCategory>();
+    private Map<String, PrivateDatum> privateDatumMap;
+    private Map<String, Principal> principalMap;
+    private Map<String, DatumCategory> datumCategoryMap;
+    private Map<String, PrincipalCategory> principalCategoryMap;
 
-    public Set<DatumCategory> readRegistredDatums() {
+    private Set<DatumCategory> datumCategorySet;
+    private Set<PrincipalCategory> princiaplCategorySet;
+
+    public void readRegisteredExtensions() {
+        readRegisteredDatums();
+        readRegisteredPrincipals();
+        readRegisteredPermissions();
+    }
+
+    private void readRegisteredDatums() {
         final IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
                 .getConfigurationElementsFor(DATUM_EXTENSION_POINT_ID);
-        return readRegistredDatums(configurationElements);
+        readRegisteredDatums(configurationElements);
     }
 
     @VisibleForTesting
-    Set<DatumCategory> readRegistredDatums(IConfigurationElement... configurationElements) {
+    void readRegisteredDatums(IConfigurationElement... configurationElements) {
+        Map<String, PrivateDatum> privateDatumMap = this.privateDatumMap = new HashMap<String, PrivateDatum>();
+        Map<String, DatumCategory> datumCategoryMap = this.datumCategoryMap = new HashMap<String, DatumCategory>();
+        Set<DatumCategory> datumCategorySet = this.datumCategorySet = new HashSet<DatumCategory>();
+
         if (configurationElements == null) {
-            return datumCategorySet;
+            return;
         }
         for (final IConfigurationElement configurationElement : configurationElements) {
-            if (configurationElement.getName().equals(DATUM_EXTENSION)) {
+            if (configurationElement.getName().equals(DATUM_ELEMENT)) {
                 final String pluginId = configurationElement.getContributor().getName();
-                final String datumId = configurationElement.getAttribute(ATTRIBUTE_ID);
-                final String datumName = configurationElement.getAttribute(ATTRIBUTE_NAME);
-                final String datumDescription = configurationElement.getAttribute(ATTRIBUTE_DESCRIPTION);
+                final String datumId = configurationElement.getAttribute(ID_ATTRIBUTE);
+                final String datumName = configurationElement.getAttribute(NAME_ATTRIBUTE);
+                final String datumDescription = configurationElement.getAttribute(DESCRIPTION_ATTRIBUTE);
+                String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
-                String icon = configurationElement.getAttribute(ATTRIBUTE_ICON);
-                if (icon == null) {
-                    icon = ISharedImages.IMG_OBJ_ELEMENT;
-                }
-
-                ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, icon);
+                ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId,
+                        icon == null ? ISharedImages.IMG_OBJ_ELEMENT : icon);
 
                 if (isValidAttribute(datumId) && isValidAttribute(datumName) && isValidAttribute(datumDescription)) {
                     PrivateDatum datum = new PrivateDatum(datumId, datumName, datumDescription, imageDescriptor);
-                    datumCategorySet.add(new DatumCategory(datum));
+                    privateDatumMap.put(datumId, datum);
+                    DatumCategory datumCategory = new DatumCategory(datum);
+                    datumCategorySet.add(datumCategory);
+                    datumCategoryMap.put(datumId, datumCategory);
                 } else {
                     LOG.error("Failed to read private datum, invalid or missing attribute");
                 }
             }
         }
-        return datumCategorySet;
+        this.privateDatumMap = privateDatumMap;
+        this.datumCategoryMap = datumCategoryMap;
+        this.datumCategorySet = datumCategorySet;
     }
 
-    public Set<PrincipalCategory> readRegistredPrincipals() {
+    private void readRegisteredPrincipals() {
         final IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
-                .getConfigurationElementsFor(PERMISSION_EXTENSION_POINT_ID);
-        return readRegistredPrincipals(configurationElements);
+                .getConfigurationElementsFor(PRINCIPAL_EXTENSION_POINT_ID);
+        readRegisteredPrincipals(configurationElements);
     }
 
     @VisibleForTesting
-    Set<PrincipalCategory> readRegistredPrincipals(IConfigurationElement... configurationElements) {
-        if (configurationElements == null || datumCategorySet == null) {
-            return principalCategorySet;
+    void readRegisteredPrincipals(IConfigurationElement... configurationElements) {
+        Map<String, Principal> principalMap = this.principalMap = new HashMap<String, Principal>();
+        Map<String, PrincipalCategory> principalCategoryMap = this.principalCategoryMap = new HashMap<String, PrincipalCategory>();
+        Set<PrincipalCategory> princiaplCategorySet = this.princiaplCategorySet = new HashSet<PrincipalCategory>();
+
+        if (configurationElements == null) {
+            return;
         }
         for (final IConfigurationElement configurationElement : configurationElements) {
-            if (configurationElement.getName().equals(PERMISSION_EXTENSION)) {
+            if (configurationElement.getName().equals(PRINCIPAL_ELEMENT)) {
                 final String pluginId = configurationElement.getContributor().getName();
-                final String datumId = configurationElement.getAttribute(ATTRIBUTE_DATUM_ID);
-                final String purpose = configurationElement.getAttribute(ATTRIBUTE_PURPOSE);
+                final String principalId = configurationElement.getAttribute(ID_ATTRIBUTE);
+                final String principalName = configurationElement.getAttribute(NAME_ATTRIBUTE);
+                String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
-                if (isValidAttribute(datumId) && isValidAttribute(purpose)) {
-                    PrincipalCategory principal;
-                    if (principalCategoryMap.containsKey(pluginId)) {
-                        principal = principalCategoryMap.get(pluginId);
-                    } else {
-                        principal = new PrincipalCategory(pluginId);
-                        principalCategoryMap.put(pluginId, principal);
-                    }
-                    Optional<DatumCategory> optionalDatum = find(datumCategorySet, datumId);
-                    if (optionalDatum.isPresent()) {
-                        DatumCategory datum = optionalDatum.get();
-                        PrivatePermission permission = new PrivatePermission(principal.getId(), datum.getId(),
-                                datum.getName(), purpose);
-                        principal.addPermission(permission);
-                        datum.addPermission(permission);
-                        principalCategorySet.add(principal);
-                    }
+                ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+                        icon == null ? Constants.BUNDLE_ID : pluginId, icon == null ? Constants.PREF_FEATURE_ICON
+                                : icon);
+
+                if (isValidAttribute(principalId) && isValidAttribute(principalName)) {
+                    Principal principal = new Principal(principalId, principalName, imageDescriptor);
+                    principalMap.put(principalId, principal);
+                    PrincipalCategory principalCategory = new PrincipalCategory(principal);
+                    princiaplCategorySet.add(principalCategory);
+                    principalCategoryMap.put(principalId, principalCategory);
                 } else {
-                    LOG.error("Failed to read principal permissions, invalid or missing attribute");
+                    LOG.error("Failed to read principal, invalid or missing attribute");
                 }
             }
         }
-        return principalCategorySet;
+        this.principalMap = principalMap;
+        this.principalCategoryMap = principalCategoryMap;
+        this.princiaplCategorySet = princiaplCategorySet;
+    }
+
+    private void readRegisteredPermissions() {
+        final IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
+                .getConfigurationElementsFor(PERMISSION_EXTENSION_POINT_ID);
+        readRegisteredPermissions(configurationElements);
+    }
+
+    @VisibleForTesting
+    void readRegisteredPermissions(IConfigurationElement... configurationElements) {
+        if (configurationElements == null) {
+            return;
+        }
+        for (final IConfigurationElement configurationElement : configurationElements) {
+            if (configurationElement.getName().equals(PERMISSION_ELEMENT)) {
+                final String datumId = configurationElement.getAttribute(DATUM_ID_ATTRIBUTE);
+                final String principalId = configurationElement.getAttribute(PRINCIPAL_ID_ATTRIBUTE);
+                final String purpose = configurationElement.getAttribute(PURPOSE_ATTRIBUTE);
+                final String policy = configurationElement.getAttribute(POLICY_URI_ATTRIBUTE);
+
+                if (isValidAttribute(datumId) && isValidAttribute(principalId) && isValidAttribute(purpose)
+                        && isValidAttribute(policy)) {
+                    PrivatePermission permission = new PrivatePermission(privateDatumMap.get(datumId),
+                            principalMap.get(principalId), purpose, policy);
+                    datumCategoryMap.get(datumId).addPermission(permission);
+                    if (principalCategoryMap.containsKey(principalId)) {
+                        principalCategoryMap.get(principalId).addPermission(permission);
+                    }
+                } else {
+                    LOG.error("Failed to read permissions, invalid or missing attribute");
+                }
+            }
+        }
+    }
+
+    public Set<DatumCategory> getDatumCategory() {
+        return datumCategorySet;
+    }
+
+    public Set<PrincipalCategory> getPrincipalCategory() {
+        return princiaplCategorySet;
     }
 
     private boolean isValidAttribute(String attribute) {
-        return !(attribute == null) && !attribute.isEmpty();
-    }
-
-    private Optional<DatumCategory> find(Set<DatumCategory> datums, String id) {
-        for (DatumCategory datum : datums) {
-            if (id.equals(datum.getId())) {
-                return Optional.fromNullable(datum);
-            }
-        }
-        return Optional.fromNullable(null);
+        return !Strings.isNullOrEmpty(attribute);
     }
 }

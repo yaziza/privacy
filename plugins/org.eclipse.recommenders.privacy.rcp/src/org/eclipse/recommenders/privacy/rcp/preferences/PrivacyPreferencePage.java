@@ -24,8 +24,8 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.recommenders.privacy.rcp.ExtensionReader;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
 import org.eclipse.recommenders.privacy.rcp.PrivacySettingsService;
@@ -39,6 +39,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -63,9 +64,10 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
     @Override
     public void init(IWorkbench workbench) {
         extensionReader = new ExtensionReader();
+        extensionReader.readRegisteredExtensions();
         globalPreferences = new PrivacySettingsService();
-        datumPermissionsInput = extensionReader.readRegistredDatums();
-        principalPermissionsInput = extensionReader.readRegistredPrincipals();
+        datumPermissionsInput = extensionReader.getDatumCategory();
+        principalPermissionsInput = extensionReader.getPrincipalCategory();
         setMessage("Privacy Configuration");
     }
 
@@ -107,10 +109,13 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         data.horizontalSpan = 2;
         composite.setLayoutData(data);
 
-        new Label(composite, SWT.NONE).setText("Permissions by");
+        Label permissionLabel = new Label(composite, SWT.NONE);
+        permissionLabel.setText("Permissions by");
+        permissionLabel.setFont(Display.getCurrent().getSystemFont());
 
         Button permissionByDatums = new Button(composite, SWT.RADIO);
         permissionByDatums.setText("datum");
+        permissionByDatums.setFont(Display.getCurrent().getSystemFont());
         permissionByDatums.setSelection(true);
         permissionByDatums.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
         permissionByDatums.addSelectionListener(new SelectionAdapter() {
@@ -124,6 +129,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
         Button permissionByInterestedParty = new Button(composite, SWT.RADIO);
         permissionByInterestedParty.setText("interested party");
+        permissionByInterestedParty.setFont(Display.getCurrent().getSystemFont());
         permissionByInterestedParty.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
         permissionByInterestedParty.addSelectionListener(new SelectionAdapter() {
 
@@ -147,12 +153,12 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
     private void createPermssionsView(final CheckboxTreeViewer sourceViewer, final Set<? extends ICategory> input,
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
-        sourceViewer.getControl().setLayoutData(
-                fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true).create());
+        sourceViewer.getControl()
+                .setLayoutData(fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true).create());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new PermissionContentProvider());
         sourceViewer.setInput(input);
-        ColumnViewerToolTipSupport.enableFor(sourceViewer);
+        PrivacyTooltipSupport.enableFor(sourceViewer, ToolTip.NO_RECREATE);
         sourceViewer.expandAll();
         sourceViewer.setCheckedElements(loadPermissions(input).toArray());
         updateAncestors(sourceViewer);
@@ -267,7 +273,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
         for (ICategory principal : input) {
             for (PrivatePermission permission : principal.getPermissions()) {
-                if (globalPreferences.isAllowed(permission.getDatumId(), permission.getPluginId())) {
+                if (globalPreferences.isAllowed(permission.getDatumId(), permission.getPrincipalId())) {
                     permissions.add(permission);
                 }
             }
@@ -280,9 +286,9 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         for (ICategory principal : principalPermissionsInput) {
             for (PrivatePermission permission : principal.getPermissions()) {
                 if (principalPermissionsViewer.getChecked(permission)) {
-                    globalPreferences.allow(permission.getDatumId(), permission.getPluginId());
+                    globalPreferences.allow(permission.getDatumId(), permission.getPrincipalId());
                 } else {
-                    globalPreferences.disallow(permission.getDatumId(), permission.getPluginId());
+                    globalPreferences.disallow(permission.getDatumId(), permission.getPrincipalId());
                 }
             }
         }

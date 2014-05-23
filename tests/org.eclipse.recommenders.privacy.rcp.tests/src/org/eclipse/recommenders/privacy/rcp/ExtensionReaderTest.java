@@ -28,15 +28,21 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableMap;
 
 public class ExtensionReaderTest {
-    private static final String DATUM_EXTENSION = "datum";
-    private static final String ATTRIBUTE_ID = "id";
-    private static final String ATTRIBUTE_NAME = "name";
-    private static final String ATTRIBUTE_DESCRIPTION = "description";
-    private static final String ATTRIBUTE_ICON = "icon";
 
-    private static final String PERMISSION_EXTENSION = "permission";
-    private static final String ATTRIBUTE_DATUM_ID = "datumId";
-    private static final String ATTRIBUTE_PURPOSE = "purpose";
+    private static final String DATUM_ELEMENT = "datum";
+    private static final String DATUM_ID_ATTRIBUTE = "datumId";
+
+    private static final String PRINCIPAL_ELEMENT = "principal";
+    private static final String PRINCIPAL_ID_ATTRIBUTE = "principalId";
+
+    private static final String PERMISSION_ELEMENT = "permission";
+
+    private static final String ID_ATTRIBUTE = "id";
+    private static final String NAME_ATTRIBUTE = "name";
+    private static final String DESCRIPTION_ATTRIBUTE = "description";
+    private static final String ICON_ATTRIBUTE = "icon";
+    private static final String PURPOSE_ATTRIBUTE = "purpose";
+    private static final String POLICY_URI_ATTRIBUTE = "policyUri";
 
     private IConfigurationElement mockConfigElement(String name, ImmutableMap<String, String> map) {
         IConfigurationElement element = mock(IConfigurationElement.class);
@@ -55,24 +61,28 @@ public class ExtensionReaderTest {
     @Test
     public final void testNoExtensionsFound() {
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(null);
+        sut.readRegisteredDatums(null);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(0));
-        datums = sut.readRegistredDatums(new IConfigurationElement[] {});
+        sut.readRegisteredDatums(new IConfigurationElement[] {});
         assertThat(datums.size(), is(0));
 
-        Set<PrincipalCategory> principals = sut.readRegistredPrincipals(null);
-        assertThat(principals.size(), is(0));
-        principals = sut.readRegistredPrincipals(new IConfigurationElement[] {});
-        assertThat(principals.size(), is(0));
+        sut.readRegisteredPrincipals(null);
+        Set<PrincipalCategory> plugins = sut.getPrincipalCategory();
+        assertThat(plugins.size(), is(0));
+        sut.readRegisteredPrincipals(new IConfigurationElement[] {});
+        plugins = sut.getPrincipalCategory();
+        assertThat(plugins.size(), is(0));
     }
 
     @Test
     public final void testDatumExtensionWithoutIcon() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID,
-                "some id", ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "some description"));
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
 
         DatumCategory datum = getOnlyElement(datums);
         assertThat(datum.getId(), is("some id"));
@@ -86,12 +96,12 @@ public class ExtensionReaderTest {
 
     @Test
     public final void testDatumExtensionIcon() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID,
-                "some id", ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "some description", ATTRIBUTE_ICON,
-                "datum.png"));
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
 
         assertThat(datums.size(), is(1));
         DatumCategory datum = getOnlyElement(datums);
@@ -107,75 +117,89 @@ public class ExtensionReaderTest {
     @Test
     public final void testUnkownExtensions() {
         IConfigurationElement configElement = mockConfigElement("unknown",
-                ImmutableMap.of(ATTRIBUTE_ID, "some id", ATTRIBUTE_NAME, "some name"));
+                ImmutableMap.of(ID_ATTRIBUTE, "some id", NAME_ATTRIBUTE, "some name"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
-
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(0));
+
+        sut.readRegisteredPrincipals(configElement);
+        Set<PrincipalCategory> plugins = sut.getPrincipalCategory();
+        assertThat(plugins.size(), is(0));
     }
 
     @Test
     public final void testDatumExtensionMissingAttributes() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_ID, "some id"));
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(0));
     }
 
     @Test
     public final void testDatumEmptyAttributes() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_ID, "", ATTRIBUTE_NAME, "", ATTRIBUTE_DESCRIPTION, "", ATTRIBUTE_ICON, ""));
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT,
+                ImmutableMap.of(ID_ATTRIBUTE, "", NAME_ATTRIBUTE, "", DESCRIPTION_ATTRIBUTE, "", ICON_ATTRIBUTE, ""));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(0));
     }
 
     @Test
     public final void testDuplicatedDatum() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID,
-                "some id", ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "some description"));
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description"));
 
-        IConfigurationElement duplicate = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID, "some id",
-                ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "dome description"));
+        IConfigurationElement duplicate = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "dome description"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement, duplicate);
+        sut.readRegisteredDatums(configElement, duplicate);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(1));
     }
 
     @Test
     public final void testPermissionsWithoutDatums() {
-        IConfigurationElement configElement = mockConfigElement(PERMISSION_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_DATUM_ID, "some id", ATTRIBUTE_PURPOSE, "some purpose"));
+        IConfigurationElement configElement = mockConfigElement(PRINCIPAL_ELEMENT,
+                ImmutableMap.of(ID_ATTRIBUTE, "principal id", NAME_ATTRIBUTE, "principal name"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<PrincipalCategory> principals = sut.readRegistredPrincipals(configElement);
+        sut.readRegisteredPrincipals(configElement);
+        Set<PrincipalCategory> principals = sut.getPrincipalCategory();
 
-        assertThat(principals.size(), is(0));
+        assertThat(principals.size(), is(1));
     }
 
     @Test
-    public final void testPermissionsExtension() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID,
-                "some id", ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "some description", ATTRIBUTE_ICON,
-                "datum.png"));
+    public final void testPermissionExtension() {
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(1));
 
-        configElement = mockConfigElement(PERMISSION_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_DATUM_ID, "some id", ATTRIBUTE_PURPOSE, "some purpose"));
+        configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "principal id",
+                NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
 
-        Set<PrincipalCategory> principals = sut.readRegistredPrincipals(configElement);
+        sut.readRegisteredPrincipals(configElement);
 
-        assertThat(principals.size(), is(1));
-        PrincipalCategory principal = getOnlyElement(principals);
+        configElement = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE, "some id",
+                PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "some purpose", POLICY_URI_ATTRIBUTE,
+                "some policy"));
+
+        sut.readRegisteredPermissions(configElement);
+        Set<PrincipalCategory> plugins = sut.getPrincipalCategory();
+
+        assertThat(plugins.size(), is(1));
+        PrincipalCategory principal = getOnlyElement(plugins);
 
         assertThat(principal.getPermissions().size(), is(1));
         PrivatePermission permission = getOnlyElement(principal.getPermissions());
@@ -187,39 +211,91 @@ public class ExtensionReaderTest {
 
     @Test
     public final void testMultipleUseOfPrivateDatum() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID,
-                "some id", ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "some description", ATTRIBUTE_ICON,
-                "datum.png"));
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(1));
 
-        IConfigurationElement firstUse = mockConfigElement(PERMISSION_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_DATUM_ID, "some id", ATTRIBUTE_PURPOSE, "some purpose"));
+        configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "principal id",
+                NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
 
-        IConfigurationElement secondUse = mockConfigElement(PERMISSION_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_DATUM_ID, "some id", ATTRIBUTE_PURPOSE, "other purpose"));
+        sut.readRegisteredPrincipals(configElement);
 
-        Set<PrincipalCategory> principals = sut.readRegistredPrincipals(firstUse, secondUse);
+        IConfigurationElement firstUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
+                "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "some purpose",
+                POLICY_URI_ATTRIBUTE, "some policy"));
+
+        IConfigurationElement secondUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
+                "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "other purpose",
+                POLICY_URI_ATTRIBUTE, "other policy"));
+
+        sut.readRegisteredPermissions(firstUse, secondUse);
+        Set<PrincipalCategory> principals = sut.getPrincipalCategory();
         PrincipalCategory principal = getOnlyElement(principals);
         assertThat(principal.getPermissions().size(), is(2));
     }
 
     @Test
-    public final void testPermissionMissingAttributes() {
-        IConfigurationElement configElement = mockConfigElement(DATUM_EXTENSION, ImmutableMap.of(ATTRIBUTE_ID,
-                "some id", ATTRIBUTE_NAME, "some name", ATTRIBUTE_DESCRIPTION, "some description", ATTRIBUTE_ICON,
-                "datum.png"));
+    public final void testMultiplePrincipale() {
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
         ExtensionReader sut = new ExtensionReader();
-        Set<DatumCategory> datums = sut.readRegistredDatums(configElement);
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(1));
 
-        configElement = mockConfigElement(PERMISSION_EXTENSION,
-                ImmutableMap.of(ATTRIBUTE_DATUM_ID, "some id"));
+        IConfigurationElement firstPrincipale = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "principal id", NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
 
-        Set<PrincipalCategory> principals = sut.readRegistredPrincipals(configElement);
-        assertThat(principals.size(), is(0));
+        IConfigurationElement secondPrincipale = mockConfigElement(PRINCIPAL_ELEMENT,
+                ImmutableMap.of(ID_ATTRIBUTE, "other id", NAME_ATTRIBUTE, "other name", ICON_ATTRIBUTE, "other.png"));
+
+        sut.readRegisteredPrincipals(firstPrincipale, secondPrincipale);
+
+        IConfigurationElement firstUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
+                "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "some purpose",
+                POLICY_URI_ATTRIBUTE, "some policy"));
+
+        IConfigurationElement secondUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
+                "some id", PRINCIPAL_ID_ATTRIBUTE, "other id", PURPOSE_ATTRIBUTE, "other purpose",
+                POLICY_URI_ATTRIBUTE, "other policy"));
+
+        sut.readRegisteredPermissions(firstUse, secondUse);
+        Set<PrincipalCategory> principals = sut.getPrincipalCategory();
+        assertThat(principals.size(), is(2));
+
+        PrincipalCategory principal = principals.iterator().next();
+        assertThat(principal.getPermissions().size(), is(1));
+        PrivatePermission permission = getOnlyElement(principal.getPermissions());
+        assertThat(permission.getDatumId(), is("some id"));
+    }
+
+    @Test
+    public final void testPermissionMissingAttributes() {
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
+
+        ExtensionReader sut = new ExtensionReader();
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
+        assertThat(datums.size(), is(1));
+
+        configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "principal id",
+                NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
+
+        sut.readRegisteredPrincipals(configElement);
+
+        configElement = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE, "some id"));
+
+        sut.readRegisteredPermissions(configElement);
+        Set<PrincipalCategory> principals = sut.getPrincipalCategory();
+        assertThat(principals.size(), is(1));
+
+        PrincipalCategory principal = getOnlyElement(principals);
+        assertThat(principal.getPermissions().size(), is(0));
     }
 }

@@ -3,32 +3,7 @@
 <plugin>
    <extension-point id="org.eclipse.recommenders.privacy.rcp.datums" name="Private Datums" schema="schema/datums.exsd"/>
    <extension-point id="org.eclipse.recommenders.privacy.rcp.permissions" name="Permissions" schema="schema/permissions.exsd"/>
-   <extension
-         point="org.eclipse.recommenders.privacy.rcp.datums">
-      <datum
-            description="enable IP Address tracking"
-            id="org.eclipse.recommenders.privacy.datums.ipAddress"
-            name="IP Address">
-      </datum>
-   </extension>
-   <extension
-         point="org.eclipse.recommenders.privacy.rcp.datums">
-      <datum
-            description="enable sending stack traces informations to remote server"
-            icon="icons/stacktrace.gif"
-            id="org.eclipse.recommenders.privacy.datums.stacktraces"
-            name="Stack traces">
-      </datum>
-   </extension>
-   <extension
-         point="org.eclipse.recommenders.privacy.rcp.datums">
-      <datum
-            description="JVM version tracking"
-            icon="icons/jvm.gif"
-            id="org.eclipse.recommenders.privacy.datums.jvm"
-            name="JVM version">
-      </datum>
-   </extension>
+   <extension-point id="org.eclipse.recommenders.privacy.rcp.principals" name="Principal" schema="schema/principals.exsd"/>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -39,18 +14,50 @@
       </page>
    </extension>
    <extension
-         point="org.eclipse.recommenders.privacy.rcp.permissions">
-      <permission
-            datumId="org.eclipse.recommenders.privacy.datums.ipAddress"
-            purpose="send ip address to my server">
-      </permission>
+         point="org.eclipse.recommenders.privacy.rcp.datums">
+      <datum
+            description="One of the IP addresses assigned to this computer. The IP address may discl
+ose (approximate) information about your location."
+            id="org.eclipse.recommenders.privacy.datums.ipAddress"
+            name="IP Address">
+      </datum>
+      <datum
+            description="Enable sending stack traces informations from choosen packages. (only selec
+    ted packages are sent)."
+            icon="icons/stacktrace.gif"
+            id="org.eclipse.recommenders.privacy.datums.stacktraces"
+            name="Stack traces">
+      </datum>
+      <datum
+            description="The installed JVM version."
+            icon="icons/jvm.gif"
+            id="org.eclipse.recommenders.privacy.datums.jvm"
+            name="JVM version">
+      </datum>
    </extension>
    <extension
          point="org.eclipse.recommenders.privacy.rcp.permissions">
       <permission
-            datumId="org.eclipse.recommenders.privacy.datums.stacktraces"
-            purpose="Stack trace purpose">
+            datumId="org.eclipse.recommenders.privacy.datums.ipAddress"
+            principalId="org.eclipse.recommenders.privacy"
+            policyUri="http://www.example.org/policy/ipaddress"
+            purpose="Your IP address will be send to the Example project whenever you use the Exampl
+e feature for the first time. The Example projects uses your IP address exclusively to keep track of
+ the number of simultaneous users. Your IP address will not be stored for more than 24 hours.">
       </permission>
+      <permission
+            datumId="org.eclipse.recommenders.privacy.datums.stacktraces"
+            policyUri="http://www.example.org/policy/stacktraces"
+            principalId="org.eclipse.recommenders.privacy"
+            purpose="Your stack trace informations will be send to the Example project.">
+      </permission>
+   </extension>
+   <extension
+         point="org.eclipse.recommenders.privacy.rcp.principals">
+      <principal
+            id="org.eclipse.recommenders.privacy"
+            name="Code Recommenders Privacy">
+      </principal>
    </extension>
 
 </plugin>

@@ -3,10 +3,10 @@
 <schema targetNamespace="org.eclipse.recommenders.privacy.rcp" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.recommenders.privacy.rcp" id="org.eclipse.recommenders.privacy.rcp.permissions" name="Permissions"/>
+         <meta.schema plugin="org.eclipse.recommenders.privacy.rcp" id="org.eclipse.recommenders.privacy.rcp.principal" name="Principal"/>
       </appinfo>
       <documentation>
-         This extension point allow third party plug-ins to request permission to access a private datum (e.g., the Stack-trace)
+         [Enter description of this extension point.]
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="permission"/>
+            <element ref="principal"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,34 +47,30 @@
       </complexType>
    </element>
 
-   <element name="permission">
+   <element name="principal">
       <complexType>
-         <attribute name="datumId" type="string" use="required">
+         <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique identifier of a private datum
+                  The unique identifier
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="principalId" type="string" use="required">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique identifier of a principal
+                  A human-readable principal name
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="purpose" type="string" use="required">
+         <attribute name="icon" type="string">
             <annotation>
                <documentation>
-                  Permission purpose
+                  An option image for the permission &quot;opt-in&quot; popup dialog and the privycy preference page
                </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="policyUri" type="string" use="required">
-            <annotation>
-               <documentation>
-                  Uri of a privacy policy of the principal
-               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -85,7 +81,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         0.1.0
+         [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
@@ -94,18 +90,7 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         The following is an example of the permission extension point usage:
-&lt;p&gt;
-&lt;pre&gt;
-   &lt;extension
-         point=&quot;org.eclipse.recommenders.privacy.rcp.permissions&quot;&gt;
-      &lt;permission
-            datumId=&quot;com.example.xyz.datums.somePrivateDatumId&quot;
-            purpose=&quot;purpose&quot;&gt;
-      &lt;/permission&gt;
-   &lt;/extension&gt;
-&lt;/pre&gt;
-&lt;/p&gt;
+         [Enter extension point usage example here.]
       </documentation>
    </annotation>
 

@@ -14,32 +14,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PrivatePermission {
 
-    private final String pluginId;
-    private final String datumId;
-    private final String datumName;
+    private final PrivateDatum datum;
+    private final Principal principal;
     private final String purpose;
+    private final String policyUri;
 
-    public PrivatePermission(String pluginId, String datumId, String datumName, String purpose) {
-        this.pluginId = checkNotNull(pluginId);
-        this.datumId = checkNotNull(datumId);
-        this.datumName = checkNotNull(datumName);
+    public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri) {
+        this.datum = checkNotNull(datum);
+        this.principal = checkNotNull(principal);
         this.purpose = checkNotNull(purpose);
-    }
-
-    public String getPluginId() {
-        return pluginId;
+        this.policyUri = checkNotNull(policyUri);
     }
 
     public String getDatumId() {
-        return datumId;
+        return datum.getId();
     }
 
     public String getDatumName() {
-        return datumName;
+        return datum.getName();
+    }
+
+    public String getPrincipalId() {
+        return principal.getId();
+    }
+
+    public String getPrincipalName() {
+        return principal.getName();
     }
 
     public String getPurpose() {
         return purpose;
+    }
+
+    public String getPolicyUri() {
+        return this.policyUri;
     }
 
     @Override
@@ -51,13 +59,16 @@ public class PrivatePermission {
             return false;
         }
         PrivatePermission other = (PrivatePermission) obj;
-        if (!datumId.equals(other.datumId)) {
+        if (!datum.equals(other.datum)) {
             return false;
         }
-        if (!pluginId.equals(other.pluginId)) {
+        if (!principal.equals(other.principal)) {
             return false;
         }
         if (!purpose.equals(other.getPurpose())) {
+            return false;
+        }
+        if (!policyUri.equals(other.getPolicyUri())) {
             return false;
         }
         return true;
@@ -67,9 +78,10 @@ public class PrivatePermission {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((datumId == null) ? 0 : datumId.hashCode());
-        result = prime * result + ((pluginId == null) ? 0 : pluginId.hashCode());
+        result = prime * result + ((datum == null) ? 0 : datum.hashCode());
+        result = prime * result + ((principal == null) ? 0 : principal.hashCode());
         result = prime * result + ((purpose == null) ? 0 : purpose.hashCode());
+        result = prime * result + ((policyUri == null) ? 0 : policyUri.hashCode());
         return result;
     }
 }

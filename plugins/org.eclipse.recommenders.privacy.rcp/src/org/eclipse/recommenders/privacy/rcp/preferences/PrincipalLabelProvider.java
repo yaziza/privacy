@@ -10,10 +10,15 @@
  */
 package org.eclipse.recommenders.privacy.rcp.preferences;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 public class PrincipalLabelProvider extends ColumnLabelProvider {
 
@@ -43,6 +48,18 @@ public class PrincipalLabelProvider extends ColumnLabelProvider {
             return principalCategory.getTooltip();
         }
         PrivatePermission permission = (PrivatePermission) element;
-        return permission.getPurpose();
+        String formatter = "Purpose: {0}\n\nPolicy: <a href=\"{1}\">{1}</a>";
+        return MessageFormat.format(formatter, permission.getPurpose(), permission.getPolicyUri());
+    }
+
+    @Override
+    public Color getForeground(Object element) {
+        if (element instanceof ICategory) {
+            ICategory principalCategory = (ICategory) element;
+            boolean unused = principalCategory.getPermissions().isEmpty();
+            Color gray = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+            return unused ? gray : null;
+        }
+        return null;
     }
 }

@@ -11,7 +11,8 @@
 package org.eclipse.recommenders.privacy.rcp;
 
 public class Constants {
-    public static final String BUNDLE_ID = "org.eclipse.recommenders.privacy";
+    public static final String BUNDLE_ID = "org.eclipse.recommenders.privacy.rcp";
 
     public static final String PREF_NODE_ID_GLOBAL_PERMISSIONS = "org.eclipse.recommenders.privacy.permissions.prefs";
+    public static final String PREF_FEATURE_ICON = "icons/feature.gif";
 }

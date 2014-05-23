@@ -16,39 +16,34 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class PrincipalCategory implements ICategory {
 
-    private final Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();;
-    private final String pluginId;
+    private Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();;
+    private final Principal principal;
 
-    public PrincipalCategory(String pluginId) {
-        this.pluginId = checkNotNull(pluginId);
+    public PrincipalCategory(Principal principal) {
+        this.principal = checkNotNull(principal);
     }
 
     public String getId() {
-        return pluginId;
+        return principal.getId();
     }
 
     @Override
     public String getText() {
-        return getId();
+        return principal.getId();
     }
 
     @Override
     public String getTooltip() {
-        return getId();
+        return principal.getName();
     }
 
     @Override
     public Image getImageDescriptor() {
-        ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(Constants.BUNDLE_ID,
-                ISharedImages.IMG_OBJ_FOLDER);
-        return imageDescriptor.createImage();
+        return principal.getIcon().createImage();
     }
 
     public Set<PrivatePermission> getPermissions() {
@@ -61,7 +56,7 @@ public class PrincipalCategory implements ICategory {
 
     @Override
     public String toString() {
-        return pluginId;
+        return principal.getName();
     }
 
     @Override
@@ -73,7 +68,7 @@ public class PrincipalCategory implements ICategory {
             return false;
         }
         PrincipalCategory other = (PrincipalCategory) obj;
-        if (!pluginId.equals(other.getId())) {
+        if (!principal.equals(other.principal)) {
             return false;
         }
         return true;
@@ -83,7 +78,7 @@ public class PrincipalCategory implements ICategory {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((pluginId == null) ? 0 : pluginId.hashCode());
+        result = prime * result + ((principal == null) ? 0 : principal.hashCode());
         return result;
     }
 }
