@@ -13,8 +13,7 @@ package org.eclipse.recommenders.privacy.rcp;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Set;
 
@@ -166,8 +165,8 @@ public class ExtensionReaderTest {
 
     @Test
     public final void testPermissionsWithoutDatums() {
-        IConfigurationElement configElement = mockConfigElement(PRINCIPAL_ELEMENT,
-                ImmutableMap.of(ID_ATTRIBUTE, "principal id", NAME_ATTRIBUTE, "principal name"));
+        IConfigurationElement configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "principal id", NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description"));
 
         ExtensionReader sut = new ExtensionReader();
         sut.readRegisteredPrincipals(configElement);
@@ -187,7 +186,8 @@ public class ExtensionReaderTest {
         assertThat(datums.size(), is(1));
 
         configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "principal id",
-                NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
+                NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description", ICON_ATTRIBUTE,
+                "principal.png"));
 
         sut.readRegisteredPrincipals(configElement);
 
@@ -220,7 +220,8 @@ public class ExtensionReaderTest {
         assertThat(datums.size(), is(1));
 
         configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "principal id",
-                NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
+                NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description", ICON_ATTRIBUTE,
+                "principal.png"));
 
         sut.readRegisteredPrincipals(configElement);
 
@@ -249,10 +250,12 @@ public class ExtensionReaderTest {
         assertThat(datums.size(), is(1));
 
         IConfigurationElement firstPrincipale = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
-                "principal id", NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
+                "principal id", NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description",
+                ICON_ATTRIBUTE, "principal.png"));
 
-        IConfigurationElement secondPrincipale = mockConfigElement(PRINCIPAL_ELEMENT,
-                ImmutableMap.of(ID_ATTRIBUTE, "other id", NAME_ATTRIBUTE, "other name", ICON_ATTRIBUTE, "other.png"));
+        IConfigurationElement secondPrincipale = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "other id", NAME_ATTRIBUTE, "other name", DESCRIPTION_ATTRIBUTE, "other description", ICON_ATTRIBUTE,
+                "other.png"));
 
         sut.readRegisteredPrincipals(firstPrincipale, secondPrincipale);
 
@@ -285,7 +288,8 @@ public class ExtensionReaderTest {
         assertThat(datums.size(), is(1));
 
         configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "principal id",
-                NAME_ATTRIBUTE, "principal name", ICON_ATTRIBUTE, "principal.png"));
+                NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description", ICON_ATTRIBUTE,
+                "principal.png"));
 
         sut.readRegisteredPrincipals(configElement);
 

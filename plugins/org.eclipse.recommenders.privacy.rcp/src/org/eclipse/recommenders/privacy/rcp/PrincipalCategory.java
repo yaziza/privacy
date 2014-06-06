@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class PrincipalCategory implements ICategory {
 
-    private Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();;
+    private final Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();;
     private final Principal principal;
 
     public PrincipalCategory(Principal principal) {
@@ -31,14 +31,22 @@ public class PrincipalCategory implements ICategory {
         return principal.getId();
     }
 
+    public String getName() {
+        return principal.getName();
+    }
+
+    public String getDescription() {
+        return principal.getDescription();
+    }
+
     @Override
     public String getText() {
-        return principal.getId();
+        return getName();
     }
 
     @Override
     public String getTooltip() {
-        return principal.getName();
+        return getDescription();
     }
 
     @Override
@@ -46,6 +54,7 @@ public class PrincipalCategory implements ICategory {
         return principal.getIcon().createImage();
     }
 
+    @Override
     public Set<PrivatePermission> getPermissions() {
         return Collections.unmodifiableSet(permissions);
     }
@@ -78,7 +87,7 @@ public class PrincipalCategory implements ICategory {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((principal == null) ? 0 : principal.hashCode());
+        result = prime * result + (principal == null ? 0 : principal.hashCode());
         return result;
     }
 }

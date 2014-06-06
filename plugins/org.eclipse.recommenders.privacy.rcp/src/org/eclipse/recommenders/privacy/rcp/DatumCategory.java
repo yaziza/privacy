@@ -46,7 +46,7 @@ public class DatumCategory implements ICategory {
 
     @Override
     public String getText() {
-        return datum.getName();
+        return getName();
     }
 
     @Override
@@ -59,6 +59,7 @@ public class DatumCategory implements ICategory {
         return datum.getIcon().createImage();
     }
 
+    @Override
     public Set<PrivatePermission> getPermissions() {
         return Collections.unmodifiableSet(permissions);
     }
@@ -91,7 +92,7 @@ public class DatumCategory implements ICategory {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((datum == null) ? 0 : datum.hashCode());
+        result = prime * result + (datum == null ? 0 : datum.hashCode());
         return result;
     }
 }

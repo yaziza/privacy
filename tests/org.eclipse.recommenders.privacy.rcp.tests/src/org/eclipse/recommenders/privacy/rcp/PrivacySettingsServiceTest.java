@@ -10,6 +10,7 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
+import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -20,57 +21,57 @@ public class PrivacySettingsServiceTest {
     @Test
     public final void testLoadDefaultPreferences() {
         PrivacySettingsService sut = new PrivacySettingsService("testLoadDefaultPreferences");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(false));
+        assertThat(sut.getState("some.id", "com.example.test"), is(UNKNOWN));
     }
 
     @Test
     public final void testUnsavedPreferences() {
         PrivacySettingsService sut = new PrivacySettingsService("testUnsavedPreferences");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(false));
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(false));
+        assertThat(sut.getState("some.id", "com.example.test"), is(UNKNOWN));
+        assertThat(sut.getState("some.id", "com.example.test"), is(UNKNOWN));
     }
 
     @Test
     public final void testAllowPreferences() {
         PrivacySettingsService sut = new PrivacySettingsService("testAllowPreferences");
-        sut.allow("some.id", "com.example.test");
-        sut.allow("other.id", "com.example.test");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(true));
-        assertThat(sut.isAllowed("other.id", "com.example.test"), is(true));
-        assertThat(sut.isAllowed("some.id", "com.example.other"), is(false));
-        assertThat(sut.isAllowed("third", "com.example.test"), is(false));
+        sut.setState("some.id", "com.example.test", APPROVED);
+        sut.setState("other.id", "com.example.test", DISAPPROVED);
+        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
+        assertThat(sut.getState("other.id", "com.example.test"), is(DISAPPROVED));
+        assertThat(sut.getState("some.id", "com.example.other"), is(UNKNOWN));
+        assertThat(sut.getState("third", "com.example.test"), is(UNKNOWN));
     }
 
     @Test
     public final void testDisallowPreferences() {
         PrivacySettingsService sut = new PrivacySettingsService("testDisallowPreferences");
-        sut.allow("some.id", "com.example.test");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(true));
-        sut.disallow("some.id", "com.example.test");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(false));
+        sut.setState("some.id", "com.example.test", APPROVED);
+        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
+        sut.setState("some.id", "com.example.test", DISAPPROVED);
+        assertThat(sut.getState("some.id", "com.example.test"), is(DISAPPROVED));
 
-        sut.allow("other.id", "com.example.test");
-        assertThat(sut.isAllowed("other.id", "com.example.test"), is(true));
-        sut.disallow("other.id", "com.example.test");
-        assertThat(sut.isAllowed("other.id", "com.example.test"), is(false));
+        sut.setState("other.id", "com.example.test", APPROVED);
+        assertThat(sut.getState("other.id", "com.example.test"), is(APPROVED));
+        sut.setState("other.id", "com.example.test", DISAPPROVED);
+        assertThat(sut.getState("other.id", "com.example.test"), is(DISAPPROVED));
     }
 
     @Test
     public final void testAllowAfterDisallow() {
         PrivacySettingsService sut = new PrivacySettingsService("testAllowAfterDisallow");
-        sut.allow("some.id", "com.example.test");
-        sut.allow("other.id", "com.example.test");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(true));
-        assertThat(sut.isAllowed("other.id", "com.example.test"), is(true));
+        sut.setState("some.id", "com.example.test", APPROVED);
+        sut.setState("other.id", "com.example.test", APPROVED);
+        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
+        assertThat(sut.getState("other.id", "com.example.test"), is(APPROVED));
 
-        sut.disallow("some.id", "com.example.test");
-        sut.disallow("other.id", "com.example.test");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(false));
-        assertThat(sut.isAllowed("other.id", "com.example.test"), is(false));
+        sut.setState("some.id", "com.example.test", DISAPPROVED);
+        sut.setState("other.id", "com.example.test", DISAPPROVED);
+        assertThat(sut.getState("some.id", "com.example.test"), is(DISAPPROVED));
+        assertThat(sut.getState("other.id", "com.example.test"), is(DISAPPROVED));
 
-        sut.allow("some.id", "com.example.test");
-        sut.allow("other.id", "com.example.test");
-        assertThat(sut.isAllowed("some.id", "com.example.test"), is(true));
-        assertThat(sut.isAllowed("other.id", "com.example.test"), is(true));
+        sut.setState("some.id", "com.example.test", APPROVED);
+        sut.setState("other.id", "com.example.test", APPROVED);
+        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
+        assertThat(sut.getState("other.id", "com.example.test"), is(APPROVED));
     }
 }

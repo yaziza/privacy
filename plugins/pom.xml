@@ -4,13 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.eclipse.recommenders</groupId>
-		<artifactId>tests</artifactId>
+		<artifactId>plugins</artifactId>
 		<version>2.0.7</version>
 	</parent>
 	<groupId>org.eclipse.recommenders.privacy</groupId>
-	<artifactId>org.eclipse.recommenders.privacy.rcp.tests</artifactId>
+	<artifactId>plugins</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
-	<packaging>eclipse-test-plugin</packaging>
+	<packaging>pom</packaging>
+	<modules>
+		<module>org.eclipse.recommenders.privacy.rcp</module>
+		<module>org.eclipse.recommenders.privacy.example.rcp</module>
+	</modules>
 	<properties>
 		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>
 	</properties>
@@ -20,7 +24,6 @@
 			<url>https://repo.eclipse.org/content/repositories/recommenders/</url>
 		</repository>
 	</repositories>
-	<!-- Plugin repositories are also used to locate plugin dependencies. -->
 	<pluginRepositories>
 		<pluginRepository>
 			<id>repo.eclipse.org</id>
@@ -37,7 +40,7 @@
 						<artifact>
 							<groupId>org.eclipse.recommenders.privacy</groupId>
 							<artifactId>luna</artifactId>
-							<version>${privacyVersion}</version>	
+							<version>${privacyVersion}</version>
 						</artifact>
 					</target>
 				</configuration>
@@ -63,45 +66,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-surefire-plugin</artifactId>
-				<configuration>
-					<useUIHarness>true</useUIHarness>
-					<dependencies>
-						<dependency>
-							<artifactId>org.eclipse.e4.rcp</artifactId>
-							<type>eclipse-feature</type>
-						</dependency>
-					</dependencies>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>mac</id>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-surefire-plugin</artifactId>
-						<configuration>
-							<dependencies combine.children="append">
-								<dependency>
-									<artifactId>org.eclipse.jdt.launching.macosx</artifactId>
-									<type>eclipse-plugin</type>
-								</dependency>
-							</dependencies>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

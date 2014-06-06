@@ -13,6 +13,13 @@ package org.eclipse.recommenders.privacy.rcp;
 public class Constants {
     public static final String BUNDLE_ID = "org.eclipse.recommenders.privacy.rcp";
 
-    public static final String PREF_NODE_ID_GLOBAL_PERMISSIONS = "org.eclipse.recommenders.privacy.permissions.prefs";
+    public static final char PREF_APPROVED = '+';
+    public static final char PREF_DISAPPROVED = '-';
+    public static final String PREF_SEPARATOR = ";";
+
+    public static final String PREF_NODE_ID_GLOBAL_PERMISSIONS = "org.eclipse.recommenders.privacy.permissions";
     public static final String PREF_FEATURE_ICON = "icons/feature.gif";
+    public static final String PREF_MESSAGE = "Privacy allow you to enable or disable various plug-ins sending usage data to their servers.";
+
+    public static final String APPROVAL_DIALOG_MESSAGE = "Contribute to the Eclipse community by providing usage data.";
 }

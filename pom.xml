@@ -10,7 +10,7 @@
 	<modules>
 		<module>releng/licenses</module>
 		<module>targets/luna</module>
-		<module>plugins/org.eclipse.recommenders.privacy.rcp</module>
+		<module>plugins</module>
 		<module>tests/org.eclipse.recommenders.privacy.rcp.tests</module>
 		<module>features</module>
 		<module>repositories/head</module>

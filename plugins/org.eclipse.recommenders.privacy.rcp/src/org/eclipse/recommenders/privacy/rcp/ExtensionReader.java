@@ -56,7 +56,11 @@ public class ExtensionReader {
     private Set<DatumCategory> datumCategorySet;
     private Set<PrincipalCategory> princiaplCategorySet;
 
-    public void readRegisteredExtensions() {
+    public ExtensionReader() {
+        readRegisteredExtensions();
+    }
+
+    private void readRegisteredExtensions() {
         readRegisteredDatums();
         readRegisteredPrincipals();
         readRegisteredPermissions();
@@ -124,14 +128,17 @@ public class ExtensionReader {
                 final String pluginId = configurationElement.getContributor().getName();
                 final String principalId = configurationElement.getAttribute(ID_ATTRIBUTE);
                 final String principalName = configurationElement.getAttribute(NAME_ATTRIBUTE);
+                final String principalDescription = configurationElement.getAttribute(DESCRIPTION_ATTRIBUTE);
                 String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
                 ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
                         icon == null ? Constants.BUNDLE_ID : pluginId, icon == null ? Constants.PREF_FEATURE_ICON
                                 : icon);
 
-                if (isValidAttribute(principalId) && isValidAttribute(principalName)) {
-                    Principal principal = new Principal(principalId, principalName, imageDescriptor);
+                if (isValidAttribute(principalId) && isValidAttribute(principalName)
+                        && isValidAttribute(principalDescription)) {
+                    Principal principal = new Principal(principalId, principalName, principalDescription,
+                            imageDescriptor);
                     principalMap.put(principalId, principal);
                     PrincipalCategory principalCategory = new PrincipalCategory(principal);
                     princiaplCategorySet.add(principalCategory);

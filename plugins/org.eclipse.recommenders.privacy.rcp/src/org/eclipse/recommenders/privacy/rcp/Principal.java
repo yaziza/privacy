@@ -18,11 +18,13 @@ public class Principal {
 
     private final String id;
     private final String name;
+    private final String description;
     private final ImageDescriptor icon;
 
-    public Principal(String id, String name, ImageDescriptor icon) {
+    public Principal(String id, String name, String description, ImageDescriptor icon) {
         this.id = checkNotNull(id);
         this.name = checkNotNull(name);
+        this.description = checkNotNull(description);
         this.icon = icon;
     }
 
@@ -32,6 +34,10 @@ public class Principal {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public ImageDescriptor getIcon() {
@@ -60,8 +66,8 @@ public class Principal {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + (id == null ? 0 : id.hashCode());
+        result = prime * result + (name == null ? 0 : name.hashCode());
         return result;
     }
 }

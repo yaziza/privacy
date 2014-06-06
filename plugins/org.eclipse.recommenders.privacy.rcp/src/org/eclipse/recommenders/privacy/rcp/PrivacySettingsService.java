@@ -30,25 +30,55 @@ public class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     @Override
-    public boolean isAllowed(String datumId, String principal) {
-        String key = datumId.concat("." + principal);
-        return getGlobalPermissionPreferences().getBoolean(key, false);
+    public void setState(String datumId, String principalId, PermissionState state) {
+        store(datumId, principalId, state);
     }
 
     @Override
-    public void allow(String datumId, String principal) {
-        store(datumId, principal, true);
+    public PermissionState getState(String datumId, String principalId) {
+        String value = getGlobalPermissionPreferences().get(datumId, "");
+        if (!value.contains(Constants.PREF_SEPARATOR)) {
+            return PermissionState.UNKNOWN;
+        }
+        for (String principal : value.split(Constants.PREF_SEPARATOR)) {
+            char prefix = principal.charAt(0);
+            if (principal.substring(1).equals(principalId)) {
+                return prefix == Constants.PREF_APPROVED ? PermissionState.APPROVED : PermissionState.DISAPPROVED;
+            }
+        }
+        return PermissionState.UNKNOWN;
     }
 
     @Override
-    public void disallow(String datumId, String principal) {
-        store(datumId, principal, false);
+    public void approve(String datumId, String principalId) {
+        store(datumId, principalId, PermissionState.APPROVED);
     }
 
-    private void store(String datumId, String principal, boolean value) {
-        String key = datumId.concat("." + principal);
+    @Override
+    public void disapprove(String datumId, String principalId) {
+        store(datumId, principalId, PermissionState.DISAPPROVED);
+    }
+
+    @Override
+    public boolean isApproved(String datumId, String principalId) {
+        return getState(datumId, principalId).equals(PermissionState.APPROVED);
+    }
+
+    private void store(String datumId, String principalId, PermissionState state) {
+        StringBuilder newValue = new StringBuilder();
+        String oldValue = getGlobalPermissionPreferences().get(datumId, "");
+
+        for (String principal : oldValue.split(Constants.PREF_SEPARATOR)) {
+            if (principal.isEmpty() || principal.substring(1).equals(principalId)) {
+                char prefix = state.equals(PermissionState.APPROVED) ? Constants.PREF_APPROVED
+                        : Constants.PREF_DISAPPROVED;
+                principal = prefix + principalId;
+            }
+            newValue.append(principal + Constants.PREF_SEPARATOR);
+        }
+
         IEclipsePreferences prefs = getGlobalPermissionPreferences();
-        prefs.putBoolean(key, value);
+        prefs.put(datumId, newValue.toString());
         try {
             prefs.flush();
         } catch (BackingStoreException e) {
