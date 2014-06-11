@@ -14,6 +14,7 @@
 	<modules>
 		<module>org.eclipse.recommenders.privacy.3rd.feature</module>
 		<module>org.eclipse.recommenders.privacy.rcp.feature</module>
+		<module>org.eclipse.recommenders.privacy.example.rcp.feature</module>
 	</modules>
 	<properties>
 		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>

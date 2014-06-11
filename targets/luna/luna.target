@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Target Definition for Eclipse Luna" sequenceNumber="5">
+<target name="Target Definition for Eclipse Luna" sequenceNumber="6">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.feature.group" version="0.0.0"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.epp.package.standard.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/luna"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.e4.rcp.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.ecf" version="0.0.0"/>
-<unit id="org.eclipse.ecf.filetransfer" version="0.0.0"/>
-<unit id="org.eclipse.ecf.identity" version="0.0.0"/>
-<unit id="org.eclipse.ecf.provider.filetransfer" version="0.0.0"/>
-<unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.4-I-builds/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/cbi/updates/license"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <!-- TODO CQ missing! -->
 <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
 <unit id="ch.qos.logback.classic.source" version="1.0.7.v20121108-1250"/>
@@ -33,6 +23,9 @@
 <!-- https://dev.eclipse.org/ipzilla/show_bug.cgi?id=8197 -->
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
 <unit id="com.google.guava.source" version="15.0.0.v201403281430"/>
+<!-- TODO CQ missing! -->
+<unit id="com.ibm.icu.base" version="52.1.0.v201404171520"/>
+<unit id="com.ibm.icu.base.source" version="52.1.0.v201404171520"/>
 <!-- Tests-only dependency -->
 <unit id="org.junit" version="4.11.0.v201303080030"/>
 <unit id="org.junit.source" version="4.11.0.v201303080030"/>
