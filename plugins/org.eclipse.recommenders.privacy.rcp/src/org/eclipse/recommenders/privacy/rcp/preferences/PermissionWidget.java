@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -135,7 +136,7 @@ public class PermissionWidget {
         });
 
         Button permissionByInterestedParty = new Button(composite, SWT.RADIO);
-        permissionByInterestedParty.setText("interested party");
+        permissionByInterestedParty.setText("interested party:");
         permissionByInterestedParty.setFont(Display.getCurrent().getSystemFont());
         permissionByInterestedParty.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
         permissionByInterestedParty.addSelectionListener(new SelectionAdapter() {
@@ -152,7 +153,7 @@ public class PermissionWidget {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(message);
         GridData data = new GridData(SWT.FILL, SWT.NONE, false, false);
-        data.widthHint = 275;
+        data.widthHint = IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH;
         label.setLayoutData(data);
     }
 
@@ -160,7 +161,7 @@ public class PermissionWidget {
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         sourceViewer.getControl()
-                .setLayoutData(fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true).create());
+        .setLayoutData(fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true).create());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new PermissionContentProvider());
         sourceViewer.setInput(input);
@@ -216,6 +217,8 @@ public class PermissionWidget {
                     principalPermissionsViewer.setSubtreeChecked(principal, true);
                     principalPermissionsViewer.setGrayed(principal, false);
                 }
+                updateAncestors(principalPermissionsViewer);
+                updateAncestors(datumPermissionsViewer);
             }
         });
 
@@ -234,6 +237,8 @@ public class PermissionWidget {
                     principalPermissionsViewer.setSubtreeChecked(principal, false);
                     principalPermissionsViewer.setGrayed(principal, false);
                 }
+                updateAncestors(principalPermissionsViewer);
+                updateAncestors(datumPermissionsViewer);
             }
         });
     }
