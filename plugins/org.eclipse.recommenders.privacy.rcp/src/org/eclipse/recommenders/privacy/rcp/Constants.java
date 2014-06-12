@@ -13,10 +13,6 @@ package org.eclipse.recommenders.privacy.rcp;
 public class Constants {
     public static final String BUNDLE_ID = "org.eclipse.recommenders.privacy.rcp"; //$NON-NLS-1$
 
-    public static final char PREF_APPROVED = '+';
-    public static final char PREF_DISAPPROVED = '-';
-    public static final String PREF_SEPARATOR = ";"; //$NON-NLS-1$
-
     public static final String PREF_NODE_ID_GLOBAL_PERMISSIONS = "org.eclipse.recommenders.privacy.permissions"; //$NON-NLS-1$
     public static final String PREF_FEATURE_ICON = "icons/feature.gif"; //$NON-NLS-1$
 

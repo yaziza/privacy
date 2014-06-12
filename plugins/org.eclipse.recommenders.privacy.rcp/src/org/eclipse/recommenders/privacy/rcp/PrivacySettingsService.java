@@ -15,12 +15,17 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PrivacySettingsService implements IPrivacySettingsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PrivacySettingsService.class);
+
+    private static final String PREF_APPROVED = "+"; //$NON-NLS-1$
+    private static final String PREF_DISAPPROVED = "-"; //$NON-NLS-1$
+    private static final String PREF_ROOT_NODE = "approval"; //$NON-NLS-1$
 
     private IEclipsePreferences preferences;
 
@@ -37,17 +42,16 @@ public class PrivacySettingsService implements IPrivacySettingsService {
 
     @Override
     public PermissionState getState(String datumId, String principalId) {
-        String value = preferences.get(datumId, ""); //$NON-NLS-1$
-        if (!value.contains(Constants.PREF_SEPARATOR)) {
+        Preferences root = preferences.node(PREF_ROOT_NODE);
+        String state = root.node(datumId).get(principalId, ""); //$NON-NLS-1$
+
+        if (state.equals(PREF_APPROVED)) {
+            return PermissionState.APPROVED;
+        } else if (state.equals(PREF_DISAPPROVED)) {
+            return PermissionState.DISAPPROVED;
+        } else {
             return PermissionState.UNKNOWN;
         }
-        for (String principal : value.split(Constants.PREF_SEPARATOR)) {
-            char prefix = principal.charAt(0);
-            if (principal.substring(1).equals(principalId)) {
-                return prefix == Constants.PREF_APPROVED ? PermissionState.APPROVED : PermissionState.DISAPPROVED;
-            }
-        }
-        return PermissionState.UNKNOWN;
     }
 
     @Override
@@ -66,19 +70,10 @@ public class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     private void store(String datumId, String principalId, PermissionState state) {
-        StringBuilder newValue = new StringBuilder();
-        String oldValue = preferences.get(datumId, ""); //$NON-NLS-1$
+        String value = state.equals(PermissionState.APPROVED) ? PREF_APPROVED : PREF_DISAPPROVED;
 
-        for (String principal : oldValue.split(Constants.PREF_SEPARATOR)) {
-            if (principal.isEmpty() || principal.substring(1).equals(principalId)) {
-                char prefix = state.equals(PermissionState.APPROVED) ? Constants.PREF_APPROVED
-                        : Constants.PREF_DISAPPROVED;
-                principal = prefix + principalId;
-            }
-            newValue.append(principal + Constants.PREF_SEPARATOR);
-        }
-
-        preferences.put(datumId, newValue.toString());
+        Preferences root = preferences.node(PREF_ROOT_NODE);
+        root.node(datumId).put(principalId, value);
         try {
             preferences.flush();
         } catch (BackingStoreException e) {

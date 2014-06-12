@@ -10,6 +10,22 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
+/**
+ * Class for storing/loading @link{PrivatePermission} @link{PermissionState}. The Preference String is composed from a
+ * datumId{@code datumId} and a principalId{@code principalId} followed by the @link{PermissionState}. The ID's are
+ * stored below a root node called "approval".
+ *
+ * Example:
+ *
+ * approval/org.eclipse.recommenders.privacy.datums.ipAddress/com.example.first=+;
+ * approval/org.eclipse.recommenders.privacy.datums.ipAddress/com.example.second=-;
+ *
+ * The @link{Principal} with id : "com.example.first" is allowed to send the @link{PrivateDatum with id:
+ * "org.eclipse.recommenders.privacy.datums.ipAddress" and "com.example.second" is not.
+ *
+ * @author Yasser Aziza
+ *
+ */
 public interface IPrivacySettingsService {
 
     /**
