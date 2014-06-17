@@ -21,4 +21,5 @@ public class Constants {
     public static final String PREF_FEATURE_ICON = "icons/feature.gif"; //$NON-NLS-1$
 
     public static final String PREFERENCE_PAGE_EXTENTIONPOINT_ID = "org.eclipse.ui.preferencePages"; //$NON-NLS-1$
+    public static final String PREF_PAGE_ID = "org.eclipse.recommenders.privacy.rcp.ui.preferencespage"; //$NON-NLS-1$
 }

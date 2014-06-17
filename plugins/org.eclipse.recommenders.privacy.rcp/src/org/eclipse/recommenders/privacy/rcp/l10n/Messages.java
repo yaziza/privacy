@@ -33,6 +33,8 @@ public class Messages extends NLS {
 
     public static String TOOLTIP_INTERESTED_PARTY;
 
+    public static String PREF_LINK_MESSAGE;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

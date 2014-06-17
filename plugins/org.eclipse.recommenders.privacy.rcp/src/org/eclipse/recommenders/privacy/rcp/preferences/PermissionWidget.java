@@ -166,7 +166,7 @@ public class PermissionWidget {
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         sourceViewer.getControl()
-        .setLayoutData(fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true).create());
+                .setLayoutData(fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true).create());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new PermissionContentProvider());
         sourceViewer.setInput(input);
@@ -223,8 +223,7 @@ public class PermissionWidget {
                     principalPermissionsViewer.setSubtreeChecked(principal, true);
                     principalPermissionsViewer.setGrayed(principal, false);
                 }
-                updateAncestors(principalPermissionsViewer);
-                updateAncestors(datumPermissionsViewer);
+                updateAncestors();
             }
         });
 
@@ -243,8 +242,7 @@ public class PermissionWidget {
                     principalPermissionsViewer.setSubtreeChecked(principal, false);
                     principalPermissionsViewer.setGrayed(principal, false);
                 }
-                updateAncestors(principalPermissionsViewer);
-                updateAncestors(datumPermissionsViewer);
+                updateAncestors();
             }
         });
     }
@@ -268,6 +266,11 @@ public class PermissionWidget {
             viewer.setChecked(category, !noneChecked);
             viewer.setGrayed(category, !allChecked);
         }
+    }
+
+    private void updateAncestors() {
+        updateAncestors(principalPermissionsViewer);
+        updateAncestors(datumPermissionsViewer);
     }
 
     private final class PermissionsCheckedPredicate implements Predicate<PrivatePermission> {
@@ -303,5 +306,13 @@ public class PermissionWidget {
             }
         }
         return permissions;
+    }
+
+    public void checkElements(Set<PrivatePermission> permissions) {
+        for (PrivatePermission permission : permissions) {
+            datumPermissionsViewer.setChecked(permission, true);
+            principalPermissionsViewer.setChecked(permission, true);
+        }
+        updateAncestors();
     }
 }

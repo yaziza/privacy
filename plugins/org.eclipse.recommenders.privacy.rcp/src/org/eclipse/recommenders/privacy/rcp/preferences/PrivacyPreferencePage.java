@@ -52,6 +52,10 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         return permissionWidget.createContents(parent, Messages.PREFPAGE_DESCRIPTION);
     }
 
+    public void checkElements(Set<PrivatePermission> permissions) {
+        permissionWidget.checkElements(permissions);
+    }
+
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {
         Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
 

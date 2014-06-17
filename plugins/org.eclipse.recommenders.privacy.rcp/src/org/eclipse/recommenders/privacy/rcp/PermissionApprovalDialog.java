@@ -15,10 +15,19 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.recommenders.privacy.rcp.preferences.PermissionWidget;
+import org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.PreferencesUtil;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class PermissionApprovalDialog extends Dialog {
 
@@ -37,6 +46,22 @@ public class PermissionApprovalDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
         permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
+
+        Link link = new Link(container, SWT.NONE);
+        final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(Constants.PREF_PAGE_ID);
+        link.setText(MessageFormat.format(Messages.PREF_LINK_MESSAGE, linkToPreferencePage));
+
+        link.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, Constants.PREF_PAGE_ID, null,
+                        null);
+                PrivacyPreferencePage preferencePage = (PrivacyPreferencePage) dialog.getSelectedPage();
+                preferencePage.checkElements(permissionWidget.getApprovedPermissions());
+                cancelPressed();
+                dialog.open();
+            }
+        });
         return container;
     }
 
@@ -68,5 +93,10 @@ public class PermissionApprovalDialog extends Dialog {
             settingsService.setState(permission.getDatumId(), permission.getPrincipalId(), PermissionState.DISAPPROVED);
         }
         super.okPressed();
+    }
+
+    @Override
+    protected void cancelPressed() {
+        super.cancelPressed();
     }
 }
