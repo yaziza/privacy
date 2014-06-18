@@ -5,24 +5,24 @@
          point="org.eclipse.recommenders.privacy.rcp.principals">
       <principal
             description="Code Recommenders Privacy framework."
-            id="org.eclipse.recommenders.privacy"
-            name="Code Recommenders Privacy">
+            id="org.eclipse.recommenders.privacy.example"
+            name="Example Project">
       </principal>
    </extension>
    <extension
          point="org.eclipse.recommenders.privacy.rcp.permissions">
       <permission
-            datumId="org.eclipse.recommenders.privacy.datums.ipAddress"
-            policyUri="http://www.example.org/policy/ipaddress"
-            principalId="org.eclipse.recommenders.privacy"
-            purpose="Your IP address will be send to the Example project whenever you use the Exampl
-e feature for the first time. The Example projects uses your IP address exclusively to keep track of
- the number of simultaneous users. Your IP address will not be stored for more than 24 hours.">
+            datumId="org.eclipse.recommenders.privacy.datums.machineId"
+            policyUri="http://www.example.org/policy/machineid"
+            principalId="org.eclipse.recommenders.privacy.example"
+            purpose="Your Machine ID will be send to the Example project whenever you use the Exampl
+e feature for the first time. The Example projects uses your Machine ID exclusively to keep track of
+ the number of simultaneous users. Your Machine ID will not be stored for more than 24 hours.">
       </permission>
       <permission
             datumId="org.eclipse.recommenders.privacy.datums.stacktraces"
             policyUri="http://www.example.org/policy/stacktraces"
-            principalId="org.eclipse.recommenders.privacy"
+            principalId="org.eclipse.recommenders.privacy.example"
             purpose="Your stack trace informations will be send to the Example project.">
       </permission>
    </extension>

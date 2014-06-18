@@ -16,23 +16,28 @@
    <extension
          point="org.eclipse.recommenders.privacy.rcp.datums">
       <datum
-            description="One of the IP addresses assigned to this computer. The IP address may discl
-ose (approximate) information about your location."
-            id="org.eclipse.recommenders.privacy.datums.ipAddress"
-            name="IP Address">
+            description="Set whether or not Eclipse can share your current Machine ID with a plugin that requests it."
+            id="org.eclipse.recommenders.privacy.datums.machineId"
+            name="Machine ID">
       </datum>
       <datum
-            description="Enable sending stack traces informations from choosen packages. (only selec
-    ted packages are sent)."
+            description="Enable sending stack traces informations from choosen packages. (only 
+selected packages are sent)."
             icon="icons/stacktrace.gif"
             id="org.eclipse.recommenders.privacy.datums.stacktraces"
             name="Stack traces">
       </datum>
       <datum
-            description="The installed JVM version."
+            description="Allow a plugin to send the JVM version."
             icon="icons/jvm.gif"
             id="org.eclipse.recommenders.privacy.datums.jvm"
             name="JVM version">
+      </datum>
+      <datum
+            description="One of the IP addresses assigned to this computer. The IP address may discl
+ose (approximate) information about your location."
+            id="org.eclipse.recommenders.privacy.datums.ipAddress"
+            name="IP Address">
       </datum>
    </extension>
    <extension

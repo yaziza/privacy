@@ -61,6 +61,7 @@
 						<configuration>
 							<validHeaders>
 								<validHeader>license-aziza-2014.txt</validHeader>
+								<validHeader>license-codetrails-2014.txt</validHeader>
 							</validHeaders>
 						</configuration>
 					</execution>

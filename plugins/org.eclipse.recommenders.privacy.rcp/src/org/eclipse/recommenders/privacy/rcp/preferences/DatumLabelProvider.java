@@ -10,15 +10,16 @@
  */
 package org.eclipse.recommenders.privacy.rcp.preferences;
 
-import java.text.MessageFormat;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
+import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class DatumLabelProvider extends ColumnLabelProvider {
 
@@ -38,7 +39,8 @@ public class DatumLabelProvider extends ColumnLabelProvider {
             ICategory datumCategory = (ICategory) element;
             return datumCategory.getImageDescriptor();
         }
-        return null;
+        PrivatePermission permision = (PrivatePermission) element;
+        return permision.getPrincipalIcon();
     }
 
     @Override
@@ -48,8 +50,7 @@ public class DatumLabelProvider extends ColumnLabelProvider {
             return datumCategory.getTooltip();
         }
         PrivatePermission permission = (PrivatePermission) element;
-        String formatter = "Purpose: {0}\n\nPolicy: <a href=\"{1}\">{1}</a>";
-        return MessageFormat.format(formatter, permission.getPurpose(), permission.getPolicyUri());
+        return MessageFormat.format(Messages.TOOLTIP_INTERESTED_PARTY, permission.getPurpose(), permission.getPolicyUri());
     }
 
     @Override

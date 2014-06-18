@@ -36,7 +36,7 @@ public class PrivacySettingsService implements IPrivacySettingsService {
 
     @Override
     public PermissionState getState(String datumId, String principalId) {
-        String value = getGlobalPermissionPreferences().get(datumId, "");
+        String value = getGlobalPermissionPreferences().get(datumId, ""); //$NON-NLS-1$
         if (!value.contains(Constants.PREF_SEPARATOR)) {
             return PermissionState.UNKNOWN;
         }
@@ -66,7 +66,7 @@ public class PrivacySettingsService implements IPrivacySettingsService {
 
     private void store(String datumId, String principalId, PermissionState state) {
         StringBuilder newValue = new StringBuilder();
-        String oldValue = getGlobalPermissionPreferences().get(datumId, "");
+        String oldValue = getGlobalPermissionPreferences().get(datumId, ""); //$NON-NLS-1$
 
         for (String principal : oldValue.split(Constants.PREF_SEPARATOR)) {
             if (principal.isEmpty() || principal.substring(1).equals(principalId)) {
@@ -82,7 +82,7 @@ public class PrivacySettingsService implements IPrivacySettingsService {
         try {
             prefs.flush();
         } catch (BackingStoreException e) {
-            LOG.error("Failed to flush preferences", e);
+            LOG.error("Failed to flush preferences", e); //$NON-NLS-1$
         }
     }
 

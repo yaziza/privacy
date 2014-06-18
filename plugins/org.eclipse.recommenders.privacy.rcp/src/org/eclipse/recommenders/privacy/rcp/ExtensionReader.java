@@ -30,23 +30,23 @@ public class ExtensionReader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExtensionReader.class);
 
-    private static final String DATUM_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.datums";
-    private static final String DATUM_ELEMENT = "datum";
-    private static final String DATUM_ID_ATTRIBUTE = "datumId";
+    private static final String DATUM_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.datums"; //$NON-NLS-1$
+    private static final String DATUM_ELEMENT = "datum"; //$NON-NLS-1$
+    private static final String DATUM_ID_ATTRIBUTE = "datumId"; //$NON-NLS-1$
 
-    private static final String PRINCIPAL_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.principals";
-    private static final String PRINCIPAL_ELEMENT = "principal";
-    private static final String PRINCIPAL_ID_ATTRIBUTE = "principalId";
+    private static final String PRINCIPAL_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.principals"; //$NON-NLS-1$
+    private static final String PRINCIPAL_ELEMENT = "principal"; //$NON-NLS-1$
+    private static final String PRINCIPAL_ID_ATTRIBUTE = "principalId"; //$NON-NLS-1$
 
-    private static final String PERMISSION_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.permissions";
-    private static final String PERMISSION_ELEMENT = "permission";
+    private static final String PERMISSION_EXTENSION_POINT_ID = "org.eclipse.recommenders.privacy.rcp.permissions"; //$NON-NLS-1$
+    private static final String PERMISSION_ELEMENT = "permission"; //$NON-NLS-1$
 
-    private static final String ID_ATTRIBUTE = "id";
-    private static final String NAME_ATTRIBUTE = "name";
-    private static final String DESCRIPTION_ATTRIBUTE = "description";
-    private static final String ICON_ATTRIBUTE = "icon";
-    private static final String PURPOSE_ATTRIBUTE = "purpose";
-    private static final String POLICY_URI_ATTRIBUTE = "policyUri";
+    private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
+    private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
+    private static final String DESCRIPTION_ATTRIBUTE = "description"; //$NON-NLS-1$
+    private static final String ICON_ATTRIBUTE = "icon"; //$NON-NLS-1$
+    private static final String PURPOSE_ATTRIBUTE = "purpose"; //$NON-NLS-1$
+    private static final String POLICY_URI_ATTRIBUTE = "policyUri"; //$NON-NLS-1$
 
     private Map<String, PrivateDatum> privateDatumMap;
     private Map<String, Principal> principalMap;
@@ -99,7 +99,7 @@ public class ExtensionReader {
                     datumCategorySet.add(datumCategory);
                     datumCategoryMap.put(datumId, datumCategory);
                 } else {
-                    LOG.error("Failed to read private datum, invalid or missing attribute");
+                    LOG.error("Failed to read private datum, invalid or missing attribute"); //$NON-NLS-1$
                 }
             }
         }
@@ -144,7 +144,7 @@ public class ExtensionReader {
                     princiaplCategorySet.add(principalCategory);
                     principalCategoryMap.put(principalId, principalCategory);
                 } else {
-                    LOG.error("Failed to read principal, invalid or missing attribute");
+                    LOG.error("Failed to read principal, invalid or missing attribute"); //$NON-NLS-1$
                 }
             }
         }
@@ -180,7 +180,7 @@ public class ExtensionReader {
                         principalCategoryMap.get(principalId).addPermission(permission);
                     }
                 } else {
-                    LOG.error("Failed to read permissions, invalid or missing attribute");
+                    LOG.error("Failed to read permissions, invalid or missing attribute"); //$NON-NLS-1$
                 }
             }
         }

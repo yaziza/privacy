@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.ui.progress.UIJob;
 
 public class ApprovalDialogJob extends UIJob {
@@ -27,7 +28,7 @@ public class ApprovalDialogJob extends UIJob {
     private Set<PrivatePermission> detectedPermissions;
 
     public ApprovalDialogJob(ExtensionReader extensionReader) {
-        super("Approval Dialog");
+        super(Messages.JOB_APPROVAL_DIALOG);
         this.extensionReader = extensionReader;
         this.detectedPermissions = getDetectedPermission();
     }

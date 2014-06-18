@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 Yasser Aziza.
+x * Copyright (c) 2014 Yasser Aziza.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.recommenders.privacy.rcp.DatumCategory;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
 import org.eclipse.recommenders.privacy.rcp.PrincipalCategory;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
+import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -72,6 +73,10 @@ public class PermissionWidget {
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof ICategory) {
+                    ICategory category = (ICategory) element;
+                    return !category.getPermissions().isEmpty();
+                }
                 return true;
             }
 
@@ -118,11 +123,11 @@ public class PermissionWidget {
         composite.setLayoutData(data);
 
         Label permissionLabel = new Label(composite, SWT.NONE);
-        permissionLabel.setText("Permissions by");
+        permissionLabel.setText(Messages.LABEL_GROUP_BY);
         permissionLabel.setFont(Display.getCurrent().getSystemFont());
 
         Button permissionByDatums = new Button(composite, SWT.RADIO);
-        permissionByDatums.setText("datum");
+        permissionByDatums.setText(Messages.LABEL_INFORMATION);
         permissionByDatums.setFont(Display.getCurrent().getSystemFont());
         permissionByDatums.setSelection(true);
         permissionByDatums.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
@@ -136,7 +141,7 @@ public class PermissionWidget {
         });
 
         Button permissionByInterestedParty = new Button(composite, SWT.RADIO);
-        permissionByInterestedParty.setText("interested party:");
+        permissionByInterestedParty.setText(Messages.LABEL_INTERESTED_PARTY);
         permissionByInterestedParty.setFont(Display.getCurrent().getSystemFont());
         permissionByInterestedParty.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
         permissionByInterestedParty.addSelectionListener(new SelectionAdapter() {
@@ -202,7 +207,7 @@ public class PermissionWidget {
         composite.setLayoutData(data);
 
         Button enableAll = new Button(composite, SWT.PUSH);
-        enableAll.setText("Enable All");
+        enableAll.setText(Messages.BUTTON_ENABLE_ALL);
         enableAll.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
         enableAll.addSelectionListener(new SelectionAdapter() {
 
@@ -224,7 +229,7 @@ public class PermissionWidget {
         });
 
         Button disableAll = new Button(composite, SWT.PUSH);
-        disableAll.setText("Disable All");
+        disableAll.setText(Messages.BUTTON_DISABLE_ALL);
         disableAll.setLayoutData(swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
         disableAll.addSelectionListener(new SelectionAdapter() {
 

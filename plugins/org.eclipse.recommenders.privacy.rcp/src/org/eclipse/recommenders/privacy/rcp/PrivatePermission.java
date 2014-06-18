@@ -12,6 +12,8 @@ package org.eclipse.recommenders.privacy.rcp;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.eclipse.swt.graphics.Image;
+
 public class PrivatePermission {
 
     private final PrivateDatum datum;
@@ -34,12 +36,20 @@ public class PrivatePermission {
         return datum.getName();
     }
 
+    public Image getDatumIcon() {
+        return datum.getIcon().createImage();
+    }
+
     public String getPrincipalId() {
         return principal.getId();
     }
 
     public String getPrincipalName() {
         return principal.getName();
+    }
+
+    public Image getPrincipalIcon() {
+        return principal.getIcon().createImage();
     }
 
     public String getPurpose() {
@@ -78,10 +88,10 @@ public class PrivatePermission {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((datum == null) ? 0 : datum.hashCode());
-        result = prime * result + ((principal == null) ? 0 : principal.hashCode());
-        result = prime * result + ((purpose == null) ? 0 : purpose.hashCode());
-        result = prime * result + ((policyUri == null) ? 0 : policyUri.hashCode());
+        result = prime * result + (datum == null ? 0 : datum.hashCode());
+        result = prime * result + (principal == null ? 0 : principal.hashCode());
+        result = prime * result + (purpose == null ? 0 : purpose.hashCode());
+        result = prime * result + (policyUri == null ? 0 : policyUri.hashCode());
         return result;
     }
 }

@@ -22,6 +22,7 @@ import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.eclipse.recommenders.privacy.rcp.PrincipalCategory;
 import org.eclipse.recommenders.privacy.rcp.PrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
+import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -43,12 +44,12 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
         permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet,
                 loadPermissions(principalCategorySet));
-        setMessage("Privacy Configuration");
+        setMessage(Messages.PREFPAGE_TITLE);
     }
 
     @Override
     protected Control createContents(Composite parent) {
-        return permissionWidget.createContents(parent, Constants.PREF_MESSAGE);
+        return permissionWidget.createContents(parent, Messages.PREFPAGE_DESCRIPTION);
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {

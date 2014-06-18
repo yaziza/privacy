@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.recommenders.privacy.rcp.preferences.PermissionWidget;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -35,14 +36,14 @@ public class PermissionApprovalDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        permissionWidget.createContents(container, Constants.APPROVAL_DIALOG_MESSAGE);
+        permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
         return container;
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText("Code Recommenders Privacy");
+        newShell.setText(Messages.APPROVAL_DIALOG_TITLE);
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {
