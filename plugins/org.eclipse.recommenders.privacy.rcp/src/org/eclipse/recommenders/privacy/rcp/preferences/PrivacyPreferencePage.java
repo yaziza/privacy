@@ -10,45 +10,48 @@
  */
 package org.eclipse.recommenders.privacy.rcp.preferences;
 
-import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.recommenders.privacy.rcp.Constants;
 import org.eclipse.recommenders.privacy.rcp.DatumCategory;
 import org.eclipse.recommenders.privacy.rcp.ExtensionReader;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
-import org.eclipse.recommenders.privacy.rcp.PermissionState;
+import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PrincipalCategory;
-import org.eclipse.recommenders.privacy.rcp.PrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
+import org.eclipse.recommenders.privacy.rcp.SettingsPersistence;
+import org.eclipse.recommenders.privacy.rcp.Startup;
 import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-    private PrivacySettingsService settingsService;
-
+    private IPrivacySettingsService service;
     private ExtensionReader extensionReader;
-
     private PermissionWidget permissionWidget;
 
     @Override
     public void init(IWorkbench workbench) {
-        settingsService = new PrivacySettingsService();
-        extensionReader = new ExtensionReader();
-        Set<DatumCategory> datumCategorySet = extensionReader.getDatumCategory();
-        Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
-        permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet,
-                loadPermissions(principalCategorySet));
         setMessage(Messages.PREFPAGE_TITLE);
+        BundleContext bundleContext = FrameworkUtil.getBundle(Startup.class).getBundleContext();
+        IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
+        service = eclipseContext.get(IPrivacySettingsService.class);
+        extensionReader = new ExtensionReader();
     }
 
     @Override
     protected Control createContents(Composite parent) {
+        Set<DatumCategory> datumCategorySet = extensionReader.getDatumCategory();
+        Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
+        permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet,
+                loadPermissions(principalCategorySet));
         return permissionWidget.createContents(parent, Messages.PREFPAGE_DESCRIPTION);
     }
 
@@ -57,26 +60,13 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {
-        Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
-
-        for (ICategory principal : input) {
-            for (PrivatePermission permission : principal.getPermissions()) {
-                if (settingsService.isApproved(permission.getDatumId(), permission.getPrincipalId())) {
-                    permissions.add(permission);
-                }
-            }
-        }
-        return permissions;
+        return SettingsPersistence.loadApproved(service, input);
     }
 
     @Override
     public void performApply() {
-        for (PrivatePermission permission : permissionWidget.getApprovedPermissions()) {
-            settingsService.setState(permission.getDatumId(), permission.getPrincipalId(), PermissionState.APPROVED);
-        }
-        for (PrivatePermission permission : permissionWidget.getDispprovedPermissions()) {
-            settingsService.setState(permission.getDatumId(), permission.getPrincipalId(), PermissionState.DISAPPROVED);
-        }
+        SettingsPersistence.store(service, permissionWidget.getApprovedPermissions(),
+                permissionWidget.getDispprovedPermissions());
     }
 
     @Override

@@ -10,23 +10,24 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.osgi.service.prefs.BackingStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PrivacySettingsService implements IPrivacySettingsService {
+
     private static final Logger LOG = LoggerFactory.getLogger(PrivacySettingsService.class);
 
-    private final String qualifier;
+    private IEclipsePreferences preferences;
 
-    public PrivacySettingsService() {
-        this(Constants.PREF_NODE_ID_GLOBAL_PERMISSIONS);
-    }
-
-    public PrivacySettingsService(String qualifier) {
-        this.qualifier = qualifier;
+    @Inject
+    public PrivacySettingsService(
+            @Preference(value = Constants.PREF_NODE_ID_GLOBAL_PERMISSIONS) IEclipsePreferences preferences) {
+        this.preferences = preferences;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class PrivacySettingsService implements IPrivacySettingsService {
 
     @Override
     public PermissionState getState(String datumId, String principalId) {
-        String value = getGlobalPermissionPreferences().get(datumId, ""); //$NON-NLS-1$
+        String value = preferences.get(datumId, ""); //$NON-NLS-1$
         if (!value.contains(Constants.PREF_SEPARATOR)) {
             return PermissionState.UNKNOWN;
         }
@@ -66,7 +67,7 @@ public class PrivacySettingsService implements IPrivacySettingsService {
 
     private void store(String datumId, String principalId, PermissionState state) {
         StringBuilder newValue = new StringBuilder();
-        String oldValue = getGlobalPermissionPreferences().get(datumId, ""); //$NON-NLS-1$
+        String oldValue = preferences.get(datumId, ""); //$NON-NLS-1$
 
         for (String principal : oldValue.split(Constants.PREF_SEPARATOR)) {
             if (principal.isEmpty() || principal.substring(1).equals(principalId)) {
@@ -77,16 +78,11 @@ public class PrivacySettingsService implements IPrivacySettingsService {
             newValue.append(principal + Constants.PREF_SEPARATOR);
         }
 
-        IEclipsePreferences prefs = getGlobalPermissionPreferences();
-        prefs.put(datumId, newValue.toString());
+        preferences.put(datumId, newValue.toString());
         try {
-            prefs.flush();
+            preferences.flush();
         } catch (BackingStoreException e) {
             LOG.error("Failed to flush preferences", e); //$NON-NLS-1$
         }
-    }
-
-    private IEclipsePreferences getGlobalPermissionPreferences() {
-        return InstanceScope.INSTANCE.getNode(qualifier);
     }
 }

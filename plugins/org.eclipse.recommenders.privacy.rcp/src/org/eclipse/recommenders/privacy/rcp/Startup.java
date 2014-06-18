@@ -10,14 +10,20 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.ui.IStartup;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 public class Startup implements IStartup {
 
     @Override
     public void earlyStartup() {
-        ExtensionReader extensionReader = new ExtensionReader();
-        ApprovalDialogJob job = new ApprovalDialogJob(extensionReader);
+        BundleContext bundleContext = FrameworkUtil.getBundle(Startup.class).getBundleContext();
+        IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
+        ApprovalDialogJob job = ContextInjectionFactory.make(ApprovalDialogJob.class, eclipseContext);
         job.schedule();
     }
 }

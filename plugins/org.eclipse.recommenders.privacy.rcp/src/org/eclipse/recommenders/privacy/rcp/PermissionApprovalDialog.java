@@ -10,12 +10,11 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.recommenders.privacy.rcp.preferences.PermissionWidget;
 import org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage;
 import org.eclipse.swt.SWT;
@@ -31,22 +30,29 @@ import com.ibm.icu.text.MessageFormat;
 
 public class PermissionApprovalDialog extends Dialog {
 
-    private PrivacySettingsService settingsService = new PrivacySettingsService();
+    private PermissionWidget permissionWidget;
 
-    private final PermissionWidget permissionWidget;
+    private final IPrivacySettingsService service;
+    private final Set<? extends ICategory> datumSet;
+    private final Set<? extends ICategory> principalSet;
+    private final Set<PrivatePermission> detectedPermissions;
 
-    protected PermissionApprovalDialog(Shell parentShell, Set<? extends ICategory> datumSet,
-            Set<? extends ICategory> principalSet, Set<PrivatePermission> detectedPermissions) {
+    protected PermissionApprovalDialog(Shell parentShell, IPrivacySettingsService service,
+            Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet,
+            Set<PrivatePermission> detectedPermissions) {
         super(parentShell);
-        this.permissionWidget = new PermissionWidget(datumSet, principalSet, loadPermissions(principalSet),
-                new PermissionFilter(detectedPermissions));
+        this.service = service;
+        this.datumSet = datumSet;
+        this.principalSet = principalSet;
+        this.detectedPermissions = detectedPermissions;
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
+        permissionWidget = new PermissionWidget(datumSet, principalSet, loadPermissions(principalSet),
+                new PermissionFilter(detectedPermissions));
         permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
-
         Link link = new Link(container, SWT.NONE);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(Constants.PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.PREF_LINK_MESSAGE, linkToPreferencePage));
@@ -72,26 +78,13 @@ public class PermissionApprovalDialog extends Dialog {
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {
-        Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
-
-        for (ICategory principal : input) {
-            for (PrivatePermission permission : principal.getPermissions()) {
-                if (settingsService.isApproved(permission.getDatumId(), permission.getPrincipalId())) {
-                    permissions.add(permission);
-                }
-            }
-        }
-        return permissions;
+        return SettingsPersistence.loadApproved(service, input);
     }
 
     @Override
     protected void okPressed() {
-        for (PrivatePermission permission : permissionWidget.getApprovedPermissions()) {
-            settingsService.setState(permission.getDatumId(), permission.getPrincipalId(), PermissionState.APPROVED);
-        }
-        for (PrivatePermission permission : permissionWidget.getDispprovedPermissions()) {
-            settingsService.setState(permission.getDatumId(), permission.getPrincipalId(), PermissionState.DISAPPROVED);
-        }
+        SettingsPersistence.store(service, permissionWidget.getApprovedPermissions(),
+                permissionWidget.getDispprovedPermissions());
         super.okPressed();
     }
 

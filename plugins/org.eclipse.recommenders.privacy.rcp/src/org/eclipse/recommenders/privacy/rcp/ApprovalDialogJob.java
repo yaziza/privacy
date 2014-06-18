@@ -13,37 +13,38 @@ package org.eclipse.recommenders.privacy.rcp;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
 import org.eclipse.ui.progress.UIJob;
 
 public class ApprovalDialogJob extends UIJob {
 
-    private PrivacySettingsService settingsService = new PrivacySettingsService();
-
+    private final IPrivacySettingsService privacySettingsService;
     private final ExtensionReader extensionReader;
 
-    private Set<PrivatePermission> detectedPermissions;
-
-    public ApprovalDialogJob(ExtensionReader extensionReader) {
+    @Inject
+    public ApprovalDialogJob(IPrivacySettingsService privacySettingsService, IEclipseContext eclipseContext) {
         super(Messages.JOB_APPROVAL_DIALOG);
-        this.extensionReader = extensionReader;
-        this.detectedPermissions = getDetectedPermission();
+        this.privacySettingsService = privacySettingsService;
+        this.extensionReader = new ExtensionReader();
     }
 
     @Override
     public boolean shouldRun() {
-        return !detectedPermissions.isEmpty();
+        return !getDetectedPermission().isEmpty();
     }
 
     @Override
     public IStatus runInUIThread(IProgressMonitor monitor) {
         PermissionApprovalDialog approvalDialog = new PermissionApprovalDialog(getDisplay().getActiveShell(),
-                extensionReader.getDatumCategory(), extensionReader.getPrincipalCategory(), detectedPermissions);
+                privacySettingsService, extensionReader.getDatumCategory(), extensionReader.getPrincipalCategory(),
+                getDetectedPermission());
         approvalDialog.open();
-
         return Status.OK_STATUS;
     }
 
@@ -51,7 +52,8 @@ public class ApprovalDialogJob extends UIJob {
         Set<PrivatePermission> detectedPermissions = new HashSet<PrivatePermission>();
         for (PrincipalCategory principalCategory : extensionReader.getPrincipalCategory()) {
             for (PrivatePermission permission : principalCategory.getPermissions()) {
-                PermissionState state = settingsService.getState(permission.getDatumId(), principalCategory.getId());
+                PermissionState state = privacySettingsService.getState(permission.getDatumId(),
+                        principalCategory.getId());
                 if (state.equals(PermissionState.UNKNOWN)) {
                     detectedPermissions.add(permission);
                 }
