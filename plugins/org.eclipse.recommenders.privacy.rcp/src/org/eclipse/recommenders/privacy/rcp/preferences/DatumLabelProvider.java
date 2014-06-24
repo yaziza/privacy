@@ -14,10 +14,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.recommenders.privacy.rcp.ICategory;
 import org.eclipse.recommenders.privacy.rcp.PrivatePermission;
 import org.eclipse.recommenders.privacy.rcp.l10n.Messages;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -50,17 +47,7 @@ public class DatumLabelProvider extends ColumnLabelProvider {
             return datumCategory.getTooltip();
         }
         PrivatePermission permission = (PrivatePermission) element;
-        return MessageFormat.format(Messages.TOOLTIP_INTERESTED_PARTY, permission.getPurpose(), permission.getPolicyUri());
-    }
-
-    @Override
-    public Color getForeground(Object element) {
-        if (element instanceof ICategory) {
-            ICategory datumCategory = (ICategory) element;
-            boolean unused = datumCategory.getPermissions().isEmpty();
-            Color gray = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-            return unused ? gray : null;
-        }
-        return null;
+        return MessageFormat.format(Messages.TOOLTIP_INTERESTED_PARTY, permission.getPurpose(),
+                permission.getPolicyUri());
     }
 }

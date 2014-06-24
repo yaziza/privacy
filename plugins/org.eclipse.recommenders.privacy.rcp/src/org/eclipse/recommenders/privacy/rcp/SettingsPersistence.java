@@ -10,35 +10,75 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
-import static org.eclipse.recommenders.privacy.rcp.PermissionState.APPROVED;
-import static org.eclipse.recommenders.privacy.rcp.PermissionState.DISAPPROVED;
+import static com.google.common.collect.Sets.filter;
+import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.base.Predicate;
+
 public final class SettingsPersistence {
 
-    private SettingsPersistence() { }
-
-    public static Set<PrivatePermission> loadApproved(IPrivacySettingsService service, Set<? extends ICategory> input) {
-        Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
-
-        for (ICategory principal : input) {
-            for (PrivatePermission permission : principal.getPermissions()) {
-                if (service.isApproved(permission.getDatumId(), permission.getPrincipalId())) {
-                    permissions.add(permission);
-                }
-            }
-        }
-        return permissions;
+    private SettingsPersistence() {
     }
 
-    public static void store(IPrivacySettingsService service, Set<PrivatePermission> approvedPermissions, Set<PrivatePermission> disapprovedPermissions) {
+    public static Set<PrivatePermission> loadApproved(IPrivacySettingsService service,
+            Set<? extends ICategory> categories) {
+        return filter(getCategoriesPermissions(categories), new LoadApprovedPredicate(service));
+    }
+
+    public static Set<PrivatePermission> suggestApproved(IPrivacySettingsService service,
+            Set<? extends ICategory> categories) {
+        return filter(getCategoriesPermissions(categories), new SuggestApprovedPredicate(service));
+    }
+
+    public static void store(IPrivacySettingsService service, Set<PrivatePermission> approvedPermissions,
+            Set<PrivatePermission> disapprovedPermissions) {
         for (PrivatePermission permission : approvedPermissions) {
             service.setState(permission.getDatumId(), permission.getPrincipalId(), APPROVED);
         }
         for (PrivatePermission permission : disapprovedPermissions) {
             service.setState(permission.getDatumId(), permission.getPrincipalId(), DISAPPROVED);
+        }
+    }
+
+    public static Set<PrivatePermission> getCategoriesPermissions(Set<? extends ICategory> categories) {
+        Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
+
+        for (ICategory principal : categories) {
+            for (PrivatePermission permission : principal.getPermissions()) {
+                permissions.add(permission);
+            }
+        }
+        return permissions;
+    }
+
+    public static final class LoadApprovedPredicate implements Predicate<PrivatePermission> {
+
+        private final IPrivacySettingsService service;
+
+        private LoadApprovedPredicate(IPrivacySettingsService service) {
+            this.service = service;
+        }
+
+        @Override
+        public boolean apply(PrivatePermission permission) {
+            return service.isApproved(permission.getDatumId(), permission.getPrincipalId());
+        }
+    }
+
+    public static final class SuggestApprovedPredicate implements Predicate<PrivatePermission> {
+
+        private final IPrivacySettingsService service;
+
+        private SuggestApprovedPredicate(IPrivacySettingsService service) {
+            this.service = service;
+        }
+
+        @Override
+        public boolean apply(PrivatePermission permission) {
+            return !service.isNeverApproved(permission.getDatumId());
         }
     }
 }

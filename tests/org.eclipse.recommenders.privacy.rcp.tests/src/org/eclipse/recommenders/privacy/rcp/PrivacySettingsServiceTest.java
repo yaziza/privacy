@@ -255,4 +255,41 @@ public class PrivacySettingsServiceTest {
         assertThat(sut.getState("other.id", "com.example.third"), is(DISAPPROVED));
         assertThat(sut.getState("other.id", "unknown"), is(UNKNOWN));
     }
+
+    @Test
+    public final void testIsNeverApproved() throws BackingStoreException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        Preferences root = mock(Preferences.class);
+        Preferences someId = mock(Preferences.class);
+        Preferences otherId = mock(Preferences.class);
+        Preferences third = mock(Preferences.class);
+
+        when(preferenceMock.node("approval")).thenReturn(root);
+        when(root.nodeExists("some.id")).thenReturn(true);
+        when(root.nodeExists("other.id")).thenReturn(true);
+        when(root.nodeExists("third")).thenReturn(true);
+
+        when(root.node("some.id")).thenReturn(someId);
+        when(root.node("other.id")).thenReturn(otherId);
+        when(root.node("third")).thenReturn(third);
+
+        when(someId.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(someId.get("com.example.first", "")).thenReturn("+");
+        when(someId.get("com.example.second", "")).thenReturn("+");
+
+        when(otherId.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(otherId.get("com.example.first", "")).thenReturn("-");
+        when(otherId.get("com.example.second", "")).thenReturn("-");
+
+        when(third.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(third.get("com.example.first", "")).thenReturn("+");
+        when(third.get("com.example.second", "")).thenReturn("-");
+
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
+
+        assertThat(sut.isNeverApproved("some.id"), is(false));
+        assertThat(sut.isNeverApproved("other.id"), is(true));
+        assertThat(sut.isNeverApproved("third"), is(false));
+        assertThat(sut.isNeverApproved("non.existing.datum"), is(true));
+    }
 }

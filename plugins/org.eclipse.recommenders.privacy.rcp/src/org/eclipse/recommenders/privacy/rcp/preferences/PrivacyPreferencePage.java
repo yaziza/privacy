@@ -51,7 +51,8 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         Set<DatumCategory> datumCategorySet = extensionReader.getDatumCategory();
         Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
         permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet,
-                loadPermissions(principalCategorySet));
+                loadPermissions(principalCategorySet),
+                SettingsPersistence.getCategoriesPermissions(principalCategorySet));
         return permissionWidget.createContents(parent, Messages.PREFPAGE_DESCRIPTION);
     }
 

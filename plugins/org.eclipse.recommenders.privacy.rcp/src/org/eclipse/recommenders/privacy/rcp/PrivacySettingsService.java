@@ -80,4 +80,24 @@ public class PrivacySettingsService implements IPrivacySettingsService {
             LOG.error("Failed to flush preferences", e); //$NON-NLS-1$
         }
     }
+
+    @Override
+    public boolean isNeverApproved(String datumId) {
+        Preferences root = preferences.node(PREF_ROOT_NODE);
+        try {
+            if (!root.nodeExists(datumId)) {
+                return true;
+            }
+            Preferences node = root.node(datumId);
+            for (String principalId : node.keys()) {
+                if (node.get(principalId, "").equals(PREF_APPROVED)) { //$NON-NLS-1$
+                    return false;
+                }
+            }
+        } catch (BackingStoreException e) {
+            LOG.error("Failed to load preferences", e); //$NON-NLS-1$
+            e.printStackTrace();
+        }
+        return true;
+    }
 }

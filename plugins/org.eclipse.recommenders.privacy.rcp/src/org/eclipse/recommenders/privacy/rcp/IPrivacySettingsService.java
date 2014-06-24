@@ -70,4 +70,13 @@ public interface IPrivacySettingsService {
      * @return returns <code>true</code> when the sending the {@link PrivateDatum} is allowed
      */
     boolean isApproved(String datumId, String principalId);
+
+    /**
+     * Tests if sending the {@link PrivateDatum} with ID {@code datumId} is never approved for all @link{Principal}.
+     *
+     * @param datumId
+     *
+     * @return returns <code>true</code> when the sending the {@link PrivateDatum} is never approved.
+     */
+    boolean isNeverApproved(String datumId);
 }

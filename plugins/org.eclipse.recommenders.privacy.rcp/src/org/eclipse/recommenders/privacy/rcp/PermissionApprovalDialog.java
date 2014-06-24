@@ -30,12 +30,12 @@ import com.ibm.icu.text.MessageFormat;
 
 public class PermissionApprovalDialog extends Dialog {
 
-    private PermissionWidget permissionWidget;
-
     private final IPrivacySettingsService service;
     private final Set<? extends ICategory> datumSet;
     private final Set<? extends ICategory> principalSet;
     private final Set<PrivatePermission> detectedPermissions;
+
+    private PermissionWidget permissionWidget;
 
     protected PermissionApprovalDialog(Shell parentShell, IPrivacySettingsService service,
             Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet,
@@ -51,7 +51,7 @@ public class PermissionApprovalDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
         permissionWidget = new PermissionWidget(datumSet, principalSet, loadPermissions(principalSet),
-                new PermissionFilter(detectedPermissions));
+                detectedPermissions);
         permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
         Link link = new Link(container, SWT.NONE);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(Constants.PREF_PAGE_ID);
@@ -78,7 +78,7 @@ public class PermissionApprovalDialog extends Dialog {
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {
-        return SettingsPersistence.loadApproved(service, input);
+        return SettingsPersistence.suggestApproved(service, input);
     }
 
     @Override
@@ -86,10 +86,5 @@ public class PermissionApprovalDialog extends Dialog {
         SettingsPersistence.store(service, permissionWidget.getApprovedPermissions(),
                 permissionWidget.getDispprovedPermissions());
         super.okPressed();
-    }
-
-    @Override
-    protected void cancelPressed() {
-        super.cancelPressed();
     }
 }

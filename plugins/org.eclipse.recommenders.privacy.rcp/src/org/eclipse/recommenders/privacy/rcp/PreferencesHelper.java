@@ -15,23 +15,27 @@ import org.eclipse.core.runtime.Platform;
 
 public class PreferencesHelper {
 
+    private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
+    private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
+    private static final String CATEGORY_ATTRIBUTE = "category"; //$NON-NLS-1$
+
     public static String createLinkLabelToPreferencePage(String preferencePageID) {
         String text = getNameOfPreferencePage(preferencePageID);
 
         String categoryID = getCategoryOfPreferencePage(preferencePageID);
         while (categoryID != null) {
-            text = getNameOfPreferencePage(categoryID) + " > " + text;
+            text = getNameOfPreferencePage(categoryID) + " > " + text; //$NON-NLS-1$
             categoryID = getCategoryOfPreferencePage(categoryID);
         }
-        return text == null ? "" : text;
+        return text == null ? "" : text; //$NON-NLS-1$
     }
 
     private static String getNameOfPreferencePage(String preferencePageID) {
-        return getAttributeOfPreferencePage(preferencePageID, "name");
+        return getAttributeOfPreferencePage(preferencePageID, NAME_ATTRIBUTE);
     }
 
     private static String getCategoryOfPreferencePage(String preferencePageID) {
-        return getAttributeOfPreferencePage(preferencePageID, "category");
+        return getAttributeOfPreferencePage(preferencePageID, CATEGORY_ATTRIBUTE);
     }
 
     private static String getAttributeOfPreferencePage(String preferencePageID, String attribute) {
@@ -41,7 +45,7 @@ public class PreferencesHelper {
 
             if (elements != null) {
                 for (IConfigurationElement e : elements) {
-                    String configId = e.getAttribute("id");
+                    String configId = e.getAttribute(ID_ATTRIBUTE);
                     if (preferencePageID.equalsIgnoreCase(configId)) {
                         String value = e.getAttribute(attribute);
                         return value;
