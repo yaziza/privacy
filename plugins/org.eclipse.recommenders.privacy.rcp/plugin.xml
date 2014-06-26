@@ -28,10 +28,10 @@ selected packages are sent)."
             name="Stack traces">
       </datum>
       <datum
-            description="Allow a plugin to send the JVM version."
+            description="Allow a plugin to send the java version."
             icon="icons/jvm.gif"
-            id="org.eclipse.recommenders.privacy.datums.jvm"
-            name="JVM version">
+            id="org.eclipse.recommenders.privacy.datums.javaVersion"
+            name="Java version">
       </datum>
       <datum
             description="One of the IP addresses assigned to this computer. The IP address may discl
