@@ -106,6 +106,12 @@ public class PermissionWidget {
         stackComposite.dispose();
     }
 
+    private void createDescription(Composite parent, String message) {
+        Label label = new Label(parent, SWT.WRAP);
+        label.setText(message);
+        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
+    }
+
     private void createPermissionLabel(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
@@ -135,17 +141,11 @@ public class PermissionWidget {
         });
     }
 
-    private void createDescription(Composite parent, String message) {
-        Label label = new Label(parent, SWT.WRAP);
-        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
-        label.setText(message);
-    }
-
     private void createPermssionsView(final CheckboxTreeViewer sourceViewer, final Set<? extends ICategory> input,
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         GridDataFactory.fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true)
-                .applyTo(sourceViewer.getControl());
+        .applyTo(sourceViewer.getControl());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new PermissionContentProvider());
         sourceViewer.setInput(input);

@@ -36,10 +36,10 @@ public final class SettingsPersistence {
     public static void store(IPrivacySettingsService service, Set<PrivatePermission> approvedPermissions,
             Set<PrivatePermission> disapprovedPermissions) {
         for (PrivatePermission permission : approvedPermissions) {
-            service.setState(permission.getDatumId(), permission.getPrincipalId(), APPROVED);
+            service.setState(permission.getPrincipalId(), permission.getDatumId(), APPROVED);
         }
         for (PrivatePermission permission : disapprovedPermissions) {
-            service.setState(permission.getDatumId(), permission.getPrincipalId(), DISAPPROVED);
+            service.setState(permission.getPrincipalId(), permission.getDatumId(), DISAPPROVED);
         }
     }
 
@@ -64,7 +64,7 @@ public final class SettingsPersistence {
 
         @Override
         public boolean apply(PrivatePermission permission) {
-            return service.isApproved(permission.getDatumId(), permission.getPrincipalId());
+            return service.isApproved(permission.getPrincipalId(), permission.getDatumId());
         }
     }
 

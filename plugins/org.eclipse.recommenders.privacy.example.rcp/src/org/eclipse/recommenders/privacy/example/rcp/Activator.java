@@ -10,6 +10,8 @@
  */
 package org.eclipse.recommenders.privacy.example.rcp;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -25,10 +27,11 @@ import org.slf4j.LoggerFactory;
 public class Activator implements BundleActivator {
     private static final Logger LOG = LoggerFactory.getLogger(Activator.class);
 
-    private static final String PRINCIPAL_ID = "org.eclipse.recommenders.privacy.example";
-    private static final String DATUM_ID = "org.eclipse.recommenders.privacy.datums.javaVersion";
+    private static final String PRINCIPAL_ID = "org.eclipse.recommenders.privacy.example.rcp.principals.example";
+    private static final String JAVA_VERSION = "org.eclipse.recommenders.privacy.rcp.datums.javaVersion";
+    private static final String USER_ID = "org.eclipse.recommenders.privacy.rcp.datums.userId";
 
-    private static final int JOB_DELAY = 600000;
+    private static final long JOB_DELAY = MINUTES.toMillis(10);
 
     private Job heartbeatJob;
 
@@ -49,11 +52,12 @@ public class Activator implements BundleActivator {
             @Override
             public IStatus run(IProgressMonitor monitor) {
                 try {
-                    if (service.isApproved(DATUM_ID, PRINCIPAL_ID)) {
-                        LOG.info("sending JVM version approved by the user ...");
-                        LOG.info("Java version: " + System.getProperty("java.version"));
+                    if (service.isApproved(PRINCIPAL_ID, JAVA_VERSION, USER_ID)) {
+                        LOG.info("sending java version and user ID approved by the user ...");
+                        LOG.info("java version: " + System.getProperty("java.version"));
+                        LOG.info("user ID: " + service.getUserId());
                     } else {
-                        LOG.info("sending JVM disapproved by the user.");
+                        LOG.info("sending java version and/or user ID disapproved by the user.");
                     }
                     return Status.OK_STATUS;
                 } finally {

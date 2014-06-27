@@ -18,8 +18,11 @@ public class Messages extends NLS {
 
     public static String JOB_APPROVAL_DIALOG;
 
-    public static String PREFPAGE_TITLE;
-    public static String PREFPAGE_DESCRIPTION;
+    public static String PRIVACY_PREFPAGE_TITLE;
+    public static String PRIVACY_PREFPAGE_DESCRIPTION;
+
+    public static String USERID_PREFPAGE_TITLE;
+    public static String USERID_PREFPAGE_DESCRIPTION;
 
     public static String APPROVAL_DIALOG_TITLE;
     public static String APPROVAL_DIALOG_MESSAGE;

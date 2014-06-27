@@ -39,7 +39,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
     @Override
     public void init(IWorkbench workbench) {
-        setMessage(Messages.PREFPAGE_TITLE);
+        setMessage(Messages.PRIVACY_PREFPAGE_TITLE);
         BundleContext bundleContext = FrameworkUtil.getBundle(Startup.class).getBundleContext();
         IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
         service = eclipseContext.get(IPrivacySettingsService.class);
@@ -50,11 +50,12 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
     protected Control createContents(Composite parent) {
         Set<DatumCategory> datumCategorySet = extensionReader.getDatumCategory();
         Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
+
         permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet);
         permissionWidget.setCheckedPermission(loadPermissions(principalCategorySet));
         permissionWidget.setShownPermission(SettingsPersistence.getCategoriesPermissions(principalCategorySet));
 
-        return permissionWidget.createContents(parent, Messages.PREFPAGE_DESCRIPTION);
+        return permissionWidget.createContents(parent, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
     }
 
     public void checkElements(Set<PrivatePermission> permissions) {

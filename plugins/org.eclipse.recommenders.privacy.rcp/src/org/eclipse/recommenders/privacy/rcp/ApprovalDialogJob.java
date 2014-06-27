@@ -52,8 +52,8 @@ public class ApprovalDialogJob extends UIJob {
         Set<PrivatePermission> detectedPermissions = new HashSet<PrivatePermission>();
         for (PrincipalCategory principalCategory : extensionReader.getPrincipalCategory()) {
             for (PrivatePermission permission : principalCategory.getPermissions()) {
-                PermissionState state = privacySettingsService.getState(permission.getDatumId(),
-                        principalCategory.getId());
+                PermissionState state = privacySettingsService.getState(principalCategory.getId(),
+                        permission.getDatumId());
                 if (state.equals(PermissionState.UNKNOWN)) {
                     detectedPermissions.add(permission);
                 }

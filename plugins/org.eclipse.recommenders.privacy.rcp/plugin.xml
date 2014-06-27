@@ -9,7 +9,12 @@
 			category="org.eclipse.ui.preferencePages.Workbench"
 			class="org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage"
 			name="%preferencePages.privacy.name"/>
+		<page id="org.eclipse.recommenders.privacy.rcp.preferencesPages.userId"
+			category="org.eclipse.recommenders.privacy.rcp.preferencesPages.privacy"
+			class="org.eclipse.recommenders.privacy.rcp.preferences.UserIdPreferencePage"
+			name="%preferencePages.userId.name"/>
 	</extension>
+
 	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
 			icon="icons/javaVersion.gif"
@@ -19,8 +24,11 @@
 			name="%datums.inet4Address.name"
 			description="%datums.inet4Address.description"/>
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.inet6Address"
-			name="%datums.inet6ddress.name"
-			description="%datums.inet6ddress.description"/>
+			name="%datums.inet6Address.name"
+			description="%datums.inet6Address.description"/>
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.userId"
+			name="%datums.userId.name"
+			description="%datums.userId.description"/>
 	</extension>
 	<extension point="org.eclipse.ui.startup">
 		<startup class="org.eclipse.recommenders.privacy.rcp.Startup"/>

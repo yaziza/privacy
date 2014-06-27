@@ -32,7 +32,7 @@ public class PrivacySettingsServiceTest {
         when(prefs.get("com.example.test", "")).thenReturn("");
 
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
-        assertThat(sut.getState("some.id", "com.example.test"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.test", "some.id"), is(UNKNOWN));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class PrivacySettingsServiceTest {
         when(prefs.get("com.example.test", "")).thenReturn("");
 
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
-        assertThat(sut.getState("some.id", "com.example.test"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.test", "some.id"), is(UNKNOWN));
     }
 
     @Test
@@ -70,10 +70,10 @@ public class PrivacySettingsServiceTest {
         sut.approve("some.id", "com.example.test");
         sut.disapprove("other.id", "com.example.test");
 
-        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.other"), is(UNKNOWN));
-        assertThat(sut.getState("other.id", "com.example.test"), is(DISAPPROVED));
-        assertThat(sut.getState("third", "com.example.test"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.test", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.other", "some.id"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.test", "other.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.test", "third"), is(UNKNOWN));
 
         verify(preferenceMock, times(2)).flush();
     }
@@ -93,19 +93,21 @@ public class PrivacySettingsServiceTest {
         when(otherId.get("com.example.test", "")).thenReturn("+");
 
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
-        sut.setState("some.id", "com.example.test", APPROVED);
-        sut.setState("other.id", "com.example.test", APPROVED);
+        sut.setState("com.example.test", "some.id", APPROVED);
+        sut.setState("com.example.test", "other.id", APPROVED);
 
-        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
-        assertThat(sut.getState("other.id", "com.example.test"), is(APPROVED));
+        assertThat(sut.getState("com.example.test", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.test", "other.id"), is(APPROVED));
+        assertThat(sut.isApproved("com.example.test", "some.id", "other.id"), is(true));
 
         when(someId.get("com.example.test", "")).thenReturn("-");
         when(otherId.get("com.example.test", "")).thenReturn("-");
 
-        sut.setState("some.id", "com.example.test", DISAPPROVED);
-        sut.setState("other.id", "com.example.test", DISAPPROVED);
-        assertThat(sut.getState("some.id", "com.example.test"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "com.example.test"), is(DISAPPROVED));
+        sut.setState("com.example.test", "some.id", DISAPPROVED);
+        sut.setState("com.example.test", "other.id", DISAPPROVED);
+        assertThat(sut.getState("com.example.test", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.test", "other.id"), is(DISAPPROVED));
+        assertThat(sut.isApproved("com.example.test", "some.id", "other.id"), is(false));
 
         verify(preferenceMock, times(4)).flush();
     }
@@ -125,26 +127,29 @@ public class PrivacySettingsServiceTest {
         when(otherId.get("com.example.test", "")).thenReturn("+");
 
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
-        sut.setState("some.id", "com.example.test", APPROVED);
-        sut.setState("other.id", "com.example.test", APPROVED);
-        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
-        assertThat(sut.getState("other.id", "com.example.test"), is(APPROVED));
+        sut.setState("com.example.test", "some.id", APPROVED);
+        sut.setState("com.example.test", "other.id", APPROVED);
+        assertThat(sut.getState("com.example.test", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.test", "other.id"), is(APPROVED));
+        assertThat(sut.isApproved("com.example.test", "some.id", "other.id"), is(true));
 
         when(someId.get("com.example.test", "")).thenReturn("-");
         when(otherId.get("com.example.test", "")).thenReturn("-");
 
-        sut.setState("some.id", "com.example.test", DISAPPROVED);
-        sut.setState("other.id", "com.example.test", DISAPPROVED);
-        assertThat(sut.getState("some.id", "com.example.test"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "com.example.test"), is(DISAPPROVED));
+        sut.setState("com.example.test", "some.id", DISAPPROVED);
+        sut.setState("com.example.test", "other.id", DISAPPROVED);
+        assertThat(sut.getState("com.example.test", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.test", "other.id"), is(DISAPPROVED));
+        assertThat(sut.isApproved("com.example.test", "some.id", "other.id"), is(false));
 
         when(someId.get("com.example.test", "")).thenReturn("+");
         when(otherId.get("com.example.test", "")).thenReturn("+");
 
-        sut.setState("some.id", "com.example.test", APPROVED);
-        sut.setState("other.id", "com.example.test", APPROVED);
-        assertThat(sut.getState("some.id", "com.example.test"), is(APPROVED));
-        assertThat(sut.getState("other.id", "com.example.test"), is(APPROVED));
+        sut.setState("com.example.test", "some.id", APPROVED);
+        sut.setState("com.example.test", "other.id", APPROVED);
+        assertThat(sut.getState("com.example.test", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.test", "other.id"), is(APPROVED));
+        assertThat(sut.isApproved("com.example.test", "some.id", "other.id"), is(true));
 
         verify(preferenceMock, times(6)).flush();
     }
@@ -162,28 +167,40 @@ public class PrivacySettingsServiceTest {
         when(someId.get("com.example.third", "")).thenReturn("+");
 
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
-        sut.setState("some.id", "com.example.first", APPROVED);
-        sut.setState("some.id", "com.example.second", DISAPPROVED);
-        sut.setState("some.id", "com.example.third", APPROVED);
-        assertThat(sut.getState("some.id", "com.example.first"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.second"), is(DISAPPROVED));
-        assertThat(sut.getState("some.id", "com.example.third"), is(APPROVED));
+        sut.setState("com.example.first", "some.id", APPROVED);
+        sut.setState("com.example.second", "some.id", DISAPPROVED);
+        sut.setState("com.example.third", "some.id", APPROVED);
+        assertThat(sut.getState("com.example.first", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.second", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.third", "some.id"), is(APPROVED));
+
+        assertThat(sut.isApproved("com.example.first", "some.id"), is(true));
+        assertThat(sut.isApproved("com.example.second", "some.id"), is(false));
+        assertThat(sut.isApproved("com.example.third", "some.id"), is(true));
 
         when(someId.get("com.example.first", "")).thenReturn("-");
 
-        sut.setState("some.id", "com.example.first", DISAPPROVED);
-        assertThat(sut.getState("some.id", "com.example.first"), is(DISAPPROVED));
-        assertThat(sut.getState("some.id", "com.example.second"), is(DISAPPROVED));
-        assertThat(sut.getState("some.id", "com.example.third"), is(APPROVED));
+        sut.setState("com.example.first", "some.id", DISAPPROVED);
+        assertThat(sut.getState("com.example.first", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.second", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.third", "some.id"), is(APPROVED));
+
+        assertThat(sut.isApproved("com.example.first", "some.id"), is(false));
+        assertThat(sut.isApproved("com.example.second", "some.id"), is(false));
+        assertThat(sut.isApproved("com.example.third", "some.id"), is(true));
 
         when(someId.get("com.example.first", "")).thenReturn("+");
         when(someId.get("com.example.second", "")).thenReturn("+");
 
-        sut.setState("some.id", "com.example.first", APPROVED);
-        sut.setState("some.id", "com.example.second", APPROVED);
-        assertThat(sut.getState("some.id", "com.example.first"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.second"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.third"), is(APPROVED));
+        sut.setState("com.example.first", "some.id", APPROVED);
+        sut.setState("com.example.second", "some.id", APPROVED);
+        assertThat(sut.getState("com.example.first", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.second", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.third", "some.id"), is(APPROVED));
+
+        assertThat(sut.isApproved("com.example.first", "some.id"), is(true));
+        assertThat(sut.isApproved("com.example.second", "some.id"), is(true));
+        assertThat(sut.isApproved("com.example.third", "some.id"), is(true));
     }
 
     @Test
@@ -207,35 +224,35 @@ public class PrivacySettingsServiceTest {
         when(otherId.get("unknown", "")).thenReturn("");
 
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
-        sut.setState("some.id", "com.example.first", APPROVED);
-        sut.setState("some.id", "com.example.second", DISAPPROVED);
-        sut.setState("some.id", "com.example.third", APPROVED);
+        sut.setState("com.example.first", "some.id", APPROVED);
+        sut.setState("com.example.second", "some.id", DISAPPROVED);
+        sut.setState("com.example.third", "some.id", APPROVED);
 
-        sut.setState("other.id", "com.example.first", DISAPPROVED);
-        sut.setState("other.id", "com.example.second", APPROVED);
-        sut.setState("other.id", "com.example.third", DISAPPROVED);
+        sut.setState("com.example.first", "other.id", DISAPPROVED);
+        sut.setState("com.example.second", "other.id", APPROVED);
+        sut.setState("com.example.third", "other.id", DISAPPROVED);
 
-        assertThat(sut.getState("some.id", "com.example.first"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.second"), is(DISAPPROVED));
-        assertThat(sut.getState("some.id", "com.example.third"), is(APPROVED));
-        assertThat(sut.getState("some.id", "unknown"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.first", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.second", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.third", "some.id"), is(APPROVED));
+        assertThat(sut.getState("unknown", "some.id"), is(UNKNOWN));
 
-        assertThat(sut.getState("other.id", "com.example.first"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "com.example.second"), is(APPROVED));
-        assertThat(sut.getState("other.id", "com.example.third"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "unknown"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.first", "other.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.second", "other.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.third", "other.id"), is(DISAPPROVED));
+        assertThat(sut.getState("unknown", "other.id"), is(UNKNOWN));
 
         when(someId.get("com.example.first", "")).thenReturn("-");
         when(otherId.get("com.example.second", "")).thenReturn("-");
 
-        sut.setState("some.id", "com.example.first", DISAPPROVED);
-        assertThat(sut.getState("some.id", "com.example.first"), is(DISAPPROVED));
-        assertThat(sut.getState("some.id", "com.example.second"), is(DISAPPROVED));
-        assertThat(sut.getState("some.id", "com.example.third"), is(APPROVED));
+        sut.setState("com.example.first", "some.id", DISAPPROVED);
+        assertThat(sut.getState("com.example.first", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.second", "some.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.third", "some.id"), is(APPROVED));
 
-        assertThat(sut.getState("other.id", "com.example.first"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "com.example.second"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "com.example.third"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.first", "other.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.second", "other.id"), is(DISAPPROVED));
+        assertThat(sut.getState("com.example.third", "other.id"), is(DISAPPROVED));
 
         when(someId.get("com.example.first", "")).thenReturn("+");
         when(someId.get("com.example.second", "")).thenReturn("+");
@@ -243,17 +260,22 @@ public class PrivacySettingsServiceTest {
         when(otherId.get("com.example.first", "")).thenReturn("+");
         when(otherId.get("com.example.second", "")).thenReturn("+");
 
-        sut.setState("some.id", "com.example.first", APPROVED);
-        sut.setState("some.id", "com.example.second", APPROVED);
-        assertThat(sut.getState("some.id", "com.example.first"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.second"), is(APPROVED));
-        assertThat(sut.getState("some.id", "com.example.third"), is(APPROVED));
-        assertThat(sut.getState("some.id", "unknown"), is(UNKNOWN));
+        sut.setState("com.example.first", "some.id", APPROVED);
+        sut.setState("com.example.second", "some.id", APPROVED);
+        assertThat(sut.getState("com.example.first", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.second", "some.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.third", "some.id"), is(APPROVED));
+        assertThat(sut.getState("unknown", "some.id"), is(UNKNOWN));
 
-        assertThat(sut.getState("other.id", "com.example.first"), is(APPROVED));
-        assertThat(sut.getState("other.id", "com.example.second"), is(APPROVED));
-        assertThat(sut.getState("other.id", "com.example.third"), is(DISAPPROVED));
-        assertThat(sut.getState("other.id", "unknown"), is(UNKNOWN));
+        assertThat(sut.getState("com.example.first", "other.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.second", "other.id"), is(APPROVED));
+        assertThat(sut.getState("com.example.third", "other.id"), is(DISAPPROVED));
+        assertThat(sut.getState("unknown", "other.id"), is(UNKNOWN));
+
+        assertThat(sut.isApproved("com.example.first", "some.id", "other.id"), is(true));
+        assertThat(sut.isApproved("com.example.second", "some.id", "other.id"), is(true));
+        assertThat(sut.isApproved("com.example.third", "some.id", "other.id"), is(false));
+        assertThat(sut.isApproved("unknown", "some.id", "other.id"), is(false));
     }
 
     @Test
@@ -265,6 +287,7 @@ public class PrivacySettingsServiceTest {
         Preferences third = mock(Preferences.class);
 
         when(preferenceMock.node("approval")).thenReturn(root);
+        when(root.childrenNames()).thenReturn(new String[] { "some.id", "other.id", "third" });
         when(root.nodeExists("some.id")).thenReturn(true);
         when(root.nodeExists("other.id")).thenReturn(true);
         when(root.nodeExists("third")).thenReturn(true);
@@ -291,5 +314,63 @@ public class PrivacySettingsServiceTest {
         assertThat(sut.isNeverApproved("other.id"), is(true));
         assertThat(sut.isNeverApproved("third"), is(false));
         assertThat(sut.isNeverApproved("non.existing.datum"), is(true));
+
+        assertThat(sut.isApproved("com.example.first", "some.id", "third"), is(true));
+        assertThat(sut.isApproved("com.example.first"), is(false));
+        assertThat(sut.isAllApproved("com.example.first"), is(false));
+        assertThat(sut.isApproved("com.example.second", "some.id", "other.id"), is(false));
+        assertThat(sut.isApproved("com.example.second"), is(false));
+    }
+
+    @Test
+    public final void testIsAllApproved() throws BackingStoreException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        Preferences root = mock(Preferences.class);
+        Preferences someId = mock(Preferences.class);
+        Preferences otherId = mock(Preferences.class);
+        Preferences third = mock(Preferences.class);
+
+        when(preferenceMock.node("approval")).thenReturn(root);
+        when(root.childrenNames()).thenReturn(new String[] { "some.id", "other.id", "third" });
+        when(root.nodeExists("some.id")).thenReturn(true);
+        when(root.nodeExists("other.id")).thenReturn(true);
+        when(root.nodeExists("third")).thenReturn(true);
+
+        when(root.node("some.id")).thenReturn(someId);
+        when(root.node("other.id")).thenReturn(otherId);
+        when(root.node("third")).thenReturn(third);
+
+        when(someId.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(someId.get("com.example.first", "")).thenReturn("+");
+        when(someId.get("com.example.second", "")).thenReturn("+");
+        when(someId.get("com.example.third", "")).thenReturn("");
+
+        when(otherId.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(otherId.get("com.example.first", "")).thenReturn("+");
+        when(otherId.get("com.example.second", "")).thenReturn("+");
+        when(otherId.get("com.example.third", "")).thenReturn("");
+
+        when(third.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(third.get("com.example.first", "")).thenReturn("+");
+        when(third.get("com.example.second", "")).thenReturn("-");
+        when(third.get("com.example.third", "")).thenReturn("");
+
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
+
+        assertThat(sut.isAllApproved("com.example.first"), is(true));
+        assertThat(sut.isApproved("com.example.first"), is(false));
+        assertThat(sut.isApproved("com.example.first", "some.id"), is(true));
+        assertThat(sut.isApproved("com.example.first", "some.id", "other.id", "third"), is(true));
+
+        assertThat(sut.isAllApproved("com.example.second"), is(false));
+        assertThat(sut.isApproved("com.example.second"), is(false));
+        assertThat(sut.isApproved("com.example.second", "some.id"), is(true));
+        assertThat(sut.isApproved("com.example.second", "some.id", "other.id"), is(true));
+        assertThat(sut.isApproved("com.example.second", "some.id", "other.id", "third"), is(false));
+
+        assertThat(sut.isAllApproved("com.example.third"), is(false));
+        assertThat(sut.isApproved("com.example.third"), is(false));
+        assertThat(sut.isApproved("com.example.third", "some.id"), is(false));
+        assertThat(sut.isApproved("com.example.third", "some.id", "other.id"), is(false));
     }
 }

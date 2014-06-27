@@ -10,6 +10,8 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
+import java.util.UUID;
+
 /**
  * Class for storing/loading @link{PrivatePermission} @link{PermissionState}. The Preference String is composed from a
  * datumId{@code datumId} and a principalId{@code principalId} followed by the @link{PermissionState}. The ID's are
@@ -29,54 +31,60 @@ package org.eclipse.recommenders.privacy.rcp;
 public interface IPrivacySettingsService {
 
     /**
-     * Change the @link{PrivateDatum} @link{PermissionState} of the @link{Principal}.
+     * Changes the @link{PrivateDatum} @link{PermissionState} of the @link{Principal}.
      *
-     * @param datumId
-     * @param principalId
-     * @param state
      */
-    void setState(String datumId, String principalId, PermissionState state);
+    void setState(String principalId, String datumId, PermissionState state);
 
     /**
-     * Get the @link{PrivateDatum} @link{PermissionState} of the @link{Principal}.
+     * Gets the @link{PrivateDatum} @link{PermissionState} of the @link{Principal}.
      *
-     * @param datumId
-     * @param principalId
      * @return returns the @link{PrivateDatum @link{PermissionState}
      */
-    PermissionState getState(String datumId, String principalId);
+    PermissionState getState(String principalId, String datumId);
 
     /**
-     * Allow the @link{Principal} to send the @link{PrivateDatum} with ID{@code datumId}.
+     * Allows the @link{Principal} to send the @link{PrivateDatum} with ID{@code datumId}.
      *
-     * @param datumId
-     * @param principalId
      */
-    void approve(String datumId, String principalId);
+    void approve(String principalId, String datumId);
 
     /**
-     * Disallow the @link{Principal} to send the @link{PrivateDatum} with ID{@code datumId}.
+     * Disallows the @link{Principal} to send the @link{PrivateDatum} with ID{@code datumId}.
      *
-     * @param datumId
-     * @param principalId
      */
-    void disapprove(String datumId, String principalId);
+    void disapprove(String principalId, String datumId);
+
+    /**
+     * Tests if all data access requested by the principals with ID{@code principalId} has been allowed.
+     *
+     * @returns <code>true</code> if all data access are allowed.
+     */
+    boolean isAllApproved(String principalId);
 
     /**
      * Tests if sending the {@link PrivateDatum} with ID {@code datumId} by the @link{Principal} is allowed.
      *
-     * @param datumId
-     * @param principalId
      * @return returns <code>true</code> when the sending the {@link PrivateDatum} is allowed
      */
-    boolean isApproved(String datumId, String principalId);
+    boolean isApproved(String principalId, String... datumsIds);
 
     /**
      * Tests if sending the {@link PrivateDatum} with ID {@code datumId} is never approved for all @link{Principal}.
      *
-     * @param datumId
-     *
      * @return returns <code>true</code> when the sending the {@link PrivateDatum} is never approved.
      */
     boolean isNeverApproved(String datumId);
+
+    /**
+     * Generates and store a User ID into a file.
+     */
+    void generateUserId();
+
+    /**
+     * Retrieves the User ID from a file
+     *
+     * @return: @link{UUID} the User ID
+     */
+    UUID getUserId();
 }
