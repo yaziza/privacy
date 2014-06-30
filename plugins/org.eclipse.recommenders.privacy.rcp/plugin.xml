@@ -1,50 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.eclipse.recommenders.privacy.rcp.datums" name="Private Datums" schema="schema/datums.exsd"/>
-   <extension-point id="org.eclipse.recommenders.privacy.rcp.permissions" name="Permissions" schema="schema/permissions.exsd"/>
-   <extension-point id="org.eclipse.recommenders.privacy.rcp.principals" name="Principal" schema="schema/principals.exsd"/>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.eclipse.ui.preferencePages.Workbench"
-            class="org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage"
-            id="org.eclipse.recommenders.privacy.rcp.ui.preferencespage"
-            name="Privacy">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.recommenders.privacy.rcp.datums">
-      <datum
-            description="Set whether or not Eclipse can share your current Machine ID with a plugin that requests it."
-            id="org.eclipse.recommenders.privacy.datums.machineId"
-            name="Machine ID">
-      </datum>
-      <datum
-            description="Enable sending stack traces informations from choosen packages. (only 
-selected packages are sent)."
-            icon="icons/stacktrace.gif"
-            id="org.eclipse.recommenders.privacy.datums.stacktraces"
-            name="Stack traces">
-      </datum>
-      <datum
-            description="Allow a plugin to send the java version."
-            icon="icons/jvm.gif"
-            id="org.eclipse.recommenders.privacy.datums.javaVersion"
-            name="Java version">
-      </datum>
-      <datum
-            description="One of the IP addresses assigned to this computer. The IP address may discl
-ose (approximate) information about your location."
-            id="org.eclipse.recommenders.privacy.datums.ipAddress"
-            name="IP Address">
-      </datum>
-   </extension>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="org.eclipse.recommenders.privacy.rcp.Startup">
-      </startup>
-   </extension>
-
+	<extension-point id="org.eclipse.recommenders.privacy.rcp.datums" name="%extension-point.datums.name" schema="schema/datums.exsd"/>
+	<extension-point id="org.eclipse.recommenders.privacy.rcp.permissions" name="%extension-point.permissions.name" schema="schema/permissions.exsd"/>
+	<extension-point id="org.eclipse.recommenders.privacy.rcp.principals" name="%extension-point.principals.name" schema="schema/principals.exsd"/>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page id="org.eclipse.recommenders.privacy.rcp.preferencesPages.privacy"
+			category="org.eclipse.ui.preferencePages.Workbench"
+			class="org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage"
+			name="%preferencePages.privacy.name"/>
+	</extension>
+	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
+			icon="icons/javaVersion.gif"
+			name="%datums.javaVersion.name"
+			description="%datums.javaVersion.description"/>
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.inet4Address"
+			name="%datums.inet4Address.name"
+			description="%datums.inet4Address.description"/>
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.inet6Address"
+			name="%datums.inet6ddress.name"
+			description="%datums.inet6ddress.description"/>
+	</extension>
+	<extension point="org.eclipse.ui.startup">
+		<startup class="org.eclipse.recommenders.privacy.rcp.Startup"/>
+	</extension>
 </plugin>

@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.recommenders.privacy.rcp;singleton:=true
 Bundle-Version: 0.1.0.qualifier
-Bundle-Name: Code Recommenders Privacy Preferences UI (Incubator)
-Bundle-Vendor: Eclipse Code Recommenders
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
@@ -17,5 +17,5 @@ Import-Package: com.google.common.annotations;version="[15.0.0,16.0.0)",
  com.google.common.collect;version="[15.0.0,16.0.0)",
  com.ibm.icu.text;version="50.0.0",
  org.slf4j;version="[1.6.0,2.0.0)"
-Service-Component: OSGI-INF/settingsService.xml
 Export-Package: org.eclipse.recommenders.privacy.rcp
+Service-Component: OSGI-INF/settingsService.xml

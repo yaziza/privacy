@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.recommenders.privacy.rcp.principals">
-      <principal
-            description="Code Recommenders Privacy framework."
-            id="org.eclipse.recommenders.privacy.example"
-            name="Example Project">
-      </principal>
-   </extension>
-   <extension
-         point="org.eclipse.recommenders.privacy.rcp.permissions">
-      <permission
-            datumId="org.eclipse.recommenders.privacy.datums.javaVersion"
-            policyUri="http://www.example.org/policy/javaversion"
-            principalId="org.eclipse.recommenders.privacy.example"
-            purpose="Your java version will be send to the Example project.">
-      </permission>
-   </extension>
-
+	<extension point="org.eclipse.recommenders.privacy.rcp.principals">
+		<principal id="org.eclipse.recommenders.privacy.example.rcp.principals.example"
+			name="%principals.example.name"
+			description="%principals.example.description"/>
+	</extension>
+	<extension point="org.eclipse.recommenders.privacy.rcp.permissions">
+		<permission
+				datumId="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
+				principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
+				policyUri="http://www.example.org/policy/javaVersion"
+				purpose="%permissions.javaVersion.purpose"/>
+	</extension>
 </plugin>
