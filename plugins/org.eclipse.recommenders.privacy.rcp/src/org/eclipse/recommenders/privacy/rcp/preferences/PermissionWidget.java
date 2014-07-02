@@ -13,8 +13,10 @@ package org.eclipse.recommenders.privacy.rcp.preferences;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Sets.intersection;
+import static org.eclipse.recommenders.privacy.rcp.preferences.CompositeType.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,38 +51,30 @@ public class PermissionWidget {
     private Set<? extends ICategory> datumPermissionsInput;
     private CheckboxTreeViewer principalPermissionsViewer;
     private Set<? extends ICategory> principalPermissionsInput;
-    private Set<PrivatePermission> checkedPermissions;
-    private Set<PrivatePermission> shownPermissions;
+    private Set<PrivatePermission> checkedPermissions = Collections.emptySet();
+    private Set<PrivatePermission> shownPermissions = Collections.emptySet();
 
-    private ViewerFilter filter;
     private StackLayout treeViewerStack;
     private Composite stackComposite;
     private Composite datumComposite;
     private Composite principalComposite;
+    private CompositeType topComposite = DATUM;
 
-    public PermissionWidget(Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet,
-            Set<PrivatePermission> checkedPermissions, final Set<PrivatePermission> shownPermissions) {
-        this(datumSet, principalSet, checkedPermissions, shownPermissions, new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof ICategory) {
-                    ICategory category = (ICategory) element;
-                    return !intersection(shownPermissions, category.getPermissions()).isEmpty();
-                }
-                PrivatePermission privatePermission = (PrivatePermission) element;
-                return shownPermissions.contains(privatePermission);
-            }
-        });
-    }
-
-    private PermissionWidget(Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet,
-            Set<PrivatePermission> checkedPermissions, Set<PrivatePermission> shownPermissions, ViewerFilter filter) {
+    public PermissionWidget(Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet) {
         datumPermissionsInput = datumSet;
         principalPermissionsInput = principalSet;
+    }
+
+    public void setCheckedPermission(Set<PrivatePermission> checkedPermissions) {
         this.checkedPermissions = checkedPermissions;
+    }
+
+    public void setShownPermission(final Set<PrivatePermission> shownPermissions) {
         this.shownPermissions = shownPermissions;
-        this.filter = filter;
+    }
+
+    public void setTopComposite(CompositeType topComposite) {
+        this.topComposite = topComposite;
     }
 
     public Control createContents(Composite parent, String message) {
@@ -88,9 +82,9 @@ public class PermissionWidget {
         createPermissionLabel(parent);
 
         stackComposite = new Composite(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(stackComposite);
         treeViewerStack = new StackLayout();
         stackComposite.setLayout(treeViewerStack);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(stackComposite);
 
         datumComposite = createTreeViewLayout(stackComposite);
         datumPermissionsViewer = new CheckboxTreeViewer(datumComposite, SWT.BORDER);
@@ -103,8 +97,7 @@ public class PermissionWidget {
         createPermssionsView(principalPermissionsViewer, principalPermissionsInput, datumPermissionsViewer,
                 new PrincipalLabelProvider());
 
-        treeViewerStack.topControl = datumComposite;
-        stackComposite.layout();
+        updateStackTopControl();
         createButtons(parent);
         return parent;
     }
@@ -122,38 +115,37 @@ public class PermissionWidget {
         permissionLabel.setText(Messages.LABEL_GROUP_BY);
         permissionLabel.setFont(Display.getCurrent().getSystemFont());
 
-        createRadioButton(composite, Messages.LABEL_INFORMATION, true);
-        createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, false);
+        createRadioButton(composite, Messages.LABEL_INFORMATION, topComposite.equals(DATUM));
+        createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, topComposite.equals(PRINCIPAL));
     }
 
     private void createRadioButton(Composite parent, final String text, boolean selected) {
         Button button = new Button(parent, SWT.RADIO);
+        GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
         button.setText(text);
         button.setFont(Display.getCurrent().getSystemFont());
         button.setSelection(selected);
-        GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
         button.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                treeViewerStack.topControl = text.equals(Messages.LABEL_INFORMATION) ? datumComposite
-                        : principalComposite;
-                stackComposite.layout();
+                topComposite = text.equals(Messages.LABEL_INFORMATION) ? DATUM : PRINCIPAL;
+                updateStackTopControl();
             }
         });
     }
 
     private void createDescription(Composite parent, String message) {
         Label label = new Label(parent, SWT.WRAP);
-        label.setText(message);
         GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
+        label.setText(message);
     }
 
     private void createPermssionsView(final CheckboxTreeViewer sourceViewer, final Set<? extends ICategory> input,
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         GridDataFactory.fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true)
-        .applyTo(sourceViewer.getControl());
+                .applyTo(sourceViewer.getControl());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new PermissionContentProvider());
         sourceViewer.setInput(input);
@@ -161,7 +153,7 @@ public class PermissionWidget {
         sourceViewer.expandAll();
         sourceViewer.setCheckedElements(checkedPermissions.toArray());
         updateAncestors(sourceViewer);
-        sourceViewer.addFilter(filter);
+        sourceViewer.addFilter(getFilter());
         sourceViewer.setSorter(new PrivacySorter());
 
         sourceViewer.addCheckStateListener(new ICheckStateListener() {
@@ -189,40 +181,26 @@ public class PermissionWidget {
         GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
         GridDataFactory.fillDefaults().span(2, 1).applyTo(composite);
 
-        Button enableAll = new Button(composite, SWT.PUSH);
-        enableAll.setText(Messages.BUTTON_ENABLE_ALL);
-        GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(enableAll);
-        enableAll.addSelectionListener(new SelectionAdapter() {
+        createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, true);
+        createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, false);
+    }
+
+    private void createChangeAllButton(Composite composite, String label, final boolean checkedState) {
+        Button button = new Button(composite, SWT.PUSH);
+        GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
+        button.setText(label);
+        button.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 for (ICategory datum : datumPermissionsInput) {
                     if (!datum.getPermissions().isEmpty()) {
-                        datumPermissionsViewer.setSubtreeChecked(datum, true);
+                        datumPermissionsViewer.setSubtreeChecked(datum, checkedState);
                         principalPermissionsViewer.setGrayed(datum, false);
                     }
                 }
                 for (ICategory principal : principalPermissionsInput) {
-                    principalPermissionsViewer.setSubtreeChecked(principal, true);
-                    principalPermissionsViewer.setGrayed(principal, false);
-                }
-                updateAncestors();
-            }
-        });
-
-        Button disableAll = new Button(composite, SWT.PUSH);
-        disableAll.setText(Messages.BUTTON_DISABLE_ALL);
-        GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(disableAll);
-        disableAll.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                for (ICategory datum : datumPermissionsInput) {
-                    datumPermissionsViewer.setSubtreeChecked(datum, false);
-                    datumPermissionsViewer.setGrayed(datum, false);
-                }
-                for (ICategory principal : principalPermissionsInput) {
-                    principalPermissionsViewer.setSubtreeChecked(principal, false);
+                    principalPermissionsViewer.setSubtreeChecked(principal, checkedState);
                     principalPermissionsViewer.setGrayed(principal, false);
                 }
                 updateAncestors();
@@ -235,6 +213,31 @@ public class PermissionWidget {
         GridLayoutFactory.fillDefaults().applyTo(composite);
         GridDataFactory.fillDefaults().applyTo(composite);
         return composite;
+    }
+
+    private ViewerFilter getFilter() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof ICategory) {
+                    ICategory category = (ICategory) element;
+                    return !intersection(shownPermissions, category.getPermissions()).isEmpty();
+                }
+                PrivatePermission privatePermission = (PrivatePermission) element;
+                return shownPermissions.contains(privatePermission);
+            }
+        };
+    }
+
+    private void updateStackTopControl() {
+        if (topComposite.equals(DATUM)) {
+            treeViewerStack.topControl = datumComposite;
+        } else if (topComposite.equals(PRINCIPAL)) {
+            treeViewerStack.topControl = principalComposite;
+        }
+
+        stackComposite.layout();
     }
 
     private void updateAncestors(final CheckboxTreeViewer viewer) {
@@ -273,7 +276,7 @@ public class PermissionWidget {
         return getPermissions(true);
     }
 
-    public Set<PrivatePermission> getDispprovedPermissions() {
+    public Set<PrivatePermission> getDisapprovedPermissions() {
         return getPermissions(false);
     }
 

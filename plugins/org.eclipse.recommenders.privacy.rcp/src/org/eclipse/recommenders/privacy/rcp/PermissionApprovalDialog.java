@@ -10,6 +10,8 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
+import static org.eclipse.recommenders.privacy.rcp.preferences.CompositeType.PRINCIPAL;
+
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -50,9 +52,12 @@ public class PermissionApprovalDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        permissionWidget = new PermissionWidget(datumSet, principalSet, loadPermissions(principalSet),
-                detectedPermissions);
+        permissionWidget = new PermissionWidget(datumSet, principalSet);
+        permissionWidget.setCheckedPermission(loadPermissions(principalSet));
+        permissionWidget.setShownPermission(detectedPermissions);
+        permissionWidget.setTopComposite(PRINCIPAL);
         permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
+
         Link link = new Link(container, SWT.NONE);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(Constants.PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.PREF_LINK_MESSAGE, linkToPreferencePage));
@@ -84,7 +89,7 @@ public class PermissionApprovalDialog extends Dialog {
     @Override
     protected void okPressed() {
         SettingsPersistence.store(service, permissionWidget.getApprovedPermissions(),
-                permissionWidget.getDispprovedPermissions());
+                permissionWidget.getDisapprovedPermissions());
         super.okPressed();
     }
 }

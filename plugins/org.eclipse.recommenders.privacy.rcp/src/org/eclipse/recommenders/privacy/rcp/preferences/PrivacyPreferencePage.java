@@ -50,9 +50,10 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
     protected Control createContents(Composite parent) {
         Set<DatumCategory> datumCategorySet = extensionReader.getDatumCategory();
         Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
-        permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet,
-                loadPermissions(principalCategorySet),
-                SettingsPersistence.getCategoriesPermissions(principalCategorySet));
+        permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet);
+        permissionWidget.setCheckedPermission(loadPermissions(principalCategorySet));
+        permissionWidget.setShownPermission(SettingsPersistence.getCategoriesPermissions(principalCategorySet));
+
         return permissionWidget.createContents(parent, Messages.PREFPAGE_DESCRIPTION);
     }
 
@@ -67,7 +68,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
     @Override
     public void performApply() {
         SettingsPersistence.store(service, permissionWidget.getApprovedPermissions(),
-                permissionWidget.getDispprovedPermissions());
+                permissionWidget.getDisapprovedPermissions());
     }
 
     @Override
