@@ -175,9 +175,9 @@ public class ExtensionReader {
                         && isValidAttribute(policy)) {
                     PrivatePermission permission = new PrivatePermission(privateDatumMap.get(datumId),
                             principalMap.get(principalId), purpose, policy);
-                    datumCategoryMap.get(datumId).addPermission(permission);
+                    datumCategoryMap.get(datumId).addPermissions(permission);
                     if (principalCategoryMap.containsKey(principalId)) {
-                        principalCategoryMap.get(principalId).addPermission(permission);
+                        principalCategoryMap.get(principalId).addPermissions(permission);
                     }
                 } else {
                     LOG.error("Failed to read permissions, invalid or missing attribute"); //$NON-NLS-1$

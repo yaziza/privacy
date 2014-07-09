@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class DatumCategory implements ICategory {
 
-    private final Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
+    private final Set<PrivatePermission> permissionSet = new HashSet<PrivatePermission>();
     private final PrivateDatum datum;
 
     public DatumCategory(PrivateDatum datum) {
@@ -61,11 +61,13 @@ public class DatumCategory implements ICategory {
 
     @Override
     public Set<PrivatePermission> getPermissions() {
-        return Collections.unmodifiableSet(permissions);
+        return Collections.unmodifiableSet(permissionSet);
     }
 
-    public void addPermission(PrivatePermission permission) {
-        permissions.add(permission);
+    public void addPermissions(PrivatePermission... permissions) {
+        for (PrivatePermission permission : permissions) {
+            permissionSet.add(permission);
+        }
     }
 
     @Override

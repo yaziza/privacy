@@ -6,6 +6,7 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-Name: Code Recommenders Privacy Preferences UI Tests (Incubator)
 Bundle-Vendor: Eclipse Code Recommenders
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.hamcrest,
+Require-Bundle: org.eclipse.swtbot.eclipse.finder,
+ org.hamcrest,
  org.junit,
  org.mockito

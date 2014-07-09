@@ -46,6 +46,11 @@ import org.eclipse.swt.widgets.Label;
 import com.google.common.base.Predicate;
 
 public class PermissionWidget {
+    private static final String SWT_ID = "id"; //$NON-NLS-1$
+    private static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInterestedParty"; //$NON-NLS-1$
+    private static final String GROUP_BY_INFORMATION_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInformation"; //$NON-NLS-1$
+    private static final String DISABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.disableAll"; //$NON-NLS-1$
+    private static final String ENABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.enableAll"; //$NON-NLS-1$
 
     private CheckboxTreeViewer datumPermissionsViewer;
     private Set<? extends ICategory> datumPermissionsInput;
@@ -121,14 +126,17 @@ public class PermissionWidget {
         permissionLabel.setText(Messages.LABEL_GROUP_BY);
         permissionLabel.setFont(Display.getCurrent().getSystemFont());
 
-        createRadioButton(composite, Messages.LABEL_INFORMATION, topComposite.equals(DATUM));
-        createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, topComposite.equals(PRINCIPAL));
+        createRadioButton(composite, Messages.LABEL_INFORMATION, GROUP_BY_INFORMATION_BUTTON_ID,
+                topComposite.equals(DATUM));
+        createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, GROUP_BY_INTERESTED_PARTY_BUTTON_ID,
+                topComposite.equals(PRINCIPAL));
     }
 
-    private void createRadioButton(Composite parent, final String text, boolean selected) {
+    private void createRadioButton(Composite parent, final String text, String id, boolean selected) {
         Button button = new Button(parent, SWT.RADIO);
         GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
         button.setText(text);
+        button.setData(SWT_ID, id);
         button.setFont(Display.getCurrent().getSystemFont());
         button.setSelection(selected);
         button.addSelectionListener(new SelectionAdapter() {
@@ -181,14 +189,15 @@ public class PermissionWidget {
         GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
         GridDataFactory.fillDefaults().span(2, 1).applyTo(composite);
 
-        createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, true);
-        createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, false);
+        createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, ENABLE_ALL_BUTTON_ID, true);
+        createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, DISABLE_ALL_BUTTON_ID, false);
     }
 
-    private void createChangeAllButton(Composite composite, String label, final boolean checkedState) {
+    private void createChangeAllButton(Composite composite, String label, String id, final boolean checkedState) {
         Button button = new Button(composite, SWT.PUSH);
         GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
         button.setText(label);
+        button.setData(SWT_ID, id);
         button.addSelectionListener(new SelectionAdapter() {
 
             @Override
