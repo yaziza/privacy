@@ -80,7 +80,7 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
 
         Button uuidButton = new Button(composite, SWT.PUSH);
         GridDataFactory.swtDefaults().applyTo(uuidButton);
-        uuidButton.setText("generate ID");
+        uuidButton.setText(Messages.BUTTON_GENERATE);
 
         final Text text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.swtDefaults().applyTo(text);

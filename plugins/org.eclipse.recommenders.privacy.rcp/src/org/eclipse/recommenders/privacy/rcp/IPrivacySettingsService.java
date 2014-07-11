@@ -84,7 +84,7 @@ public interface IPrivacySettingsService {
     /**
      * Retrieves the User ID from a file
      *
-     * @return: @link{UUID} the User ID
+     * @return: @link{UUID} the User ID. Never {@code null}.
      */
     UUID getUserId();
 }

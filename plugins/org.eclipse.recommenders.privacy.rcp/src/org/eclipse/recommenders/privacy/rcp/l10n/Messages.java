@@ -33,10 +33,12 @@ public class Messages extends NLS {
 
     public static String BUTTON_ENABLE_ALL;
     public static String BUTTON_DISABLE_ALL;
+    public static String BUTTON_GENERATE;
 
     public static String TOOLTIP_INTERESTED_PARTY;
 
     public static String PREF_LINK_MESSAGE;
+
 
     static {
         // initialize resource bundle

@@ -14,7 +14,6 @@
 			class="org.eclipse.recommenders.privacy.rcp.preferences.UserIdPreferencePage"
 			name="%preferencePages.userId.name"/>
 	</extension>
-
 	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
 			icon="icons/javaVersion.gif"

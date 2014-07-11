@@ -11,16 +11,26 @@
 package org.eclipse.recommenders.privacy.rcp;
 
 import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 public class PrivacySettingsServiceTest {
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public final void testLoadDefaultPreferences() {
@@ -372,5 +382,74 @@ public class PrivacySettingsServiceTest {
         assertThat(sut.isApproved("com.example.third"), is(false));
         assertThat(sut.isApproved("com.example.third", "some.id"), is(false));
         assertThat(sut.isApproved("com.example.third", "some.id", "other.id"), is(false));
+    }
+
+    @Test
+    public final void testGetUserIdIsNotNull() throws IOException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
+
+        UUID userId = sut.getUserId();
+
+        assertThat(userId, is(notNullValue()));
+    }
+
+    @Test
+    public final void testGetUserIdIsIdempotent() throws IOException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
+
+        UUID firstUserId = sut.getUserId();
+        UUID secondUserId = sut.getUserId();
+
+        assertThat(secondUserId, is(equalTo(firstUserId)));
+    }
+
+    @Test
+    public final void testGenerateUserId() throws IOException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
+
+        UUID firstUserId = sut.getUserId();
+        sut.generateUserId();
+        UUID secondUserId = sut.getUserId();
+
+        assertThat(secondUserId, is(not(equalTo(firstUserId))));
+    }
+
+    @Test
+    public final void testGetUserIdWithWriteProtectedUserIdFile() throws IOException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        File writeProtectedFolder = folder.newFolder();
+        writeProtectedFolder.setWritable(false);
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, writeProtectedFolder);
+
+        assertThat(writeProtectedFolder.canWrite(), is(false));
+
+        UUID firstUserId = sut.getUserId();
+
+        assertThat(firstUserId, is(notNullValue()));
+
+        UUID secondUserId = sut.getUserId();
+
+        assertThat(secondUserId, is(equalTo(firstUserId)));
+    }
+
+    @Test
+    public final void testGetUserIdWithReadProtectedUserIdFile() throws IOException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        File userIdFile = folder.newFile();
+        PrivacySettingsService firstSession = new PrivacySettingsService(preferenceMock, userIdFile);
+
+        firstSession.generateUserId();
+
+        userIdFile.setReadable(false);
+        assertThat(userIdFile.canRead(), is(false));
+
+        PrivacySettingsService secondSession = new PrivacySettingsService(preferenceMock, userIdFile);
+
+        UUID firstUserId = secondSession.getUserId();
+
+        assertThat(firstUserId, is(notNullValue()));
     }
 }
