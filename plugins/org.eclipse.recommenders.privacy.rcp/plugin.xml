@@ -7,11 +7,11 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page id="org.eclipse.recommenders.privacy.rcp.preferencesPages.privacy"
 			category="org.eclipse.ui.preferencePages.Workbench"
-			class="org.eclipse.recommenders.privacy.rcp.preferences.PrivacyPreferencePage"
+			class="org.eclipse.recommenders.internal.privacy.rcp.preferences.PrivacyPreferencePage"
 			name="%preferencePages.privacy.name"/>
 		<page id="org.eclipse.recommenders.privacy.rcp.preferencesPages.userId"
 			category="org.eclipse.recommenders.privacy.rcp.preferencesPages.privacy"
-			class="org.eclipse.recommenders.privacy.rcp.preferences.UserIdPreferencePage"
+			class="org.eclipse.recommenders.internal.privacy.rcp.preferences.UserIdPreferencePage"
 			name="%preferencePages.userId.name"/>
 	</extension>
 	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
@@ -30,6 +30,6 @@
 			description="%datums.userId.description"/>
 	</extension>
 	<extension point="org.eclipse.ui.startup">
-		<startup class="org.eclipse.recommenders.privacy.rcp.Startup"/>
+		<startup class="org.eclipse.recommenders.internal.privacy.rcp.Startup"/>
 	</extension>
 </plugin>

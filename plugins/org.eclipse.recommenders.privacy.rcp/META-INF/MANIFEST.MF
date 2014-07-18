@@ -10,8 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.di,
- org.eclipse.e4.core.di.extensions,
- javax.inject
+ org.eclipse.e4.core.di.extensions
 Import-Package: com.google.common.annotations;version="[15.0.0,16.0.0)",
  com.google.common.base;version="[15.0.0,16.0.0)",
  com.google.common.collect;version="[15.0.0,16.0.0)",

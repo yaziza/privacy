@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.eclipse.recommenders.privacy.rcp">
-   <implementation class="org.eclipse.recommenders.privacy.rcp.PrivacySettingsServiceFactory"/>
+   <implementation class="org.eclipse.recommenders.internal.privacy.rcp.services.PrivacySettingsServiceFactory"/>
    <service>
       <provide interface="org.eclipse.e4.core.contexts.IContextFunction"/>
    </service>
