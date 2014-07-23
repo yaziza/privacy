@@ -6,7 +6,12 @@
          <meta.schema plugin="org.eclipse.recommenders.privacy.rcp" id="org.eclipse.recommenders.privacy.rcp.permissions" name="Permissions"/>
       </appinfo>
       <documentation>
-         This extension point allow third party plug-ins to request permission to access a private datum (e.g., the Stack-trace)
+         &lt;p&gt;
+  This extension point allows plug-ins to request permission to access a private datum (e.g., the IP address) on behalf of a principal.
+&lt;/p&gt;
+&lt;p&gt;
+  It it important to note that extending this extension point by itself does &lt;em&gt;not&lt;/em&gt; grant permission to access the requested private datum on behalf of a principal; such a extension merely requests a permission from the user. Whether such a request has been granted &lt;em&gt;must&lt;/em&gt; be checked (using the privacy framework‘s &lt;code&gt;org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService&lt;/code&gt;) each time before a private datum is send to the principal requesting the permission, as permissions can be approved and disapproved by the user at any time.
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -52,28 +57,30 @@
          <attribute name="datumId" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique identifier of a private datum
+                  The unique identifier of a private datum.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="principalId" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique identifier of a principal
+                  The unique identifier of a principal.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="purpose" type="string" use="required">
             <annotation>
                <documentation>
-                  Permission purpose
+                  The purpose of sending the private datum to the principal.
+This should describe clearly why permission to access the datum is requested by the principal and how the data will be proceeds by it.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="policyUri" type="string" use="required">
             <annotation>
                <documentation>
-                  Uri of a privacy policy of the principal
+                  Link to the privacy policy.
+This can either point to a broad, general-purpose policy used by the principal or to a policy describing how the particular private datum is processed by the principal.
                </documentation>
             </annotation>
          </attribute>
@@ -94,38 +101,22 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         The following is an example of the permission extension point usage:
-&lt;p&gt;
-&lt;pre&gt;
-   &lt;extension
-         point=&quot;org.eclipse.recommenders.privacy.rcp.permissions&quot;&gt;
-      &lt;permission
-            datumId=&quot;com.example.xyz.datums.somePrivateDatumId&quot;
-            purpose=&quot;purpose&quot;&gt;
-      &lt;/permission&gt;
-   &lt;/extension&gt;
-&lt;/pre&gt;
+         &lt;p&gt;
+  The following requests a permission to access a private datum on behalf of a principal:
 &lt;/p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.recommenders.privacy.rcp.permissions&quot;&gt;
+  &lt;permission
+    datumId=&quot;org.example.plugin.datums.examplePrivateDatum&quot;
+    principalId=&quot;com.example.plugin.principals.examplePrincipal&quot;
+    purpose=&quot;The Example Projects uses the example private datum to ….&quot;
+    policyUri=&quot;http://www.example.com/policy&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="apiinfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="implementation"/>
-      </appinfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
 
 
 </schema>

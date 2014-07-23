@@ -12,79 +12,89 @@ package org.eclipse.recommenders.privacy.rcp;
 
 import java.util.UUID;
 
+import org.eclipse.recommenders.internal.privacy.rcp.data.Principal;
+import org.eclipse.recommenders.internal.privacy.rcp.data.PrivateDatum;
+import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;
+
 /**
- * Class for storing/loading @link{PrivatePermission} @link{PermissionState}. The Preference String is composed from a
- * datumId{@code datumId} and a principalId{@code principalId} followed by the @link{PermissionState}. The ID's are
- * stored below a root node called "approval".
+ * Class for storing/loading {@link PrivatePermission} {@link PermissionState}. The Preference String is composed from a
+ * {@code datumId} and a {@code principalId} followed by the {@link PermissionState}. The ID's are stored below a root
+ * node called "approval".
  *
  * Example:
  *
+ * <pre>
  * approval/org.eclipse.recommenders.privacy.datums.ipAddress/com.example.first=+;
  * approval/org.eclipse.recommenders.privacy.datums.ipAddress/com.example.second=-;
+ * </pre>
  *
- * The @link{Principal} with id : "com.example.first" is allowed to send the @link{PrivateDatum with id:
+ * The {@link Principal} with ID "com.example.first" is allowed to send the {@link PrivateDatum} with ID
  * "org.eclipse.recommenders.privacy.datums.ipAddress" and "com.example.second" is not.
  *
- * @author Yasser Aziza
+ * You can obtain an instance of the {@link IPrivacySettingsService} from the Eclipse context:
  *
+ * <pre>
+ * IEclipseContext context = EclipseContextFactory.getServiceContext(bundleContext);
+ * IPrivacySettingsService service = context.get(IPrivacySettingsService.class);
+ * </pre>
  */
 public interface IPrivacySettingsService {
 
     /**
-     * Changes the @link{PrivateDatum} @link{PermissionState} of the @link{Principal}.
-     *
+     * Changes the {@link PrivateDatum} {@link PermissionState} of the {@link Principal}.
      */
     void setState(String principalId, String datumId, PermissionState state);
 
     /**
-     * Gets the @link{PrivateDatum} @link{PermissionState} of the @link{Principal}.
+     * Gets the {@link PrivateDatum} {@link PermissionState} of the {@link Principal}.
      *
-     * @return returns the @link{PrivateDatum @link{PermissionState}
+     * @return the {@link PrivateDatum} {@link PermissionState}
      */
     PermissionState getState(String principalId, String datumId);
 
     /**
-     * Allows the @link{Principal} to send the @link{PrivateDatum} with ID{@code datumId}.
-     *
+     * Allows the {@link Principal} to send the {@link PrivateDatum} with {@code datumId}.
      */
     void approve(String principalId, String datumId);
 
     /**
-     * Disallows the @link{Principal} to send the @link{PrivateDatum} with ID{@code datumId}.
-     *
+     * Disallows the {@link Principal} to send the {@link PrivateDatum} with {@code datumId}.
      */
     void disapprove(String principalId, String datumId);
 
     /**
-     * Tests if all data access requested by the principals with ID{@code principalId} has been allowed.
+     * Tests if all data access requested by the principals with {@code principalId} has been allowed.
      *
-     * @returns <code>true</code> if all data access are allowed.
+     * @return <code>true</code> if all data access are allowed.
      */
     boolean isAllApproved(String principalId);
 
     /**
-     * Tests if sending the {@link PrivateDatum} with ID {@code datumId} by the @link{Principal} is allowed.
+     * Tests if sending the {@link PrivateDatum} with {@code datumId} by the {@link Principal} is allowed.
      *
-     * @return returns <code>true</code> when the sending the {@link PrivateDatum} is allowed
+     * @return <code>true</code> when the sending the {@link PrivateDatum} is allowed
      */
     boolean isApproved(String principalId, String... datumsIds);
 
     /**
-     * Tests if sending the {@link PrivateDatum} with ID {@code datumId} is never approved for all @link{Principal}.
+     * Tests if sending the {@link PrivateDatum} with {@code datumId} is never approved for all {@link Principal}.
      *
-     * @return returns <code>true</code> when the sending the {@link PrivateDatum} is never approved.
+     * @return <code>true</code> when the sending the {@link PrivateDatum} is never approved.
      */
     boolean isNeverApproved(String datumId);
 
     /**
-     * Generates and store a User ID into a file.
+     * Generates and persists a User ID.
      */
     void generateUserId();
 
     /**
-     * Retrieves the User ID from a file
+     * Retrieves the persistent User ID.
      *
-     * @return: @link{UUID} the User ID. Never {@code null}.
+     * The user ID is purely random. It only serves to uniquely identify a user; no additional information about the
+     * user (e.g., IP address or local information) is leaked.
+     *
+     * @return the User ID. Never {@code null}.
      */
     UUID getUserId();
 }

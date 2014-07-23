@@ -6,7 +6,9 @@
          <meta.schema plugin="org.eclipse.recommenders.privacy.rcp" id="org.eclipse.recommenders.privacy.rcp.principal" name="Principal"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         &lt;p&gt;
+  This extension point allows plug-ins to register a principal (e.g., a project or company) with the privacy framework.
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -52,28 +54,29 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique identifier
+                  An identifer. It &lt;em&gt;must&lt;/em&gt; be unique among all principals.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  A human-readable principal name
+                  A human-readable name for this principal.
+In most cases, this will be the name of a project or company.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="description" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  A longer description of this principal. Useful information to include in this description is the organizational status of principal (non-profit organization, for-profit company, individual, etc.) as well as the country the principal is located in.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="icon" type="string">
             <annotation>
                <documentation>
-                  An option image for the permission &quot;opt-in&quot; popup dialog and the privycy preference page
+                  An optional icon visualizing this principal, e.g., a project or company logo.
                </documentation>
                <appinfo>
                   <meta.attribute kind="resource"/>
@@ -88,7 +91,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         0.1.0
       </documentation>
    </annotation>
 
@@ -97,27 +100,21 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+  The following registers a principal with the privacy framework:
+&lt;/p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.recommenders.privacy.rcp.principals&quot;&gt;
+  &lt;principal id=&quot;com.example.plugin.principals.examplePrincipal&quot;
+     name=&quot;Example Project&quot;
+     description=&quot;The Example Project is a non-profit organization which ….&quot;
+     icon=&quot;icons/principal.png&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="apiinfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="implementation"/>
-      </appinfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
 
 
 </schema>
