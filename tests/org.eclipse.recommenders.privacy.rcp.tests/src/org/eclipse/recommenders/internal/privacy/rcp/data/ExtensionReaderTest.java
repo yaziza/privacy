@@ -20,7 +20,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IContributor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.junit.Test;
 
@@ -42,6 +41,8 @@ public class ExtensionReaderTest {
     private static final String ICON_ATTRIBUTE = "icon";
     private static final String PURPOSE_ATTRIBUTE = "purpose";
     private static final String POLICY_URI_ATTRIBUTE = "policyUri";
+
+    private static final String DEFAULT_DATUM_ICON = "icons/obj16/defaultDatum.gif";
 
     private IConfigurationElement mockConfigElement(String name, ImmutableMap<String, String> map) {
         IConfigurationElement element = mock(IConfigurationElement.class);
@@ -89,7 +90,7 @@ public class ExtensionReaderTest {
         assertThat(datum.getDescription(), is("some description"));
 
         ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.example.privacy",
-                ISharedImages.IMG_OBJ_ELEMENT);
+                DEFAULT_DATUM_ICON);
         assertThat(datum.getIcon(), is(imageDescriptor));
     }
 

@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 
 public class PermissionContentProvider implements ITreeContentProvider {
+
     private Set<? extends ICategory> categorySet;
 
     @SuppressWarnings("unchecked")

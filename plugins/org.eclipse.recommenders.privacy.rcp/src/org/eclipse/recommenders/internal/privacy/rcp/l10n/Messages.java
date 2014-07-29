@@ -27,6 +27,20 @@ public class Messages extends NLS {
     public static String APPROVAL_DIALOG_TITLE;
     public static String APPROVAL_DIALOG_MESSAGE;
 
+    public static String APPROVAL_WIZARD_TITLE;
+
+    public static String WIZARD_INTRO_PAGE_TITLE;
+    public static String WIZARD_INTRO_PAGE_DESCRIPTION;
+    public static String WIZARD_INTRO_PAGE_CONTENT;
+
+    public static String WIZARD_INTRO_PAGE_PREFS_LINK_DESCRIPTION;
+
+    public static String WIZARD_INTRO_PAGE_WEBSITE_LINK_DESCRIPTION;
+    public static String WIZARD_INTRO_PAGE_LINK_URI;
+
+    public static String WIZARD_PERMISSION_PAGE_TITLE;
+    public static String WIZARD_PERMISSION_PAGE_DESCRIPTION;
+
     public static String LABEL_GROUP_BY;
     public static String LABEL_INFORMATION;
     public static String LABEL_INTERESTED_PARTY;
@@ -35,6 +49,8 @@ public class Messages extends NLS {
     public static String BUTTON_ENABLE_ALL;
     public static String BUTTON_DISABLE_ALL;
     public static String BUTTON_GENERATE;
+    public static String BUTTON_OK;
+    public static String BUTTON_NOT_NOW;
 
     public static String TOOLTIP_INTERESTED_PARTY;
 

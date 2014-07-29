@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Label;
 import com.google.common.base.Predicate;
 
 public class PermissionWidget {
+
     private static final String SWT_ID = "id"; //$NON-NLS-1$
     private static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInterestedParty"; //$NON-NLS-1$
     private static final String GROUP_BY_INFORMATION_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInformation"; //$NON-NLS-1$

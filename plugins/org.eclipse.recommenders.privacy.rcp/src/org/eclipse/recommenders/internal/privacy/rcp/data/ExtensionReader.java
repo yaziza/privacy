@@ -20,7 +20,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +91,7 @@ public class ExtensionReader {
                 String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
                 ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId,
-                        icon == null ? ISharedImages.IMG_OBJ_ELEMENT : icon);
+                        icon == null ? DEFAULT_DATUM_ICON : icon);
 
                 if (isValidAttribute(datumId) && isValidAttribute(datumName) && isValidAttribute(datumDescription)) {
                     PrivateDatum datum = new PrivateDatum(datumId, datumName, datumDescription, imageDescriptor);
@@ -134,7 +133,7 @@ public class ExtensionReader {
                 String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
                 ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(icon == null ? BUNDLE_ID
-                        : pluginId, icon == null ? PREF_FEATURE_ICON : icon);
+                        : pluginId, icon == null ? DEFAULT_PRINCIPAL_ICON : icon);
 
                 if (isValidAttribute(principalId) && isValidAttribute(principalName)
                         && isValidAttribute(principalDescription)) {

@@ -16,7 +16,7 @@
 	</extension>
 	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
-			icon="icons/javaVersion.gif"
+			icon="icons/obj16/javaVersion.gif"
 			name="%datums.javaVersion.name"
 			description="%datums.javaVersion.description"/>
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.inet4Address"

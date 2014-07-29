@@ -16,6 +16,7 @@ import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeTyp
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivacySettingsSerciveHelper;
@@ -28,6 +29,7 @@ import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Link;
@@ -82,6 +84,19 @@ public class PermissionApprovalDialog extends Dialog {
 
         Dialog.applyDialogFont(container);
         return container;
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+
+        Button ok = getButton(IDialogConstants.OK_ID);
+        ok.setText(Messages.BUTTON_OK);
+        setButtonLayoutData(ok);
+
+        Button cancel = getButton(IDialogConstants.CANCEL_ID);
+        cancel.setText(Messages.BUTTON_NOT_NOW);
+        setButtonLayoutData(cancel);
     }
 
     @Override

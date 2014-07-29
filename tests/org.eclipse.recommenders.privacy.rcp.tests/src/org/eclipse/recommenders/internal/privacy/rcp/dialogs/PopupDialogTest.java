@@ -36,6 +36,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotRadio;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,9 +58,12 @@ public class PopupDialogTest {
 
     private IPrivacySettingsService service;
 
+    private PermissionApprovalDialog sut;
+
     @Before
     public void setUp() {
         service = mock(IPrivacySettingsService.class);
+        // when(service.isActivated()).thenReturn(true);
 
         principal = new Principal("com.example.firstPrincipal", "some principal", "some principal description", null);
         firstDatum = new PrivateDatum("com.example.firstDatum", "first datum", "first datum description", null);
@@ -72,6 +76,10 @@ public class PopupDialogTest {
         principalCategory = new PrincipalCategory(principal);
     }
 
+    public SWTBot createBot(Shell shell) {
+        return new SWTBot(shell);
+    }
+
     public PermissionApprovalDialog createSUT(Set<DatumCategory> datumSet, Set<PrincipalCategory> principalSet,
             Set<PrivatePermission> permissionSet) {
         PermissionApprovalDialog popupDialog = new PermissionApprovalDialog(new Shell(), service, datumSet,
@@ -81,13 +89,9 @@ public class PopupDialogTest {
         return popupDialog;
     }
 
-    public SWTBot createBot(Shell shell) {
-        return new SWTBot(shell);
-    }
-
     @Test
     public void testDialogButtonsExists() {
-        PermissionApprovalDialog sut = createSUT(new HashSet<DatumCategory>(), new HashSet<PrincipalCategory>(),
+        sut = createSUT(new HashSet<DatumCategory>(), new HashSet<PrincipalCategory>(),
                 new HashSet<PrivatePermission>());
         SWTBot bot = createBot(sut.getShell());
 
@@ -110,7 +114,7 @@ public class PopupDialogTest {
         when(service.isNeverApproved(firstDatum.getId())).thenReturn(true);
         when(service.isNeverApproved(secondDatum.getId())).thenReturn(true);
 
-        PermissionApprovalDialog sut = createSUT(datumSet, principalSet, permissionSet);
+        sut = createSUT(datumSet, principalSet, permissionSet);
         SWTBot bot = createBot(sut.getShell());
 
         SWTBotTree tree = bot.tree(0);
@@ -144,7 +148,7 @@ public class PopupDialogTest {
         when(service.isNeverApproved(firstDatum.getId())).thenReturn(true);
         when(service.isNeverApproved(secondDatum.getId())).thenReturn(true);
 
-        PermissionApprovalDialog sut = createSUT(datumSet, principalSet, permissionSet);
+        sut = createSUT(datumSet, principalSet, permissionSet);
         SWTBot bot = createBot(sut.getShell());
 
         SWTBotTree tree = bot.tree(0);
@@ -185,7 +189,7 @@ public class PopupDialogTest {
         when(service.isNeverApproved(firstDatum.getId())).thenReturn(true);
         when(service.isNeverApproved(secondDatum.getId())).thenReturn(true);
 
-        PermissionApprovalDialog sut = createSUT(datumSet, principalSet, permissionSet);
+        sut = createSUT(datumSet, principalSet, permissionSet);
         SWTBot bot = createBot(sut.getShell());
 
         deselectDefaultSelection(bot, 1);
@@ -243,7 +247,7 @@ public class PopupDialogTest {
         when(service.isNeverApproved(firstDatum.getId())).thenReturn(false);
         when(service.isNeverApproved(secondDatum.getId())).thenReturn(true);
 
-        PermissionApprovalDialog sut = createSUT(datumSet, principalSet, permissionSet);
+        sut = createSUT(datumSet, principalSet, permissionSet);
         SWTBot bot = createBot(sut.getShell());
 
         SWTBotTree tree = bot.tree(0);
@@ -266,7 +270,7 @@ public class PopupDialogTest {
 
         when(service.isNeverApproved(firstDatum.getId())).thenReturn(false);
 
-        PermissionApprovalDialog sut = createSUT(datumSet, principalSet, permissionSet);
+        sut = createSUT(datumSet, principalSet, permissionSet);
         SWTBot bot = createBot(sut.getShell());
 
         SWTBotTree tree = bot.tree(0);
@@ -285,7 +289,7 @@ public class PopupDialogTest {
         when(service.isNeverApproved(firstDatum.getId())).thenReturn(false);
         when(service.isNeverApproved(secondDatum.getId())).thenReturn(true);
 
-        PermissionApprovalDialog sut = createSUT(datumSet, principalSet, permissionSet);
+        sut = createSUT(datumSet, principalSet, permissionSet);
         SWTBot bot = createBot(sut.getShell());
 
         SWTBotTree tree = bot.tree(0);
@@ -315,5 +319,10 @@ public class PopupDialogTest {
                 button.setSelection(false);
             }
         });
+    }
+
+    @After
+    public void after() {
+        sut.close();
     }
 }
