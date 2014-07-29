@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.recommenders.internal.privacy.rcp.data.DatumCategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ExtensionReader;
@@ -54,8 +55,10 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet);
         permissionWidget.setCheckedPermission(loadPermissions(principalCategorySet));
         permissionWidget.setShownPermission(PrivacySettingsSerciveHelper.getCategoriesPermissions(principalCategorySet));
+        permissionWidget.createContents(parent, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
 
-        return permissionWidget.createContents(parent, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
+        Dialog.applyDialogFont(parent);
+        return parent;
     }
 
     public void checkElements(Set<PrivatePermission> permissions) {

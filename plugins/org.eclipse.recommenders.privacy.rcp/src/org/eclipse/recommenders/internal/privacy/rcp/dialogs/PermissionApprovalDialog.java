@@ -58,6 +58,7 @@ public class PermissionApprovalDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
+
         permissionWidget = new PermissionWidget(datumSet, principalSet);
         permissionWidget.setCheckedPermission(loadPermissions(principalSet));
         permissionWidget.setShownPermission(detectedPermissions);
@@ -78,6 +79,8 @@ public class PermissionApprovalDialog extends Dialog {
                 dialog.open();
             }
         });
+
+        Dialog.applyDialogFont(container);
         return container;
     }
 

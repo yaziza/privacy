@@ -30,6 +30,7 @@ public class Messages extends NLS {
     public static String LABEL_GROUP_BY;
     public static String LABEL_INFORMATION;
     public static String LABEL_INTERESTED_PARTY;
+    public static String LABEL_USER_ID;
 
     public static String BUTTON_ENABLE_ALL;
     public static String BUTTON_DISABLE_ALL;

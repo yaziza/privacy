@@ -27,6 +27,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -52,13 +53,15 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
     @Override
     protected Control createContents(Composite parent) {
         createDescription(parent, Messages.USERID_PREFPAGE_DESCRIPTION);
-        return createUserIdLabel(parent);
+        createUserIdLabel(parent);
+        applyDialogFont(parent);
+        return parent;
     }
 
     private void createDescription(Composite parent, String message) {
         Link link = new Link(parent, SWT.WRAP);
         GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).grab(true, false)
-        .applyTo(link);
+                .applyTo(link);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.USERID_PREFPAGE_DESCRIPTION, linkToPreferencePage));
 
@@ -73,17 +76,20 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private Control createUserIdLabel(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
-        GridDataFactory.fillDefaults().grab(false, true).span(2, 1).applyTo(composite);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
+        GridDataFactory.fillDefaults().grab(false, true).span(3, 1).applyTo(composite);
+
+        Label label = new Label(composite, SWT.WRAP);
+        GridDataFactory.swtDefaults().applyTo(label);
+        label.setText(Messages.LABEL_USER_ID);
+
+        final Text text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER | SWT.READ_ONLY);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(text);
+        text.setText(service.getUserId().toString());
 
         Button uuidButton = new Button(composite, SWT.PUSH);
         GridDataFactory.swtDefaults().applyTo(uuidButton);
         uuidButton.setText(Messages.BUTTON_GENERATE);
-
-        final Text text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER | SWT.READ_ONLY);
-        GridDataFactory.swtDefaults().applyTo(text);
-        text.setText(service.getUserId().toString());
-
         uuidButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -92,6 +98,7 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
                 text.setText(service.getUserId().toString());
             }
         });
+
         return parent;
     }
 }

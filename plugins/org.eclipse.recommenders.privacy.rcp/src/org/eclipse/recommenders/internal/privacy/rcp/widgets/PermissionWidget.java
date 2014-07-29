@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -40,7 +41,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 import com.google.common.base.Predicate;
@@ -104,6 +104,8 @@ public class PermissionWidget {
 
         updateStackTopControl();
         createButtons(parent);
+
+        Dialog.applyDialogFont(parent);
         return parent;
     }
 
@@ -124,7 +126,6 @@ public class PermissionWidget {
 
         Label permissionLabel = new Label(composite, SWT.NONE);
         permissionLabel.setText(Messages.LABEL_GROUP_BY);
-        permissionLabel.setFont(Display.getCurrent().getSystemFont());
 
         createRadioButton(composite, Messages.LABEL_INFORMATION, GROUP_BY_INFORMATION_BUTTON_ID,
                 topComposite.equals(DATUM));
@@ -137,7 +138,6 @@ public class PermissionWidget {
         GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
         button.setText(text);
         button.setData(SWT_ID, id);
-        button.setFont(Display.getCurrent().getSystemFont());
         button.setSelection(selected);
         button.addSelectionListener(new SelectionAdapter() {
 
