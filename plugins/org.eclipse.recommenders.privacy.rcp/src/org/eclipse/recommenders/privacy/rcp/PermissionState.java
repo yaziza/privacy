@@ -26,7 +26,8 @@ public enum PermissionState {
 
     /**
      * The user has not yet approved or disapproved the permission in question.
-     * A private datum may <em>not</em> be send to the principal that requested the permission unless an explicit approval has been given.
+     * A private datum may <em>not</em> be send to the principal that requested the permission unless an explicit approval
+     * has been given.
      */
     UNKNOWN;
 }

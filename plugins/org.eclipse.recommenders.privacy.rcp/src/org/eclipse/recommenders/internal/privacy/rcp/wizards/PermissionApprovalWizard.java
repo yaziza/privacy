@@ -13,7 +13,6 @@ package org.eclipse.recommenders.internal.privacy.rcp.wizards;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivacySettingsSerciveHelper;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;

@@ -89,8 +89,8 @@ public class ExtensionReaderTest {
         assertThat(datum.getName(), is("some name"));
         assertThat(datum.getDescription(), is("some description"));
 
-        ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.example.privacy",
-                DEFAULT_DATUM_ICON);
+        ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+                "org.eclipse.recommenders.privacy.rcp", DEFAULT_DATUM_ICON);
         assertThat(datum.getIcon(), is(imageDescriptor));
     }
 

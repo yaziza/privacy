@@ -8,14 +8,9 @@
 	</extension>
 	<extension point="org.eclipse.recommenders.privacy.rcp.permissions">
 		<permission
-			datumId="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
+			datumId="org.eclipse.recommenders.privacy.rcp.datums.heartbeat"
 			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
-			policyUri="http://www.example.org/policy/javaVersion"
-			purpose="%permissions.javaVersion.purpose"/>
-		<permission
-			datumId="org.eclipse.recommenders.privacy.rcp.datums.userId"
-			policyUri="http://www.example.org/policy/userId"
-			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
-			purpose="%permissions.userId.purpose"/>
+			policyUri="http://www.example.org/policy/heartbeat"
+			purpose="%permissions.heartbeat.purpose"/>
 	</extension>
 </plugin>

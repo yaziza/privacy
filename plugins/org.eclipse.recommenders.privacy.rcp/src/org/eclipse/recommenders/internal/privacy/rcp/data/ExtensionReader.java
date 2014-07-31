@@ -88,10 +88,9 @@ public class ExtensionReader {
                 final String datumId = configurationElement.getAttribute(ID_ATTRIBUTE);
                 final String datumName = configurationElement.getAttribute(NAME_ATTRIBUTE);
                 final String datumDescription = configurationElement.getAttribute(DESCRIPTION_ATTRIBUTE);
-                String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
-                ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId,
-                        icon == null ? DEFAULT_DATUM_ICON : icon);
+                String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
+                ImageDescriptor imageDescriptor = getImageDescriptor(pluginId, icon, DEFAULT_DATUM_ICON);
 
                 if (isValidAttribute(datumId) && isValidAttribute(datumName) && isValidAttribute(datumDescription)) {
                     PrivateDatum datum = new PrivateDatum(datumId, datumName, datumDescription, imageDescriptor);
@@ -130,10 +129,9 @@ public class ExtensionReader {
                 final String principalId = configurationElement.getAttribute(ID_ATTRIBUTE);
                 final String principalName = configurationElement.getAttribute(NAME_ATTRIBUTE);
                 final String principalDescription = configurationElement.getAttribute(DESCRIPTION_ATTRIBUTE);
-                String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
 
-                ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(icon == null ? BUNDLE_ID
-                        : pluginId, icon == null ? DEFAULT_PRINCIPAL_ICON : icon);
+                String icon = configurationElement.getAttribute(ICON_ATTRIBUTE);
+                ImageDescriptor imageDescriptor = getImageDescriptor(pluginId, icon, DEFAULT_PRINCIPAL_ICON);
 
                 if (isValidAttribute(principalId) && isValidAttribute(principalName)
                         && isValidAttribute(principalDescription)) {
@@ -192,6 +190,16 @@ public class ExtensionReader {
 
     public Set<PrincipalCategory> getPrincipalCategory() {
         return princiaplCategorySet;
+    }
+
+    private ImageDescriptor getImageDescriptor(String pluginId, String icon, String defaultIcon) {
+        ImageDescriptor imageDescriptor;
+        if (icon == null) {
+            imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(BUNDLE_ID, defaultIcon);
+        } else {
+            imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, icon);
+        }
+        return imageDescriptor;
     }
 
     private boolean isValidAttribute(String attribute) {

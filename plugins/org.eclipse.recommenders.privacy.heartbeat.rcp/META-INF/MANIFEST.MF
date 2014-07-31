@@ -1,14 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: org.eclipse.recommenders.privacy.example.rcp;singleton:=true
+Bundle-SymbolicName: org.eclipse.recommenders.privacy.heartbeat.rcp;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
-Bundle-Activator: org.eclipse.recommenders.internal.privacy.example.rcp.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.contexts,
- org.eclipse.recommenders.privacy.rcp,
- org.eclipse.recommenders.privacy.heartbeat.rcp
+ org.eclipse.e4.core.di,
+ org.eclipse.e4.core.di.extensions,
+ org.eclipse.equinox.p2.transport.ecf,
+ org.eclipse.equinox.p2.repository
 Import-Package: org.slf4j;version="[1.6.0,2.0.0)"
+Export-Package: org.eclipse.recommenders.privacy.heartbeat.rcp
+Service-Component: OSGI-INF/heartbeatService.xml

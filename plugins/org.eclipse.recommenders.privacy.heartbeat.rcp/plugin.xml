@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.heartbeat"
+			name="%datums.heartbeat.name"
+			description="%datums.heartbeat.description"
+			icon="icons/obj16/heartbeat.png"/>
+	</extension>
+</plugin>
