@@ -14,6 +14,16 @@
 			class="org.eclipse.recommenders.internal.privacy.rcp.preferences.UserIdPreferencePage"
 			name="%preferencePages.userId.name"/>
 	</extension>
+	<extension point="org.eclipse.ui.preferenceTransfer">
+		<transfer id="org.eclipse.recommenders.privacy.rcp.transfer.permissions"
+			icon="icons/view16/logo.png"
+			name="%preferenceTransfer.permissions.name">
+			<description>%preferenceTransfer.permissions.description</description>
+			<mapping scope="instance">
+				<entry node="org.eclipse.recommenders.privacy.rcp.permissions"/>
+			</mapping>
+		</transfer>
+	</extension>
 	<extension point="org.eclipse.recommenders.privacy.rcp.datums">
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.javaVersion"
 			icon="icons/obj16/javaVersion.gif"

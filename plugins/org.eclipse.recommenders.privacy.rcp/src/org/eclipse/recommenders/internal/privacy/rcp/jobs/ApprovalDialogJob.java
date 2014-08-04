@@ -10,7 +10,7 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.jobs;
 
-import static org.eclipse.recommenders.internal.privacy.rcp.Constants.PREF_NODE_ID_GLOBAL_PERMISSIONS;
+import static org.eclipse.recommenders.internal.privacy.rcp.Constants.PREF_NODE_GLOBAL_ACTIVATION_VALUE;
 import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeType.PRINCIPAL;
 
 import java.util.HashSet;
@@ -38,12 +38,8 @@ import org.eclipse.recommenders.internal.privacy.rcp.wizards.PermissionApprovalW
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.eclipse.ui.progress.UIJob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ApprovalDialogJob extends UIJob {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApprovalDialogJob.class);
 
     public static final String PREF_FIRST_ACTIVATION = "activated"; //$NON-NLS-1$
 
@@ -51,8 +47,9 @@ public class ApprovalDialogJob extends UIJob {
     private final ExtensionReader extensionReader;
     private final IEclipsePreferences preferences;
 
+    @SuppressWarnings("restriction")
     @Inject
-    public ApprovalDialogJob(@Preference(value = PREF_NODE_ID_GLOBAL_PERMISSIONS) IEclipsePreferences preferences,
+    public ApprovalDialogJob(@Preference(value = PREF_NODE_GLOBAL_ACTIVATION_VALUE) IEclipsePreferences preferences,
             IPrivacySettingsService privacySettingsService, IEclipseContext eclipseContext) {
         super(Messages.JOB_APPROVAL_DIALOG);
         this.preferences = preferences;

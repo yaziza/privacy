@@ -51,8 +51,10 @@ class PrivacySettingsService implements IPrivacySettingsService {
     private final File userIdFile;
     private UUID userId;
 
+    @SuppressWarnings("restriction")
     @Inject
-    public PrivacySettingsService(@Preference(value = PREF_NODE_ID_GLOBAL_PERMISSIONS) IEclipsePreferences preferences) {
+    public PrivacySettingsService(
+            @Preference(nodePath = PREF_NODE_GLOBAL_PERMISSIONS_PATH, value = PREF_NODE_GLOBAL_PERMISSIONS_VALUE) IEclipsePreferences preferences) {
         this(preferences, createUserIdFile());
     }
 
