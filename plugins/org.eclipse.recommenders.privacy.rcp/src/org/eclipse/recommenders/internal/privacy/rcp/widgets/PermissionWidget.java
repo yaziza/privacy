@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -83,8 +82,7 @@ public class PermissionWidget {
         this.topComposite = topComposite;
     }
 
-    public Control createContents(Composite parent, String message) {
-        createDescription(parent, message);
+    public Control createContents(Composite parent) {
         createPermissionLabel(parent);
 
         stackComposite = new Composite(parent, SWT.NONE);
@@ -112,12 +110,6 @@ public class PermissionWidget {
 
     public void dispose() {
         stackComposite.dispose();
-    }
-
-    private void createDescription(Composite parent, String message) {
-        Label label = new Label(parent, SWT.WRAP);
-        label.setText(message);
-        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
     }
 
     private void createPermissionLabel(Composite parent) {

@@ -15,6 +15,8 @@ import java.util.Set;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.recommenders.internal.privacy.rcp.data.DatumCategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ExtensionReader;
@@ -25,8 +27,10 @@ import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;
 import org.eclipse.recommenders.internal.privacy.rcp.l10n.Messages;
 import org.eclipse.recommenders.internal.privacy.rcp.widgets.PermissionWidget;
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.osgi.framework.BundleContext;
@@ -49,16 +53,28 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
     @Override
     protected Control createContents(Composite parent) {
+        createDescription(parent, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
+        createPermissionWidget(parent);
+
+        Dialog.applyDialogFont(parent);
+        return parent;
+    }
+
+    private void createDescription(Composite parent, String message) {
+        Label label = new Label(parent, SWT.WRAP);
+        label.setText(message);
+        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
+    }
+
+    private void createPermissionWidget(Composite parent) {
         Set<DatumCategory> datumCategorySet = extensionReader.getDatumCategory();
         Set<PrincipalCategory> principalCategorySet = extensionReader.getPrincipalCategory();
 
         permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet);
         permissionWidget.setCheckedPermission(loadPermissions(principalCategorySet));
-        permissionWidget.setShownPermission(PrivacySettingsSerciveHelper.getCategoriesPermissions(principalCategorySet));
-        permissionWidget.createContents(parent, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
-
-        Dialog.applyDialogFont(parent);
-        return parent;
+        permissionWidget
+        .setShownPermission(PrivacySettingsSerciveHelper.getCategoriesPermissions(principalCategorySet));
+        permissionWidget.createContents(parent);
     }
 
     public void checkElements(Set<PrivatePermission> permissions) {

@@ -13,6 +13,8 @@ import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeTyp
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -27,6 +29,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -62,12 +65,19 @@ public class PermissionApprovalPage extends WizardPage {
     @Override
     public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(container);
+        GridLayoutFactory.fillDefaults().applyTo(container);
 
-        permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
+        createDescription(container, Messages.APPROVAL_DIALOG_MESSAGE);
+        permissionWidget.createContents(container);
         createLinkToPreferencePage(container);
 
         Dialog.applyDialogFont(container);
+    }
+
+    private void createDescription(Composite parent, String message) {
+        Label label = new Label(parent, SWT.WRAP);
+        label.setText(message);
+        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
     }
 
     private void createLinkToPreferencePage(Composite container) {

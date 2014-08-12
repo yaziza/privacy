@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivacySettingsSerciveHelper;
@@ -32,6 +33,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -61,12 +63,29 @@ public class PermissionApprovalDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
 
+        createDescription(container, Messages.APPROVAL_DIALOG_MESSAGE);
+        createPermissionWidget(container);
+        createLink(container);
+
+        Dialog.applyDialogFont(container);
+        return container;
+    }
+
+    private void createDescription(Composite parent, String message) {
+        Label label = new Label(parent, SWT.WRAP);
+        label.setText(message);
+        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).applyTo(label);
+    }
+
+    private void createPermissionWidget(Composite container) {
         permissionWidget = new PermissionWidget(datumSet, principalSet);
         permissionWidget.setCheckedPermission(loadPermissions(principalSet));
         permissionWidget.setShownPermission(detectedPermissions);
         permissionWidget.setTopComposite(PRINCIPAL);
-        permissionWidget.createContents(container, Messages.APPROVAL_DIALOG_MESSAGE);
+        permissionWidget.createContents(container);
+    }
 
+    private void createLink(Composite container) {
         Link link = new Link(container, SWT.NONE);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.PREF_LINK_MESSAGE, linkToPreferencePage));
@@ -81,9 +100,6 @@ public class PermissionApprovalDialog extends Dialog {
                 dialog.open();
             }
         });
-
-        Dialog.applyDialogFont(container);
-        return container;
     }
 
     @Override
