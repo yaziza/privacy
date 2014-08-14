@@ -10,6 +10,7 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.dialogs;
 
+import static org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType.*;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -63,13 +64,12 @@ public class PopupDialogTest {
     @Before
     public void setUp() {
         service = mock(IPrivacySettingsService.class);
-        // when(service.isActivated()).thenReturn(true);
 
         principal = new Principal("com.example.firstPrincipal", "some principal", "some principal description", null);
         firstDatum = new PrivateDatum("com.example.firstDatum", "first datum", "first datum description", null);
         secondDatum = new PrivateDatum("com.example.secondDatum", "second datum", "second datum description", null);
-        firstPermission = new PrivatePermission(firstDatum, principal, "some purpose", "some uri");
-        secondPermission = new PrivatePermission(secondDatum, principal, "some purpose", "some uri");
+        firstPermission = new PrivatePermission(firstDatum, principal, "some purpose", "some uri", INSTALL);
+        secondPermission = new PrivatePermission(secondDatum, principal, "some purpose", "some uri", NEVER);
 
         firstDatumCategory = new DatumCategory(firstDatum);
         secondDatumCategory = new DatumCategory(secondDatum);

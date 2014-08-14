@@ -11,6 +11,7 @@
 package org.eclipse.recommenders.internal.privacy.rcp.data;
 
 import static org.eclipse.recommenders.internal.privacy.rcp.Constants.*;
+import static org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType.INSTALL;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ public class ExtensionReader {
     private static final String ICON_ATTRIBUTE = "icon"; //$NON-NLS-1$
     private static final String PURPOSE_ATTRIBUTE = "purpose"; //$NON-NLS-1$
     private static final String POLICY_URI_ATTRIBUTE = "policyUri"; //$NON-NLS-1$
+    private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval"; //$NON-NLS-1$
 
     private Map<String, PrivateDatum> privateDatumMap;
     private Map<String, Principal> principalMap;
@@ -169,10 +171,13 @@ public class ExtensionReader {
                 final String purpose = configurationElement.getAttribute(PURPOSE_ATTRIBUTE);
                 final String policy = configurationElement.getAttribute(POLICY_URI_ATTRIBUTE);
 
+                final String type = configurationElement.getAttribute(APPROVAL_TYPE_ATTRIBUTE);
+                ApprovalType approvalType = getApprovalType(type);
+
                 if (isValidAttribute(datumId) && isValidAttribute(principalId) && isValidAttribute(purpose)
-                        && isValidAttribute(policy)) {
+                        && isValidAttribute(policy) && approvalType != null) {
                     PrivatePermission permission = new PrivatePermission(privateDatumMap.get(datumId),
-                            principalMap.get(principalId), purpose, policy);
+                            principalMap.get(principalId), purpose, policy, approvalType);
                     datumCategoryMap.get(datumId).addPermissions(permission);
                     if (principalCategoryMap.containsKey(principalId)) {
                         principalCategoryMap.get(principalId).addPermissions(permission);
@@ -200,6 +205,18 @@ public class ExtensionReader {
             imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, icon);
         }
         return imageDescriptor;
+    }
+
+    private ApprovalType getApprovalType(String type) {
+        ApprovalType approvalType;
+        if (type == null) {
+            approvalType = INSTALL;
+        } else if (!ApprovalType.isValidType(type.toUpperCase())) {
+            approvalType = null;
+        } else {
+            approvalType = ApprovalType.valueOf(type.toUpperCase());
+        }
+        return approvalType;
     }
 
     private boolean isValidAttribute(String attribute) {

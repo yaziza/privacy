@@ -11,6 +11,7 @@
 package org.eclipse.recommenders.internal.privacy.rcp.data;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType.INSTALL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -41,6 +42,7 @@ public class ExtensionReaderTest {
     private static final String ICON_ATTRIBUTE = "icon";
     private static final String PURPOSE_ATTRIBUTE = "purpose";
     private static final String POLICY_URI_ATTRIBUTE = "policyUri";
+    private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval";
 
     private static final String DEFAULT_DATUM_ICON = "icons/obj16/defaultDatum.gif";
 
@@ -167,7 +169,8 @@ public class ExtensionReaderTest {
     @Test
     public final void testPermissionsWithoutDatums() {
         IConfigurationElement configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
-                "principal id", NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description"));
+                "principal id", NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description",
+                APPROVAL_TYPE_ATTRIBUTE, "install"));
 
         ExtensionReader sut = new ExtensionReader();
         sut.readRegisteredPrincipals(configElement);
@@ -194,7 +197,7 @@ public class ExtensionReaderTest {
 
         configElement = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE, "some id",
                 PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "some purpose", POLICY_URI_ATTRIBUTE,
-                "some policy"));
+                "some policy", APPROVAL_TYPE_ATTRIBUTE, "install"));
 
         sut.readRegisteredPermissions(configElement);
         Set<PrincipalCategory> plugins = sut.getPrincipalCategory();
@@ -208,6 +211,7 @@ public class ExtensionReaderTest {
         assertThat(permission.getDatumId(), is("some id"));
         assertThat(permission.getDatumName(), is("some name"));
         assertThat(permission.getPurpose(), is("some purpose"));
+        assertThat(permission.getApprovalType(), is(INSTALL));
     }
 
     @Test
@@ -228,11 +232,11 @@ public class ExtensionReaderTest {
 
         IConfigurationElement firstUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
                 "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "some purpose",
-                POLICY_URI_ATTRIBUTE, "some policy"));
+                POLICY_URI_ATTRIBUTE, "some policy", APPROVAL_TYPE_ATTRIBUTE, "install"));
 
         IConfigurationElement secondUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
                 "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "other purpose",
-                POLICY_URI_ATTRIBUTE, "other policy"));
+                POLICY_URI_ATTRIBUTE, "other policy", APPROVAL_TYPE_ATTRIBUTE, "never"));
 
         sut.readRegisteredPermissions(firstUse, secondUse);
         Set<PrincipalCategory> principals = sut.getPrincipalCategory();
@@ -241,7 +245,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testMultiplePrincipale() {
+    public final void testMultiplePrincipals() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
@@ -250,25 +254,29 @@ public class ExtensionReaderTest {
         Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(1));
 
-        IConfigurationElement firstPrincipale = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
-                "principal id", NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description",
-                ICON_ATTRIBUTE, "principal.png"));
+        IConfigurationElement firstPrincipal = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "first principal id", NAME_ATTRIBUTE, "first principal name", DESCRIPTION_ATTRIBUTE,
+                "first principal description", ICON_ATTRIBUTE, "firstPrincipal.png"));
 
-        IConfigurationElement secondPrincipale = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
-                "other id", NAME_ATTRIBUTE, "other name", DESCRIPTION_ATTRIBUTE, "other description", ICON_ATTRIBUTE,
-                "other.png"));
+        IConfigurationElement secondPrincipal = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "second principal id", NAME_ATTRIBUTE, "second principal name", DESCRIPTION_ATTRIBUTE,
+                "second principal description", ICON_ATTRIBUTE, "secondPrincipal.png"));
 
-        sut.readRegisteredPrincipals(firstPrincipale, secondPrincipale);
+        sut.readRegisteredPrincipals(firstPrincipal, secondPrincipal);
 
-        IConfigurationElement firstUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
-                "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "some purpose",
-                POLICY_URI_ATTRIBUTE, "some policy"));
+        IConfigurationElement firstPermission = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(
+                DATUM_ID_ATTRIBUTE, "some id", PRINCIPAL_ID_ATTRIBUTE, "first principal id", PURPOSE_ATTRIBUTE,
+                "first purpose", POLICY_URI_ATTRIBUTE, "first policy", APPROVAL_TYPE_ATTRIBUTE, "install"));
 
-        IConfigurationElement secondUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
-                "some id", PRINCIPAL_ID_ATTRIBUTE, "other id", PURPOSE_ATTRIBUTE, "other purpose",
-                POLICY_URI_ATTRIBUTE, "other policy"));
+        IConfigurationElement brokenPermission = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(
+                DATUM_ID_ATTRIBUTE, "some id", PRINCIPAL_ID_ATTRIBUTE, "second principal id", PURPOSE_ATTRIBUTE,
+                "second purpose", POLICY_URI_ATTRIBUTE, "second policy", APPROVAL_TYPE_ATTRIBUTE, "non existing"));
 
-        sut.readRegisteredPermissions(firstUse, secondUse);
+        IConfigurationElement secondPermission = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(
+                DATUM_ID_ATTRIBUTE, "some id", PRINCIPAL_ID_ATTRIBUTE, "second principal id", PURPOSE_ATTRIBUTE,
+                "third purpose", POLICY_URI_ATTRIBUTE, "third policy", APPROVAL_TYPE_ATTRIBUTE, "never"));
+
+        sut.readRegisteredPermissions(firstPermission, brokenPermission, secondPermission);
         Set<PrincipalCategory> principals = sut.getPrincipalCategory();
         assertThat(principals.size(), is(2));
 

@@ -20,12 +20,15 @@ public class PrivatePermission {
     private final Principal principal;
     private final String purpose;
     private final String policyUri;
+    private final ApprovalType approvalType;
 
-    public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri) {
+    public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri,
+            ApprovalType approvalType) {
         this.datum = checkNotNull(datum);
         this.principal = checkNotNull(principal);
         this.purpose = checkNotNull(purpose);
         this.policyUri = checkNotNull(policyUri);
+        this.approvalType = checkNotNull(approvalType);
     }
 
     public String getDatumId() {
@@ -60,6 +63,10 @@ public class PrivatePermission {
         return this.policyUri;
     }
 
+    public ApprovalType getApprovalType() {
+        return approvalType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -81,6 +88,9 @@ public class PrivatePermission {
         if (!policyUri.equals(other.getPolicyUri())) {
             return false;
         }
+        if (!approvalType.equals(other.getApprovalType())) {
+            return false;
+        }
         return true;
     }
 
@@ -92,6 +102,7 @@ public class PrivatePermission {
         result = prime * result + (principal == null ? 0 : principal.hashCode());
         result = prime * result + (purpose == null ? 0 : purpose.hashCode());
         result = prime * result + (policyUri == null ? 0 : policyUri.hashCode());
+        result = prime * result + (approvalType == null ? 0 : approvalType.hashCode());
         return result;
     }
 }

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ExtensionReader;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrincipalCategory;
@@ -93,12 +94,17 @@ public class ApprovalDialogJob extends UIJob {
         for (PrincipalCategory principalCategory : extensionReader.getPrincipalCategory()) {
             for (PrivatePermission permission : principalCategory.getPermissions()) {
                 PermissionState state = service.getState(principalCategory.getId(), permission.getDatumId());
-                if (state.equals(PermissionState.UNKNOWN)) {
+                ApprovalType type = permission.getApprovalType();
+                if (shouldAskForApproval(state, type)) {
                     detectedPermissions.add(permission);
                 }
             }
         }
         return detectedPermissions;
+    }
+
+    private boolean shouldAskForApproval(PermissionState state, ApprovalType type) {
+        return state.equals(PermissionState.UNKNOWN) && type.equals(ApprovalType.INSTALL);
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {

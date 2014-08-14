@@ -84,6 +84,14 @@ This can either point to a broad, general-purpose policy used by the principal o
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="askForApproval" type="string" use="default" value="install">
+            <annotation>
+               <documentation>
+                  Whether the privacy framework should automatically ask the user to approve this permission and when.
+Possible values are &lt;code&gt;install&lt;/code&gt; (Ask for approval when the registering plug-in is detected during start-up of Eclipse.) and &lt;code&gt;never&lt;/code&gt; (It is up to the registering plug-in to ask for approval.). The default value is &lt;code&gt;install&lt;/code&gt;.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
