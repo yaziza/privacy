@@ -10,7 +10,9 @@
  */
 package org.eclipse.recommenders.internal.privacy.example.rcp;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.eclipse.recommenders.internal.privacy.example.rcp.Constants.*;
+import static org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatInterval.*;
+import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
 
 import java.util.Dictionary;
 
@@ -19,13 +21,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatInterval;
 import org.eclipse.recommenders.internal.privacy.example.rcp.l10n.Messages;
 import org.eclipse.recommenders.privacy.heartbeat.rcp.IHeartbeatService;
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
+import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,26 +39,24 @@ public class Activator implements BundleActivator {
 
     private static final Logger LOG = LoggerFactory.getLogger(Activator.class);
 
-    private static final String URI_PREFIX = "http://recommenders.eclipse.org/heartbeat"; //$NON-NLS-1$
-    private static final String BUNDLE_ID = "org.eclipse.recommenders.privacy.example.rcp"; //$NON-NLS-1$
-
-    private static final String PRINCIPAL_ID = "org.eclipse.recommenders.privacy.example.rcp.principals.example"; //$NON-NLS-1$
-    private static final String HEARTBEAT = "org.eclipse.recommenders.privacy.rcp.datums.heartbeat"; //$NON-NLS-1$
-    private static final String BUNDLE_VERSION = "Bundle-Version"; //$NON-NLS-1$
-    private static final String BUNDLE_NAME = "Bundle-Name"; //$NON-NLS-1$
-
-    private static final long JOB_DELAY = MINUTES.toMillis(60);
-
     private IPrivacySettingsService settingsService;
     private IHeartbeatService heartbeatService;
     private Job heartbeatJob;
+    private HeartbeatInterval heartbeatInterval;
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
         settingsService = eclipseContext.get(IPrivacySettingsService.class);
         heartbeatService = eclipseContext.get(IHeartbeatService.class);
+        heartbeatInterval = getHeartbeatInterval();
         sendHeartbeat();
+    }
+
+    private HeartbeatInterval getHeartbeatInterval() {
+        Preferences preferences = InstanceScope.INSTANCE.getNode(BUNDLE_ID);
+        String delayName = preferences.get(PREF_DELAY, HOURLY.toString());
+        return HeartbeatInterval.valueOf(delayName);
     }
 
     @Override
@@ -64,14 +68,21 @@ public class Activator implements BundleActivator {
         heartbeatJob = new Job(Messages.JOB_SENDING_HEARTBEAT) {
             @Override
             public IStatus run(IProgressMonitor monitor) {
-                if (settingsService.isApproved(PRINCIPAL_ID, HEARTBEAT)) {
+                PermissionState state = settingsService.getState(PRINCIPAL_ID, HEARTBEAT);
+                heartbeatInterval = getHeartbeatInterval();
+                if (APPROVED.equals(state)) {
                     LOG.info("Sending Heartbeat approved by the user."); //$NON-NLS-1$
                     heartbeatService.sendHeartbeat(URI_PREFIX, getValueFromHeader(BUNDLE_ID, BUNDLE_NAME),
                             getValueFromHeader(BUNDLE_ID, BUNDLE_VERSION), monitor);
-                } else {
+                    if (ONCE.equals(heartbeatInterval)) {
+                        return Status.OK_STATUS;
+                    }
+                } else if (DISAPPROVED.equals(state)) {
                     LOG.info("Sending Heartbeat disapproved by the user."); //$NON-NLS-1$
+                } else {
+                    LOG.info("Sending Heartbeat not yet approved or disapproved by the user."); //$NON-NLS-1$
                 }
-                schedule(JOB_DELAY);
+                schedule(heartbeatInterval.getDelay());
                 return Status.OK_STATUS;
             }
         };

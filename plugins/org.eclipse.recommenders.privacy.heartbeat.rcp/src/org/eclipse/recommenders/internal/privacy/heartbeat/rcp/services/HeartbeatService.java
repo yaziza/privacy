@@ -36,6 +36,7 @@ public class HeartbeatService implements IHeartbeatService {
         URI uri = createURI(uriPrefix, bundleName, bundleVersion);
         try {
             transport.getLastModified(uri, monitor);
+            LOG.info("Heartbeat successfuly sent to specified URI: <{}>", uri); //$NON-NLS-1$
         } catch (AuthenticationFailedException e) {
             LOG.error("Authentication with specified URI failed", e); //$NON-NLS-1$
         } catch (FileNotFoundException e) {
@@ -43,7 +44,6 @@ public class HeartbeatService implements IHeartbeatService {
         } catch (CoreException e) {
             LOG.error("Sending Heartbeat failed", e); //$NON-NLS-1$
         }
-        LOG.info("Heartbeat successfuly sent to specified URI"); //$NON-NLS-1$
     }
 
     private URI createURI(String uriPrefix, String bundleName, String bundleVersion) {

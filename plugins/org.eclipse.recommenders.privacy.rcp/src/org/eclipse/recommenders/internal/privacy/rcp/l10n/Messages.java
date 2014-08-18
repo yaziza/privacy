@@ -48,6 +48,7 @@ public class Messages extends NLS {
 
     public static String BUTTON_ENABLE_ALL;
     public static String BUTTON_DISABLE_ALL;
+    public static String BUTTON_ADVANCED;
     public static String BUTTON_GENERATE;
     public static String BUTTON_OK;
     public static String BUTTON_NOT_NOW;

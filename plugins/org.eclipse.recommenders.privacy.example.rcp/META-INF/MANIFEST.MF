@@ -10,5 +10,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.contexts,
  org.eclipse.recommenders.privacy.rcp,
- org.eclipse.recommenders.privacy.heartbeat.rcp
+ org.eclipse.recommenders.privacy.heartbeat.rcp,
+ org.eclipse.equinox.preferences,
+ org.eclipse.ui.workbench,
+ org.eclipse.ui
 Import-Package: org.slf4j;version="[1.6.0,2.0.0)"

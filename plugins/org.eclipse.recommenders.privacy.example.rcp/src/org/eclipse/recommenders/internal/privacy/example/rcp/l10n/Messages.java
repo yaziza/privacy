@@ -18,6 +18,8 @@ public class Messages extends NLS {
 
     public static String JOB_SENDING_HEARTBEAT;
 
+    public static String ADVANCED_DIALOG_DESCRIPTION;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

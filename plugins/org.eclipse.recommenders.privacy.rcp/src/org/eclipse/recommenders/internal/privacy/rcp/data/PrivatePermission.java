@@ -12,7 +12,11 @@ package org.eclipse.recommenders.internal.privacy.rcp.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.eclipse.recommenders.privacy.rcp.IAdvancedPreferencesDialogFactory;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+
+import com.google.common.base.Optional;
 
 public class PrivatePermission {
 
@@ -20,15 +24,19 @@ public class PrivatePermission {
     private final Principal principal;
     private final String purpose;
     private final String policyUri;
+
     private final ApprovalType approvalType;
+    private final ExtensionReader extensionReader;
 
     public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri,
-            ApprovalType approvalType) {
+            ApprovalType approvalType, ExtensionReader extensionReader) {
         this.datum = checkNotNull(datum);
         this.principal = checkNotNull(principal);
         this.purpose = checkNotNull(purpose);
         this.policyUri = checkNotNull(policyUri);
+
         this.approvalType = checkNotNull(approvalType);
+        this.extensionReader = checkNotNull(extensionReader);
     }
 
     public String getDatumId() {
@@ -65,6 +73,22 @@ public class PrivatePermission {
 
     public ApprovalType getApprovalType() {
         return approvalType;
+    }
+
+    public boolean isAdvancedPreferencesSupported() {
+        return extensionReader.isAdvancedPreferencesSupported(this);
+    }
+
+    public void openAdvancedConfigurationDialog(Shell shell) {
+        Optional<IAdvancedPreferencesDialogFactory> factory = getAdvancedConfigurationDialog();
+        if (factory.isPresent()) {
+            IAdvancedPreferencesDialogFactory advancedConfigurationDialog = factory.get();
+            advancedConfigurationDialog.open(shell);
+        }
+    }
+
+    private Optional<IAdvancedPreferencesDialogFactory> getAdvancedConfigurationDialog() {
+        return extensionReader.getAdvancedConfigurationDialog(this);
     }
 
     @Override

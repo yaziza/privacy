@@ -39,7 +39,6 @@ class PrivacySettingsService implements IPrivacySettingsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PrivacySettingsService.class);
 
-    private static final String PREF_ROOT_NODE = "approval"; //$NON-NLS-1$
     private static final String PREF_APPROVED = "+"; //$NON-NLS-1$
     private static final String PREF_DISAPPROVED = "-"; //$NON-NLS-1$
 

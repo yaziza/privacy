@@ -27,6 +27,9 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
@@ -41,6 +44,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Predicate;
 
@@ -51,6 +55,7 @@ public class PermissionWidget {
     private static final String GROUP_BY_INFORMATION_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInformation"; //$NON-NLS-1$
     private static final String DISABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.disableAll"; //$NON-NLS-1$
     private static final String ENABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.enableAll"; //$NON-NLS-1$
+    private static final String ADVANCED_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.advanced"; //$NON-NLS-1$
 
     private CheckboxTreeViewer datumPermissionsViewer;
     private Set<? extends ICategory> datumPermissionsInput;
@@ -59,11 +64,13 @@ public class PermissionWidget {
     private Set<PrivatePermission> checkedPermissions = Collections.emptySet();
     private Set<PrivatePermission> shownPermissions = Collections.emptySet();
 
+    private Shell parentShell;
     private StackLayout treeViewerStack;
     private Composite stackComposite;
     private Composite datumComposite;
     private Composite principalComposite;
     private CompositeType topComposite = DATUM;
+    private Button advancedButton;
 
     public PermissionWidget(Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet) {
         datumPermissionsInput = datumSet;
@@ -83,6 +90,7 @@ public class PermissionWidget {
     }
 
     public Control createContents(Composite parent) {
+        parentShell = parent.getShell();
         createPermissionLabel(parent);
 
         stackComposite = new Composite(parent, SWT.NONE);
@@ -138,6 +146,7 @@ public class PermissionWidget {
             public void widgetSelected(SelectionEvent e) {
                 topComposite = text.equals(Messages.LABEL_INFORMATION) ? DATUM : PRINCIPAL;
                 updateStackTopControl();
+                advancedButton.setEnabled(false);
             }
         });
     }
@@ -175,15 +184,32 @@ public class PermissionWidget {
                 updateAncestors(targetViewer);
             }
         });
+
+        sourceViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                if (selection.getFirstElement() instanceof PrivatePermission) {
+                    PrivatePermission permission = (PrivatePermission) selection.getFirstElement();
+                    if (permission.isAdvancedPreferencesSupported()) {
+                        advancedButton.setEnabled(true);
+                        return;
+                    }
+                }
+                advancedButton.setEnabled(false);
+            }
+        });
     }
 
     private void createButtons(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
-        GridDataFactory.fillDefaults().span(2, 1).applyTo(composite);
+        GridLayoutFactory.fillDefaults().numColumns(4).applyTo(composite);
+        GridDataFactory.fillDefaults().span(4, 1).applyTo(composite);
 
         createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, ENABLE_ALL_BUTTON_ID, true);
         createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, DISABLE_ALL_BUTTON_ID, false);
+        createAdvancedButton(composite, Messages.BUTTON_ADVANCED, ADVANCED_BUTTON_ID);
     }
 
     private void createChangeAllButton(Composite composite, String label, String id, final boolean checkedState) {
@@ -206,6 +232,34 @@ public class PermissionWidget {
                     principalPermissionsViewer.setGrayed(principal, false);
                 }
                 updateAncestors();
+            }
+        });
+    }
+
+    private void createAdvancedButton(Composite composite, String label, String id) {
+        Label spacer = new Label(composite, SWT.NONE);
+        GridDataFactory.swtDefaults().grab(true, false).applyTo(spacer);
+
+        advancedButton = new Button(composite, SWT.PUSH);
+        GridDataFactory.swtDefaults().align(SWT.END, SWT.END).applyTo(advancedButton);
+        advancedButton.setText(label);
+        advancedButton.setData(SWT_ID, id);
+        advancedButton.setEnabled(false);
+        advancedButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                CheckboxTreeViewer viewer;
+                if (topComposite.equals(DATUM)) {
+                    viewer = datumPermissionsViewer;
+                } else {
+                    viewer = principalPermissionsViewer;
+                }
+
+                IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+                PrivatePermission permission = (PrivatePermission) selection.getFirstElement();
+
+                permission.openAdvancedConfigurationDialog(parentShell);
             }
         });
     }

@@ -43,6 +43,7 @@ public class ExtensionReaderTest {
     private static final String PURPOSE_ATTRIBUTE = "purpose";
     private static final String POLICY_URI_ATTRIBUTE = "policyUri";
     private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval";
+    private static final String ADVANCED_PREFERENCES_DIALOG_FACTORY = "advancedPreferencesDialogFactory";
 
     private static final String DEFAULT_DATUM_ICON = "icons/obj16/defaultDatum.gif";
 
@@ -311,5 +312,66 @@ public class ExtensionReaderTest {
 
         PrincipalCategory principal = getOnlyElement(principals);
         assertThat(principal.getPermissions().size(), is(0));
+    }
+
+    @Test
+    public final void testAdvancedSettingsSupported() {
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
+
+        ExtensionReader sut = new ExtensionReader();
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
+        assertThat(datums.size(), is(1));
+
+        IConfigurationElement firstPrincipal = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "first principal id", NAME_ATTRIBUTE, "first principal name", DESCRIPTION_ATTRIBUTE,
+                "first principal description", ICON_ATTRIBUTE, "firstPrincipal.png"));
+
+        sut.readRegisteredPrincipals(firstPrincipal);
+
+        IConfigurationElement firstPermission = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(
+                DATUM_ID_ATTRIBUTE, "some id", PRINCIPAL_ID_ATTRIBUTE, "first principal id", PURPOSE_ATTRIBUTE,
+                "first purpose", POLICY_URI_ATTRIBUTE, "first policy", ADVANCED_PREFERENCES_DIALOG_FACTORY,
+                "some.class"));
+
+        sut.readRegisteredPermissions(firstPermission);
+        Set<PrincipalCategory> principals = sut.getPrincipalCategory();
+        assertThat(principals.size(), is(1));
+
+        PrincipalCategory principal = principals.iterator().next();
+        assertThat(principal.getPermissions().size(), is(1));
+        PrivatePermission permission = getOnlyElement(principal.getPermissions());
+        assertThat(permission.isAdvancedPreferencesSupported(), is(true));
+    }
+
+    @Test
+    public final void testAdvancedSettingsUnsupported() {
+        IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
+                NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
+
+        ExtensionReader sut = new ExtensionReader();
+        sut.readRegisteredDatums(configElement);
+        Set<DatumCategory> datums = sut.getDatumCategory();
+        assertThat(datums.size(), is(1));
+
+        IConfigurationElement firstPrincipal = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
+                "first principal id", NAME_ATTRIBUTE, "first principal name", DESCRIPTION_ATTRIBUTE,
+                "first principal description", ICON_ATTRIBUTE, "firstPrincipal.png"));
+
+        sut.readRegisteredPrincipals(firstPrincipal);
+
+        IConfigurationElement firstPermission = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(
+                DATUM_ID_ATTRIBUTE, "some id", PRINCIPAL_ID_ATTRIBUTE, "first principal id", PURPOSE_ATTRIBUTE,
+                "first purpose", POLICY_URI_ATTRIBUTE, "first policy"));
+
+        sut.readRegisteredPermissions(firstPermission);
+        Set<PrincipalCategory> principals = sut.getPrincipalCategory();
+        assertThat(principals.size(), is(1));
+
+        PrincipalCategory principal = principals.iterator().next();
+        assertThat(principal.getPermissions().size(), is(1));
+        PrivatePermission permission = getOnlyElement(principal.getPermissions());
+        assertThat(permission.isAdvancedPreferencesSupported(), is(false));
     }
 }

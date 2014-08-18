@@ -9,8 +9,9 @@
 	<extension point="org.eclipse.recommenders.privacy.rcp.permissions">
 		<permission
 			datumId="org.eclipse.recommenders.privacy.rcp.datums.heartbeat"
-			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
 			policyUri="http://www.example.org/policy/heartbeat"
-			purpose="%permissions.heartbeat.purpose"/>
+			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
+			purpose="%permissions.heartbeat.purpose"
+			advancedPreferencesDialogFactory="org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatAdvancedPreferencesFactory"/>
 	</extension>
 </plugin>

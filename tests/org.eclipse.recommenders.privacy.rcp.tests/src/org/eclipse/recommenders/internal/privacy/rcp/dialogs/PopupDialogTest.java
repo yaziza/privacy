@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.recommenders.internal.privacy.rcp.data.DatumCategory;
+import org.eclipse.recommenders.internal.privacy.rcp.data.ExtensionReader;
 import org.eclipse.recommenders.internal.privacy.rcp.data.Principal;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrincipalCategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivateDatum;
@@ -58,18 +59,22 @@ public class PopupDialogTest {
     private PrivatePermission firstPermission, secondPermission;
 
     private IPrivacySettingsService service;
+    private ExtensionReader extensionReader;
 
     private PermissionApprovalDialog sut;
 
     @Before
     public void setUp() {
         service = mock(IPrivacySettingsService.class);
+        extensionReader = mock(ExtensionReader.class);
 
         principal = new Principal("com.example.firstPrincipal", "some principal", "some principal description", null);
         firstDatum = new PrivateDatum("com.example.firstDatum", "first datum", "first datum description", null);
         secondDatum = new PrivateDatum("com.example.secondDatum", "second datum", "second datum description", null);
-        firstPermission = new PrivatePermission(firstDatum, principal, "some purpose", "some uri", INSTALL);
-        secondPermission = new PrivatePermission(secondDatum, principal, "some purpose", "some uri", NEVER);
+        firstPermission = new PrivatePermission(firstDatum, principal, "some purpose", "some uri", INSTALL,
+                extensionReader);
+        secondPermission = new PrivatePermission(secondDatum, principal, "some purpose", "some uri", NEVER,
+                extensionReader);
 
         firstDatumCategory = new DatumCategory(firstDatum);
         secondDatumCategory = new DatumCategory(secondDatum);

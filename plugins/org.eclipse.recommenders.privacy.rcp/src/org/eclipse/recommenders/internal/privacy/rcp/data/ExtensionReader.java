@@ -18,14 +18,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.recommenders.privacy.rcp.IAdvancedPreferencesDialogFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 
 public class ExtensionReader {
@@ -50,6 +53,7 @@ public class ExtensionReader {
     private static final String PURPOSE_ATTRIBUTE = "purpose"; //$NON-NLS-1$
     private static final String POLICY_URI_ATTRIBUTE = "policyUri"; //$NON-NLS-1$
     private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval"; //$NON-NLS-1$
+    private static final String ADVANCED_CONFIGURATION_DIALOG_ATTRIBUTE = "advancedPreferencesDialogFactory"; //$NON-NLS-1$
 
     private Map<String, PrivateDatum> privateDatumMap;
     private Map<String, Principal> principalMap;
@@ -58,6 +62,8 @@ public class ExtensionReader {
 
     private Set<DatumCategory> datumCategorySet;
     private Set<PrincipalCategory> princiaplCategorySet;
+
+    private Map<PrivatePermission, IConfigurationElement> advancedConfigMap;
 
     public ExtensionReader() {
         readRegisteredExtensions();
@@ -161,6 +167,7 @@ public class ExtensionReader {
 
     @VisibleForTesting
     void readRegisteredPermissions(IConfigurationElement... configurationElements) {
+        Map<PrivatePermission, IConfigurationElement> advancedConfigMap = this.advancedConfigMap = new HashMap<PrivatePermission, IConfigurationElement>();
         if (configurationElements == null) {
             return;
         }
@@ -174,19 +181,28 @@ public class ExtensionReader {
                 final String type = configurationElement.getAttribute(APPROVAL_TYPE_ATTRIBUTE);
                 ApprovalType approvalType = getApprovalType(type);
 
-                if (isValidAttribute(datumId) && isValidAttribute(principalId) && isValidAttribute(purpose)
-                        && isValidAttribute(policy) && approvalType != null) {
-                    PrivatePermission permission = new PrivatePermission(privateDatumMap.get(datumId),
-                            principalMap.get(principalId), purpose, policy, approvalType);
-                    datumCategoryMap.get(datumId).addPermissions(permission);
-                    if (principalCategoryMap.containsKey(principalId)) {
-                        principalCategoryMap.get(principalId).addPermissions(permission);
+                try {
+                    PrivatePermission permission = null;
+                    if (isValidAttribute(datumId) && isValidAttribute(principalId) && isValidAttribute(purpose)
+                            && isValidAttribute(policy) && approvalType != null) {
+                        permission = new PrivatePermission(privateDatumMap.get(datumId), principalMap.get(principalId),
+                                purpose, policy, approvalType, this);
+
+                        advancedConfigMap.put(permission, configurationElement);
+                        datumCategoryMap.get(datumId).addPermissions(permission);
+                        if (principalCategoryMap.containsKey(principalId)) {
+                            principalCategoryMap.get(principalId).addPermissions(permission);
+                        }
                     }
-                } else {
-                    LOG.error("Failed to read permissions, invalid or missing attribute"); //$NON-NLS-1$
+                    if (permission == null) {
+                        LOG.error("Failed to read permission, invalid or missing attribute"); //$NON-NLS-1$
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while reading permission", e); //$NON-NLS-1$
                 }
             }
         }
+        this.advancedConfigMap = advancedConfigMap;
     }
 
     public Set<DatumCategory> getDatumCategory() {
@@ -195,6 +211,27 @@ public class ExtensionReader {
 
     public Set<PrincipalCategory> getPrincipalCategory() {
         return princiaplCategorySet;
+    }
+
+    public boolean isAdvancedPreferencesSupported(PrivatePermission permission) {
+        IConfigurationElement configElement = advancedConfigMap.get(permission);
+        String advancedConfigurationDialog = configElement.getAttribute(ADVANCED_CONFIGURATION_DIALOG_ATTRIBUTE);
+        return !Strings.isNullOrEmpty(advancedConfigurationDialog);
+    }
+
+    public Optional<IAdvancedPreferencesDialogFactory> getAdvancedConfigurationDialog(PrivatePermission permission) {
+        IConfigurationElement configElement = advancedConfigMap.get(permission);
+
+        try {
+            Object callback = configElement.createExecutableExtension(ADVANCED_CONFIGURATION_DIALOG_ATTRIBUTE);
+            if (callback instanceof IAdvancedPreferencesDialogFactory) {
+                IAdvancedPreferencesDialogFactory factory = (IAdvancedPreferencesDialogFactory) callback;
+                return Optional.of(factory);
+            }
+        } catch (CoreException e) {
+            LOG.info("Permission does not support advanced Configuration Mechanism"); //$NON-NLS-1$
+        }
+        return Optional.fromNullable(null);
     }
 
     private ImageDescriptor getImageDescriptor(String pluginId, String icon, String defaultIcon) {
