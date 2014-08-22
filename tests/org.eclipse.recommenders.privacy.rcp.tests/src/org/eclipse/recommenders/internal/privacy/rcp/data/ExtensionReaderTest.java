@@ -62,7 +62,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testNoExtensionsFound() {
+    public void testNoExtensionsFound() {
         ExtensionReader sut = new ExtensionReader();
         IConfigurationElement[] configElements = null;
         sut.readRegisteredDatums(configElements);
@@ -80,7 +80,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testDatumExtensionWithoutIcon() {
+    public void testDatumExtensionWithoutIcon() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description"));
 
@@ -99,7 +99,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testDatumExtensionIcon() {
+    public void testDatumExtensionIcon() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
@@ -119,7 +119,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testUnkownExtensions() {
+    public void testUnkownExtensions() {
         IConfigurationElement configElement = mockConfigElement("unknown",
                 ImmutableMap.of(ID_ATTRIBUTE, "some id", NAME_ATTRIBUTE, "some name"));
 
@@ -134,7 +134,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testDatumExtensionMissingAttributes() {
+    public void testDatumExtensionMissingAttributes() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id"));
 
         ExtensionReader sut = new ExtensionReader();
@@ -144,7 +144,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testDatumEmptyAttributes() {
+    public void testDatumEmptyAttributes() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT,
                 ImmutableMap.of(ID_ATTRIBUTE, "", NAME_ATTRIBUTE, "", DESCRIPTION_ATTRIBUTE, "", ICON_ATTRIBUTE, ""));
 
@@ -155,7 +155,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testDuplicatedDatum() {
+    public void testDuplicatedDatum() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description"));
 
@@ -169,7 +169,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testPermissionsWithoutDatums() {
+    public void testPermissionsWithoutDatums() {
         IConfigurationElement configElement = mockConfigElement(PRINCIPAL_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE,
                 "principal id", NAME_ATTRIBUTE, "principal name", DESCRIPTION_ATTRIBUTE, "principal description",
                 APPROVAL_TYPE_ATTRIBUTE, "install"));
@@ -182,7 +182,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testPermissionExtension() {
+    public void testPermissionExtension() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
@@ -217,7 +217,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testMultipleUseOfPrivateDatum() {
+    public void testMultipleUseOfPrivateDatum() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
@@ -247,7 +247,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testMultiplePrincipals() {
+    public void testMultiplePrincipals() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 
@@ -289,7 +289,7 @@ public class ExtensionReaderTest {
     }
 
     @Test
-    public final void testPermissionMissingAttributes() {
+    public void testPermissionMissingAttributes() {
         IConfigurationElement configElement = mockConfigElement(DATUM_ELEMENT, ImmutableMap.of(ID_ATTRIBUTE, "some id",
                 NAME_ATTRIBUTE, "some name", DESCRIPTION_ATTRIBUTE, "some description", ICON_ATTRIBUTE, "datum.png"));
 

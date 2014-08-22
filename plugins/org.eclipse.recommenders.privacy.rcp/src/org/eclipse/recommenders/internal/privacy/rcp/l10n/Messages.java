@@ -29,6 +29,9 @@ public class Messages extends NLS {
 
     public static String APPROVAL_WIZARD_TITLE;
 
+    public static String LOG_ERROR_ANONYMOUS_ID_FILE_READ;
+    public static String LOG_ERROR_ANONYMOUS_ID_FILE_WRITE;
+
     public static String WIZARD_INTRO_PAGE_TITLE;
     public static String WIZARD_INTRO_PAGE_DESCRIPTION;
     public static String WIZARD_INTRO_PAGE_CONTENT;

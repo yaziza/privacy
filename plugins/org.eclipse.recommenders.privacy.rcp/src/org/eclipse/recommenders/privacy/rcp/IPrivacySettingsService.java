@@ -10,8 +10,6 @@
  */
 package org.eclipse.recommenders.privacy.rcp;
 
-import java.util.UUID;
-
 import org.eclipse.recommenders.internal.privacy.rcp.data.Principal;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivateDatum;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;
@@ -82,19 +80,4 @@ public interface IPrivacySettingsService {
      * @return <code>true</code> when the sending the {@link PrivateDatum} is never approved.
      */
     boolean isNeverApproved(String datumId);
-
-    /**
-     * Generates and persists an anonymous ID.
-     */
-    void generateAnonymousId();
-
-    /**
-     * Retrieves the persistent anonymous ID.
-     *
-     * The anonymous ID is purely random. It only serves to uniquely identify a user; no additional information about
-     * the user (e.g., IP address or local information) is leaked.
-     *
-     * @return the anonymous ID. Never {@code null}.
-     */
-    UUID getAnonymousId();
 }

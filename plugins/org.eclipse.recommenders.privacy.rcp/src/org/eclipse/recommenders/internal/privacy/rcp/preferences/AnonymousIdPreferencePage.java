@@ -20,7 +20,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.recommenders.internal.privacy.rcp.l10n.Messages;
-import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
+import org.eclipse.recommenders.privacy.rcp.IAnonymousIdService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,14 +40,14 @@ import com.ibm.icu.text.MessageFormat;
 
 public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-    private IPrivacySettingsService service;
+    private IAnonymousIdService service;
 
     @Override
     public void init(IWorkbench workbench) {
         setMessage(Messages.ANONYMOUS_ID_PREFPAGE_TITLE);
         BundleContext bundleContext = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
         IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
-        service = eclipseContext.get(IPrivacySettingsService.class);
+        service = eclipseContext.get(IAnonymousIdService.class);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbe
     private void createDescription(Composite parent, String message) {
         Link link = new Link(parent, SWT.WRAP);
         GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).grab(true, false)
-        .applyTo(link);
+                .applyTo(link);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION, linkToPreferencePage));
 

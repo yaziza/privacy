@@ -11,14 +11,9 @@
 package org.eclipse.recommenders.internal.privacy.rcp.services;
 
 import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.Rule;
@@ -33,7 +28,7 @@ public class PrivacySettingsServiceTest {
     public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
-    public final void testLoadDefaultPreferences() {
+    public void testLoadDefaultPreferences() {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences prefs = mock(Preferences.class);
@@ -46,7 +41,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testUnsavedPreferences() {
+    public void testUnsavedPreferences() {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences prefs = mock(Preferences.class);
@@ -59,7 +54,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testAllowPreferences() throws BackingStoreException {
+    public void testAllowPreferences() throws BackingStoreException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -89,7 +84,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testDisallowPreferences() throws BackingStoreException {
+    public void testDisallowPreferences() throws BackingStoreException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -123,7 +118,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testAllowAfterDisallow() throws BackingStoreException {
+    public void testAllowAfterDisallow() throws BackingStoreException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -165,7 +160,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testAllowMultiplePrincipalsForSameDatum() {
+    public void testAllowMultiplePrincipalsForSameDatum() {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -214,7 +209,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testAllowMultiplePrincipalsForMultipleDatums() {
+    public void testAllowMultiplePrincipalsForMultipleDatums() {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -289,7 +284,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testIsNeverApproved() throws BackingStoreException {
+    public void testIsNeverApproved() throws BackingStoreException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -333,7 +328,7 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testIsAllApproved() throws BackingStoreException {
+    public void testIsAllApproved() throws BackingStoreException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         Preferences root = mock(Preferences.class);
         Preferences someId = mock(Preferences.class);
@@ -382,74 +377,5 @@ public class PrivacySettingsServiceTest {
         assertThat(sut.isApproved("com.example.third"), is(false));
         assertThat(sut.isApproved("com.example.third", "some.id"), is(false));
         assertThat(sut.isApproved("com.example.third", "some.id", "other.id"), is(false));
-    }
-
-    @Test
-    public final void testGetAnonymousIdIsNotNull() throws IOException {
-        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
-        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
-
-        UUID anonymousId = sut.getAnonymousId();
-
-        assertThat(anonymousId, is(notNullValue()));
-    }
-
-    @Test
-    public final void testGetAnonymousIdIsIdempotent() throws IOException {
-        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
-        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
-
-        UUID firstAnonymousId = sut.getAnonymousId();
-        UUID secondAnonymousId = sut.getAnonymousId();
-
-        assertThat(secondAnonymousId, is(equalTo(firstAnonymousId)));
-    }
-
-    @Test
-    public final void testGenerateAnonymousId() throws IOException {
-        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
-        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
-
-        UUID firstAnonymousId = sut.getAnonymousId();
-        sut.generateAnonymousId();
-        UUID secondAnonymousId = sut.getAnonymousId();
-
-        assertThat(secondAnonymousId, is(not(equalTo(firstAnonymousId))));
-    }
-
-    @Test
-    public final void testGetAnonymousIdWithWriteProtectedAnonymousIdFile() throws IOException {
-        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
-        File writeProtectedFolder = folder.newFolder();
-        writeProtectedFolder.setWritable(false);
-        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, writeProtectedFolder);
-
-        assertThat(writeProtectedFolder.canWrite(), is(false));
-
-        UUID firstAnonymousId = sut.getAnonymousId();
-
-        assertThat(firstAnonymousId, is(notNullValue()));
-
-        UUID secondAnonymousId = sut.getAnonymousId();
-
-        assertThat(secondAnonymousId, is(equalTo(firstAnonymousId)));
-    }
-
-    @Test
-    public final void testGetAnonymousIdWithReadProtectedAnonymousIdFile() throws IOException {
-        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
-        File anonymousIdFile = folder.newFile();
-        PrivacySettingsService firstSession = new PrivacySettingsService(preferenceMock, anonymousIdFile);
-
-        firstSession.generateAnonymousId();
-
-        anonymousIdFile.setReadable(false);
-        assertThat(anonymousIdFile.canRead(), is(false));
-
-        PrivacySettingsService secondSession = new PrivacySettingsService(preferenceMock, anonymousIdFile);
-
-        UUID firstAnonymousId = secondSession.getAnonymousId();
-
-        assertThat(firstAnonymousId, is(notNullValue()));
     }
 }
