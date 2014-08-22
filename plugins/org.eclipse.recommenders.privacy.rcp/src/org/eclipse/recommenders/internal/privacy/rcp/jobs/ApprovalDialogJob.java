@@ -39,6 +39,7 @@ import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.eclipse.ui.progress.UIJob;
 
+@SuppressWarnings("restriction")
 public class ApprovalDialogJob extends UIJob {
 
     public static final String PREF_FIRST_ACTIVATION = "activated"; //$NON-NLS-1$
@@ -47,7 +48,6 @@ public class ApprovalDialogJob extends UIJob {
     private final ExtensionReader extensionReader;
     private final IEclipsePreferences preferences;
 
-    @SuppressWarnings("restriction")
     @Inject
     public ApprovalDialogJob(@Preference(value = PREF_NODE_GLOBAL_ACTIVATION_VALUE) IEclipsePreferences preferences,
             IPrivacySettingsService privacySettingsService, IEclipseContext eclipseContext) {

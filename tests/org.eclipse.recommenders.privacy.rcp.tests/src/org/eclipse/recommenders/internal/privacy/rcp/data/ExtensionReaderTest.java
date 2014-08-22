@@ -63,13 +63,14 @@ public class ExtensionReaderTest {
     @Test
     public final void testNoExtensionsFound() {
         ExtensionReader sut = new ExtensionReader();
-        sut.readRegisteredDatums(null);
+        IConfigurationElement[] configElements = null;
+        sut.readRegisteredDatums(configElements);
         Set<DatumCategory> datums = sut.getDatumCategory();
         assertThat(datums.size(), is(0));
         sut.readRegisteredDatums(new IConfigurationElement[] {});
         assertThat(datums.size(), is(0));
 
-        sut.readRegisteredPrincipals(null);
+        sut.readRegisteredPrincipals(configElements);
         Set<PrincipalCategory> plugins = sut.getPrincipalCategory();
         assertThat(plugins.size(), is(0));
         sut.readRegisteredPrincipals(new IConfigurationElement[] {});

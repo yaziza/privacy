@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 
+@SuppressWarnings("restriction")
 class PrivacySettingsService implements IPrivacySettingsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PrivacySettingsService.class);
@@ -51,7 +52,6 @@ class PrivacySettingsService implements IPrivacySettingsService {
     private final File userIdFile;
     private UUID userId;
 
-    @SuppressWarnings("restriction")
     @Inject
     public PrivacySettingsService(
             @Preference(nodePath = PREF_NODE_GLOBAL_PERMISSIONS_PATH, value = PREF_NODE_GLOBAL_PERMISSIONS_VALUE) IEclipsePreferences preferences) {

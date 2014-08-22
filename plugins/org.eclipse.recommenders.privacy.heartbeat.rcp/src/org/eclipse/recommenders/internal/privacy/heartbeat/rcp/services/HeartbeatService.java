@@ -23,6 +23,7 @@ import org.eclipse.recommenders.privacy.heartbeat.rcp.IHeartbeatService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("restriction")
 public class HeartbeatService implements IHeartbeatService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeartbeatService.class);
