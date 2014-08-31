@@ -39,6 +39,9 @@ import com.ibm.icu.text.MessageFormat;
 
 public class IntroPage extends WizardPage {
 
+    private GridDataFactory gdf;
+    private GridLayoutFactory glf;
+
     protected IntroPage() {
         super(Messages.WIZARD_INTRO_PAGE_TITLE);
         setTitle(Messages.WIZARD_INTRO_PAGE_TITLE);
@@ -49,7 +52,10 @@ public class IntroPage extends WizardPage {
     @Override
     public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.WRAP);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(container);
+        glf = GridLayoutFactory.fillDefaults();
+        glf.numColumns(2).applyTo(container);
+        gdf = GridDataFactory.fillDefaults().grab(true, false)
+                .hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT);
 
         createDescription(container);
         createPreferenceLink(container);
@@ -61,17 +67,16 @@ public class IntroPage extends WizardPage {
 
     private void createDescription(Composite parent) {
         Label label = new Label(parent, SWT.WRAP);
-        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH * 2, SWT.DEFAULT)
-                .applyTo(label);
+        gdf.applyTo(label);
         label.setText(Messages.WIZARD_INTRO_PAGE_CONTENT);
     }
 
     private void createPreferenceLink(Composite parent) {
         Composite container = new Composite(parent, SWT.WRAP);
-        GridLayoutFactory.fillDefaults().numColumns(1).applyTo(container);
+        glf.numColumns(1).applyTo(container);
 
         Link link = new Link(parent, SWT.WRAP);
-        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH * 2, SWT.DEFAULT).applyTo(link);
+        gdf.applyTo(link);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.WIZARD_INTRO_PAGE_PREFS_LINK_DESCRIPTION, linkToPreferencePage));
         link.addSelectionListener(new SelectionAdapter() {
@@ -87,10 +92,10 @@ public class IntroPage extends WizardPage {
 
     private void createWebsiteLink(Composite parent) {
         Composite container = new Composite(parent, SWT.WRAP);
-        GridLayoutFactory.fillDefaults().numColumns(1).applyTo(container);
+        glf.numColumns(1).applyTo(container);
 
         Link link = new Link(parent, SWT.WRAP);
-        GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH * 2, SWT.DEFAULT).applyTo(link);
+        gdf.applyTo(link);
         link.setText(MessageFormat.format(Messages.WIZARD_INTRO_PAGE_WEBSITE_LINK_DESCRIPTION,
                 Messages.WIZARD_INTRO_PAGE_LINK_URI));
         link.addSelectionListener(new SelectionAdapter() {
