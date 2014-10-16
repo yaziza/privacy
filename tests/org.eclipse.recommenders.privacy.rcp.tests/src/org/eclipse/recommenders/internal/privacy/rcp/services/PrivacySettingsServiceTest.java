@@ -385,40 +385,40 @@ public class PrivacySettingsServiceTest {
     }
 
     @Test
-    public final void testGetUserIdIsNotNull() throws IOException {
+    public final void testGetAnonymousIdIsNotNull() throws IOException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
 
-        UUID userId = sut.getUserId();
+        UUID anonymousId = sut.getAnonymousId();
 
-        assertThat(userId, is(notNullValue()));
+        assertThat(anonymousId, is(notNullValue()));
     }
 
     @Test
-    public final void testGetUserIdIsIdempotent() throws IOException {
+    public final void testGetAnonymousIdIsIdempotent() throws IOException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
 
-        UUID firstUserId = sut.getUserId();
-        UUID secondUserId = sut.getUserId();
+        UUID firstAnonymousId = sut.getAnonymousId();
+        UUID secondAnonymousId = sut.getAnonymousId();
 
-        assertThat(secondUserId, is(equalTo(firstUserId)));
+        assertThat(secondAnonymousId, is(equalTo(firstAnonymousId)));
     }
 
     @Test
-    public final void testGenerateUserId() throws IOException {
+    public final void testGenerateAnonymousId() throws IOException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         PrivacySettingsService sut = new PrivacySettingsService(preferenceMock, folder.newFile());
 
-        UUID firstUserId = sut.getUserId();
-        sut.generateUserId();
-        UUID secondUserId = sut.getUserId();
+        UUID firstAnonymousId = sut.getAnonymousId();
+        sut.generateAnonymousId();
+        UUID secondAnonymousId = sut.getAnonymousId();
 
-        assertThat(secondUserId, is(not(equalTo(firstUserId))));
+        assertThat(secondAnonymousId, is(not(equalTo(firstAnonymousId))));
     }
 
     @Test
-    public final void testGetUserIdWithWriteProtectedUserIdFile() throws IOException {
+    public final void testGetAnonymousIdWithWriteProtectedAnonymousIdFile() throws IOException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
         File writeProtectedFolder = folder.newFolder();
         writeProtectedFolder.setWritable(false);
@@ -426,30 +426,30 @@ public class PrivacySettingsServiceTest {
 
         assertThat(writeProtectedFolder.canWrite(), is(false));
 
-        UUID firstUserId = sut.getUserId();
+        UUID firstAnonymousId = sut.getAnonymousId();
 
-        assertThat(firstUserId, is(notNullValue()));
+        assertThat(firstAnonymousId, is(notNullValue()));
 
-        UUID secondUserId = sut.getUserId();
+        UUID secondAnonymousId = sut.getAnonymousId();
 
-        assertThat(secondUserId, is(equalTo(firstUserId)));
+        assertThat(secondAnonymousId, is(equalTo(firstAnonymousId)));
     }
 
     @Test
-    public final void testGetUserIdWithReadProtectedUserIdFile() throws IOException {
+    public final void testGetAnonymousIdWithReadProtectedAnonymousIdFile() throws IOException {
         IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
-        File userIdFile = folder.newFile();
-        PrivacySettingsService firstSession = new PrivacySettingsService(preferenceMock, userIdFile);
+        File anonymousIdFile = folder.newFile();
+        PrivacySettingsService firstSession = new PrivacySettingsService(preferenceMock, anonymousIdFile);
 
-        firstSession.generateUserId();
+        firstSession.generateAnonymousId();
 
-        userIdFile.setReadable(false);
-        assertThat(userIdFile.canRead(), is(false));
+        anonymousIdFile.setReadable(false);
+        assertThat(anonymousIdFile.canRead(), is(false));
 
-        PrivacySettingsService secondSession = new PrivacySettingsService(preferenceMock, userIdFile);
+        PrivacySettingsService secondSession = new PrivacySettingsService(preferenceMock, anonymousIdFile);
 
-        UUID firstUserId = secondSession.getUserId();
+        UUID firstAnonymousId = secondSession.getAnonymousId();
 
-        assertThat(firstUserId, is(notNullValue()));
+        assertThat(firstAnonymousId, is(notNullValue()));
     }
 }

@@ -9,10 +9,10 @@
 			category="org.eclipse.ui.preferencePages.Workbench"
 			class="org.eclipse.recommenders.internal.privacy.rcp.preferences.PrivacyPreferencePage"
 			name="%preferencePages.privacy.name"/>
-		<page id="org.eclipse.recommenders.privacy.rcp.preferencesPages.userId"
+		<page id="org.eclipse.recommenders.privacy.rcp.preferencesPages.anonymousId"
 			category="org.eclipse.recommenders.privacy.rcp.preferencesPages.privacy"
-			class="org.eclipse.recommenders.internal.privacy.rcp.preferences.UserIdPreferencePage"
-			name="%preferencePages.userId.name"/>
+			class="org.eclipse.recommenders.internal.privacy.rcp.preferences.AnonymousIdPreferencePage"
+			name="%preferencePages.anonymousId.name"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferenceTransfer">
 		<transfer id="org.eclipse.recommenders.privacy.rcp.transfer.permissions"
@@ -30,14 +30,17 @@
 			name="%datums.javaVersion.name"
 			description="%datums.javaVersion.description"/>
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.inet4Address"
+			icon="icons/obj16/inet4Address.gif"
 			name="%datums.inet4Address.name"
 			description="%datums.inet4Address.description"/>
 		<datum id="org.eclipse.recommenders.privacy.rcp.datums.inet6Address"
+			icon="icons/obj16/inet6Address.gif"
 			name="%datums.inet6Address.name"
 			description="%datums.inet6Address.description"/>
-		<datum id="org.eclipse.recommenders.privacy.rcp.datums.userId"
-			name="%datums.userId.name"
-			description="%datums.userId.description"/>
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.anonymousId"
+			icon="icons/obj16/anonymousId.gif"
+			name="%datums.anonymousId.name"
+			description="%datums.anonymousId.description"/>
 	</extension>
 	<extension point="org.eclipse.ui.startup">
 		<startup class="org.eclipse.recommenders.internal.privacy.rcp.Startup"/>

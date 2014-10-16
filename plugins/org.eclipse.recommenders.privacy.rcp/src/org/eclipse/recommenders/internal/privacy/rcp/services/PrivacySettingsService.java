@@ -46,29 +46,29 @@ class PrivacySettingsService implements IPrivacySettingsService {
     private static final String USER_HOME = "user.home"; //$NON-NLS-1$
 
     private static final String DOT_ECLIPSE_DIRECTORY_NAME = ".eclipse"; //$NON-NLS-1$
-    private static final String USER_ID_FILE_NAME = "userId"; //$NON-NLS-1$
+    private static final String ANONYMOUS_ID_FILE_NAME = "anonymousId"; //$NON-NLS-1$
 
     private final IEclipsePreferences preferences;
-    private final File userIdFile;
-    private UUID userId;
+    private final File anonymousIdFile;
+    private UUID anonymousId;
 
     @Inject
     public PrivacySettingsService(
             @Preference(nodePath = PREF_NODE_GLOBAL_PERMISSIONS_PATH, value = PREF_NODE_GLOBAL_PERMISSIONS_VALUE) IEclipsePreferences preferences) {
-        this(preferences, createUserIdFile());
+        this(preferences, createAnonymousIdFile());
     }
 
     @VisibleForTesting()
-    PrivacySettingsService(IEclipsePreferences preferences, File userIdFile) {
+    PrivacySettingsService(IEclipsePreferences preferences, File anonymousIdFile) {
         this.preferences = preferences;
-        if (userIdFile.isDirectory()) {
-            this.userIdFile = new File(userIdFile, USER_ID_FILE_NAME);
+        if (anonymousIdFile.isDirectory()) {
+            this.anonymousIdFile = new File(anonymousIdFile, ANONYMOUS_ID_FILE_NAME);
         } else {
-            this.userIdFile = userIdFile;
+            this.anonymousIdFile = anonymousIdFile;
         }
     }
 
-    private static File createUserIdFile() {
+    private static File createAnonymousIdFile() {
         File userHome = new File(System.getProperty(USER_HOME));
         File dotEclipseDir = new File(userHome, DOT_ECLIPSE_DIRECTORY_NAME);
         File bundleDir = new File(dotEclipseDir, BUNDLE_ID);
@@ -77,7 +77,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
             bundleDir.mkdirs();
         }
 
-        return new File(bundleDir, USER_ID_FILE_NAME);
+        return new File(bundleDir, ANONYMOUS_ID_FILE_NAME);
     }
 
     @Override
@@ -175,24 +175,24 @@ class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     @Override
-    public UUID getUserId() {
-        if (userId == null) {
-            if (userIdFile.exists()) {
+    public UUID getAnonymousId() {
+        if (anonymousId == null) {
+            if (anonymousIdFile.exists()) {
                 try {
-                    userId = readUserIdFromFile(userIdFile);
+                    anonymousId = readAnonymousIdFromFile(anonymousIdFile);
                 } catch (IOException e) {
-                    LOG.error("Failed to read User ID from file \"{}\"", userIdFile, e); //$NON-NLS-1$
-                    generateUserId();
+                    LOG.error("Failed to read Anonymous ID from file \"{}\"", anonymousIdFile, e); //$NON-NLS-1$
+                    generateAnonymousId();
                 }
             } else {
-                generateUserId();
+                generateAnonymousId();
             }
         }
 
-        return userId;
+        return anonymousId;
     }
 
-    private UUID readUserIdFromFile(File file) throws IOException {
+    private UUID readAnonymousIdFromFile(File file) throws IOException {
         final RandomAccessFile f = new RandomAccessFile(file, "r"); //$NON-NLS-1$
         final byte[] bytes = new byte[(int) f.length()];
         try {
@@ -206,24 +206,24 @@ class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     @Override
-    public void generateUserId() {
-        UUID freshUserId;
+    public void generateAnonymousId() {
+        UUID freshAnonymousId;
         do {
-            freshUserId = UUID.randomUUID();
-        } while (freshUserId.equals(userId));
-        userId = freshUserId;
+            freshAnonymousId = UUID.randomUUID();
+        } while (freshAnonymousId.equals(anonymousId));
+        anonymousId = freshAnonymousId;
 
         try {
-            writeUserIdToFile(userIdFile, userId);
+            writeAnonymousIdToFile(anonymousIdFile, anonymousId);
         } catch (IOException e) {
-            LOG.error("Failed to write User ID to file \"{}\"", userIdFile, e); //$NON-NLS-1$
+            LOG.error("Failed to write Anonymous ID to file \"{}\"", anonymousIdFile, e); //$NON-NLS-1$
         }
     }
 
-    private void writeUserIdToFile(File file, UUID userId) throws IOException {
+    private void writeAnonymousIdToFile(File file, UUID anonymousId) throws IOException {
         final FileOutputStream out = new FileOutputStream(file);
         try {
-            out.write(userId.toString().getBytes());
+            out.write(anonymousId.toString().getBytes());
         } finally {
             out.close();
         }

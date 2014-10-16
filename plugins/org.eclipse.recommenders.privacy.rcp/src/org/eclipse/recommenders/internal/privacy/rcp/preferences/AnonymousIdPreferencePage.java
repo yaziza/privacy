@@ -38,13 +38,13 @@ import org.osgi.framework.FrameworkUtil;
 
 import com.ibm.icu.text.MessageFormat;
 
-public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
     private IPrivacySettingsService service;
 
     @Override
     public void init(IWorkbench workbench) {
-        setMessage(Messages.USERID_PREFPAGE_TITLE);
+        setMessage(Messages.ANONYMOUS_ID_PREFPAGE_TITLE);
         BundleContext bundleContext = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
         IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
         service = eclipseContext.get(IPrivacySettingsService.class);
@@ -52,8 +52,8 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
 
     @Override
     protected Control createContents(Composite parent) {
-        createDescription(parent, Messages.USERID_PREFPAGE_DESCRIPTION);
-        createUserIdLabel(parent);
+        createDescription(parent, Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION);
+        createAnonymousIdLabel(parent);
         applyDialogFont(parent);
         return parent;
     }
@@ -61,9 +61,9 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
     private void createDescription(Composite parent, String message) {
         Link link = new Link(parent, SWT.WRAP);
         GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).grab(true, false)
-                .applyTo(link);
+        .applyTo(link);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
-        link.setText(MessageFormat.format(Messages.USERID_PREFPAGE_DESCRIPTION, linkToPreferencePage));
+        link.setText(MessageFormat.format(Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION, linkToPreferencePage));
 
         link.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -74,18 +74,18 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
         });
     }
 
-    private Control createUserIdLabel(Composite parent) {
+    private Control createAnonymousIdLabel(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
         GridDataFactory.fillDefaults().grab(false, true).span(3, 1).applyTo(composite);
 
         Label label = new Label(composite, SWT.WRAP);
         GridDataFactory.swtDefaults().applyTo(label);
-        label.setText(Messages.LABEL_USER_ID);
+        label.setText(Messages.LABEL_ANONYMOUS_ID);
 
         final Text text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(text);
-        text.setText(service.getUserId().toString());
+        text.setText(service.getAnonymousId().toString());
 
         Button uuidButton = new Button(composite, SWT.PUSH);
         GridDataFactory.swtDefaults().applyTo(uuidButton);
@@ -94,8 +94,8 @@ public class UserIdPreferencePage extends PreferencePage implements IWorkbenchPr
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                service.generateUserId();
-                text.setText(service.getUserId().toString());
+                service.generateAnonymousId();
+                text.setText(service.getAnonymousId().toString());
             }
         });
 

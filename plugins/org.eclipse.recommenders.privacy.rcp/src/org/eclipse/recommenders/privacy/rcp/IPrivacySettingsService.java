@@ -84,17 +84,17 @@ public interface IPrivacySettingsService {
     boolean isNeverApproved(String datumId);
 
     /**
-     * Generates and persists a User ID.
+     * Generates and persists an anonymous ID.
      */
-    void generateUserId();
+    void generateAnonymousId();
 
     /**
-     * Retrieves the persistent User ID.
+     * Retrieves the persistent anonymous ID.
      *
-     * The user ID is purely random. It only serves to uniquely identify a user; no additional information about the
-     * user (e.g., IP address or local information) is leaked.
+     * The anonymous ID is purely random. It only serves to uniquely identify a user; no additional information about
+     * the user (e.g., IP address or local information) is leaked.
      *
-     * @return the User ID. Never {@code null}.
+     * @return the anonymous ID. Never {@code null}.
      */
-    UUID getUserId();
+    UUID getAnonymousId();
 }

@@ -21,8 +21,8 @@ public class Messages extends NLS {
     public static String PRIVACY_PREFPAGE_TITLE;
     public static String PRIVACY_PREFPAGE_DESCRIPTION;
 
-    public static String USERID_PREFPAGE_TITLE;
-    public static String USERID_PREFPAGE_DESCRIPTION;
+    public static String ANONYMOUS_ID_PREFPAGE_TITLE;
+    public static String ANONYMOUS_ID_PREFPAGE_DESCRIPTION;
 
     public static String APPROVAL_DIALOG_TITLE;
     public static String APPROVAL_DIALOG_MESSAGE;
@@ -44,7 +44,7 @@ public class Messages extends NLS {
     public static String LABEL_GROUP_BY;
     public static String LABEL_INFORMATION;
     public static String LABEL_INTERESTED_PARTY;
-    public static String LABEL_USER_ID;
+    public static String LABEL_ANONYMOUS_ID;
 
     public static String BUTTON_ENABLE_ALL;
     public static String BUTTON_DISABLE_ALL;
