@@ -47,6 +47,7 @@ public class Messages extends NLS {
     public static String LABEL_GROUP_BY;
     public static String LABEL_INFORMATION;
     public static String LABEL_INTERESTED_PARTY;
+    public static String LABEL_APPROVED_INTERESTED_PARTIES;
     public static String LABEL_ANONYMOUS_ID;
 
     public static String BUTTON_ENABLE_ALL;

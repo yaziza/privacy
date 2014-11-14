@@ -13,6 +13,7 @@ package org.eclipse.recommenders.internal.privacy.rcp.widgets;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Sets.intersection;
+import static org.eclipse.recommenders.internal.privacy.rcp.Constants.*;
 import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeType.*;
 
 import java.util.Arrays;
@@ -50,17 +51,10 @@ import com.google.common.base.Predicate;
 
 public class PermissionWidget {
 
-    private static final String SWT_ID = "id"; //$NON-NLS-1$
-    private static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInterestedParty"; //$NON-NLS-1$
-    private static final String GROUP_BY_INFORMATION_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInformation"; //$NON-NLS-1$
-    private static final String DISABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.disableAll"; //$NON-NLS-1$
-    private static final String ENABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.enableAll"; //$NON-NLS-1$
-    private static final String ADVANCED_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.advanced"; //$NON-NLS-1$
-
     private CheckboxTreeViewer datumPermissionsViewer;
-    private Set<? extends ICategory> datumPermissionsInput;
+    private final Set<? extends ICategory> datumPermissionsInput;
     private CheckboxTreeViewer principalPermissionsViewer;
-    private Set<? extends ICategory> principalPermissionsInput;
+    private final Set<? extends ICategory> principalPermissionsInput;
     private Set<PrivatePermission> checkedPermissions = Collections.emptySet();
     private Set<PrivatePermission> shownPermissions = Collections.emptySet();
 
@@ -128,9 +122,9 @@ public class PermissionWidget {
         Label permissionLabel = new Label(composite, SWT.NONE);
         permissionLabel.setText(Messages.LABEL_GROUP_BY);
 
-        createRadioButton(composite, Messages.LABEL_INFORMATION, GROUP_BY_INFORMATION_BUTTON_ID,
+        createRadioButton(composite, Messages.LABEL_INFORMATION, getId(GROUP_BY_INFORMATION_BUTTON_ID),
                 topComposite.equals(DATUM));
-        createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, GROUP_BY_INTERESTED_PARTY_BUTTON_ID,
+        createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, getId(GROUP_BY_INTERESTED_PARTY_BUTTON_ID),
                 topComposite.equals(PRINCIPAL));
     }
 
@@ -155,9 +149,9 @@ public class PermissionWidget {
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         GridDataFactory.fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true)
-        .applyTo(sourceViewer.getControl());
+                .applyTo(sourceViewer.getControl());
         sourceViewer.setLabelProvider(labelProvider);
-        sourceViewer.setContentProvider(new PermissionContentProvider());
+        sourceViewer.setContentProvider(new CategoryContentProvider());
         sourceViewer.setInput(input);
         PrivacyTooltipSupport.enableFor(sourceViewer, ToolTip.NO_RECREATE);
         sourceViewer.expandAll();
@@ -207,9 +201,9 @@ public class PermissionWidget {
         GridLayoutFactory.fillDefaults().numColumns(4).applyTo(composite);
         GridDataFactory.fillDefaults().span(4, 1).applyTo(composite);
 
-        createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, ENABLE_ALL_BUTTON_ID, true);
-        createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, DISABLE_ALL_BUTTON_ID, false);
-        createAdvancedButton(composite, Messages.BUTTON_ADVANCED, ADVANCED_BUTTON_ID);
+        createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, getId(ENABLE_ALL_BUTTON_ID), true);
+        createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, getId(DISABLE_ALL_BUTTON_ID), false);
+        createAdvancedButton(composite, Messages.BUTTON_ADVANCED, getId(ADVANCED_BUTTON_ID));
     }
 
     private void createChangeAllButton(Composite composite, String label, String id, final boolean checkedState) {
@@ -355,5 +349,9 @@ public class PermissionWidget {
             principalPermissionsViewer.setChecked(permission, true);
         }
         updateAncestors();
+    }
+
+    private String getId(String suffix) {
+        return getClass().getName() + '.' + suffix;
     }
 }

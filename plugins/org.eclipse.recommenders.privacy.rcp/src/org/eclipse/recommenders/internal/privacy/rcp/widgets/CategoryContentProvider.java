@@ -14,16 +14,16 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;
+import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 
-public class PermissionContentProvider implements ITreeContentProvider {
+public class CategoryContentProvider implements ITreeContentProvider {
 
-    private Set<PrivatePermission> permissionSet;
+    private Set<? extends ICategory> categorySet;
 
     @SuppressWarnings("unchecked")
     @Override
     public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-        permissionSet = (Set<PrivatePermission>) newInput;
+        categorySet = (Set<ICategory>) newInput;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PermissionContentProvider implements ITreeContentProvider {
 
     @Override
     public Object[] getElements(Object parent) {
-        return permissionSet.toArray();
+        return categorySet.toArray();
     }
 
     @Override
@@ -42,11 +42,18 @@ public class PermissionContentProvider implements ITreeContentProvider {
 
     @Override
     public Object[] getChildren(Object parent) {
+        if (parent instanceof ICategory) {
+            ICategory category = (ICategory) parent;
+            return category.getPermissions().toArray();
+        }
         return null;
     }
 
     @Override
     public boolean hasChildren(Object parent) {
+        if (parent instanceof ICategory) {
+            return true;
+        }
         return false;
     }
 }

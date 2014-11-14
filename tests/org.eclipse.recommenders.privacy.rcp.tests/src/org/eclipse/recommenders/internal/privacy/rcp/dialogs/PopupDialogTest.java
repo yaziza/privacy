@@ -46,11 +46,12 @@ import com.google.common.collect.Sets;
 
 public class PopupDialogTest {
 
+    private static final String PERMISSION_WIDGET = "org.eclipse.recommenders.internal.privacy.rcp.widgets.PermissionWidget";
     private static final String SWT_ID = "id";
-    private static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInterestedParty";
-    private static final String GROUP_BY_INFORMATION_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.groupByInformation";
-    private static final String DISABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.disableAll";
-    private static final String ENABLE_ALL_BUTTON_ID = "org.eclipse.recommenders.privacy.rcp.preferences.enableAll";
+    private static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = PERMISSION_WIDGET + ".groupByInterestedParty";
+    private static final String GROUP_BY_INFORMATION_BUTTON_ID = PERMISSION_WIDGET + ".groupByInformation";
+    private static final String DISABLE_ALL_BUTTON_ID = PERMISSION_WIDGET + ".disableAll";
+    private static final String ENABLE_ALL_BUTTON_ID = PERMISSION_WIDGET + ".enableAll";
 
     private Principal principal;
     private PrincipalCategory principalCategory;

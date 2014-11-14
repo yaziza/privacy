@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.UUID;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.recommenders.internal.privacy.rcp.l10n.Messages;
 import org.eclipse.recommenders.privacy.rcp.IAnonymousIdService;
 import org.slf4j.Logger;
@@ -123,7 +122,7 @@ public class AnonymousIdService implements IAnonymousIdService {
         } catch (IllegalArgumentException e) {
             throw new IOException(e);
         } finally {
-            IOUtils.closeQuietly(raf);
+            raf.close();
         }
     }
 }

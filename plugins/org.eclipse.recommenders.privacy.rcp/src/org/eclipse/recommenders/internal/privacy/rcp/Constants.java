@@ -28,6 +28,13 @@ public final class Constants {
     public static final String PREFERENCE_PAGE_EXTENTIONPOINT_ID = "org.eclipse.ui.preferencePages"; //$NON-NLS-1$
     public static final String PREF_PAGE_ID = "org.eclipse.recommenders.privacy.rcp.preferencesPages.privacy"; //$NON-NLS-1$
 
+    public static final String SWT_ID = "id"; //$NON-NLS-1$
+    public static final String DISABLE_ALL_BUTTON_ID = "disableAll"; //$NON-NLS-1$
+    public static final String ENABLE_ALL_BUTTON_ID = "enableAll"; //$NON-NLS-1$
+    public static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = "groupByInterestedParty"; //$NON-NLS-1$
+    public static final String GROUP_BY_INFORMATION_BUTTON_ID = "groupByInformation"; //$NON-NLS-1$
+    public static final String ADVANCED_BUTTON_ID = "advanced"; //$NON-NLS-1$
+
     private Constants() {
         // Not meant to be instantiated
     }
