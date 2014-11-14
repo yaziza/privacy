@@ -21,34 +21,34 @@ public class PreferencesHelper {
     private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
     private static final String CATEGORY_ATTRIBUTE = "category"; //$NON-NLS-1$
 
-    public static String createLinkLabelToPreferencePage(String preferencePageID) {
-        String text = getNameOfPreferencePage(preferencePageID);
+    public static String createLinkLabelToPreferencePage(String preferencePageId) {
+        String text = getNameOfPreferencePage(preferencePageId);
 
-        String categoryID = getCategoryOfPreferencePage(preferencePageID);
-        while (categoryID != null) {
-            text = getNameOfPreferencePage(categoryID) + " > " + text; //$NON-NLS-1$
-            categoryID = getCategoryOfPreferencePage(categoryID);
+        String categoryId = getCategoryOfPreferencePage(preferencePageId);
+        while (categoryId != null) {
+            text = getNameOfPreferencePage(categoryId) + " > " + text; //$NON-NLS-1$
+            categoryId = getCategoryOfPreferencePage(categoryId);
         }
         return text == null ? "" : text; //$NON-NLS-1$
     }
 
-    private static String getNameOfPreferencePage(String preferencePageID) {
-        return getAttributeOfPreferencePage(preferencePageID, NAME_ATTRIBUTE);
+    private static String getNameOfPreferencePage(String preferencePageId) {
+        return getAttributeOfPreferencePage(preferencePageId, NAME_ATTRIBUTE);
     }
 
-    private static String getCategoryOfPreferencePage(String preferencePageID) {
-        return getAttributeOfPreferencePage(preferencePageID, CATEGORY_ATTRIBUTE);
+    private static String getCategoryOfPreferencePage(String preferencePageId) {
+        return getAttributeOfPreferencePage(preferencePageId, CATEGORY_ATTRIBUTE);
     }
 
-    private static String getAttributeOfPreferencePage(String preferencePageID, String attribute) {
-        if (preferencePageID != null) {
+    private static String getAttributeOfPreferencePage(String preferencePageId, String attribute) {
+        if (preferencePageId != null) {
             IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(
                     PREFERENCE_PAGE_EXTENTIONPOINT_ID);
 
             if (elements != null) {
                 for (IConfigurationElement e : elements) {
                     String configId = e.getAttribute(ID_ATTRIBUTE);
-                    if (preferencePageID.equalsIgnoreCase(configId)) {
+                    if (preferencePageId.equalsIgnoreCase(configId)) {
                         String value = e.getAttribute(attribute);
                         return value;
                     }

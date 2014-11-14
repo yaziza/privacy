@@ -11,6 +11,6 @@
 package org.eclipse.recommenders.internal.privacy.rcp.widgets;
 
 public enum CompositeType {
-    PRINCIPAL,
-    DATUM
+    DATUM,
+    PRINCIPAL
 }

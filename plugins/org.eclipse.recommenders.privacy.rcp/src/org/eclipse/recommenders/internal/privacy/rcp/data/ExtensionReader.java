@@ -91,7 +91,7 @@ public class ExtensionReader {
             return;
         }
         for (final IConfigurationElement configurationElement : configurationElements) {
-            if (configurationElement.getName().equals(DATUM_ELEMENT)) {
+            if (DATUM_ELEMENT.equals(configurationElement.getName())) {
                 final String pluginId = configurationElement.getContributor().getName();
                 final String datumId = configurationElement.getAttribute(ID_ATTRIBUTE);
                 final String datumName = configurationElement.getAttribute(NAME_ATTRIBUTE);
@@ -132,7 +132,7 @@ public class ExtensionReader {
             return;
         }
         for (final IConfigurationElement configurationElement : configurationElements) {
-            if (configurationElement.getName().equals(PRINCIPAL_ELEMENT)) {
+            if (PRINCIPAL_ELEMENT.equals(configurationElement.getName())) {
                 final String pluginId = configurationElement.getContributor().getName();
                 final String principalId = configurationElement.getAttribute(ID_ATTRIBUTE);
                 final String principalName = configurationElement.getAttribute(NAME_ATTRIBUTE);
@@ -172,7 +172,7 @@ public class ExtensionReader {
             return;
         }
         for (final IConfigurationElement configurationElement : configurationElements) {
-            if (configurationElement.getName().equals(PERMISSION_ELEMENT)) {
+            if (PERMISSION_ELEMENT.equals(configurationElement.getName())) {
                 final String datumId = configurationElement.getAttribute(DATUM_ID_ATTRIBUTE);
                 final String principalId = configurationElement.getAttribute(PRINCIPAL_ID_ATTRIBUTE);
                 final String purpose = configurationElement.getAttribute(PURPOSE_ATTRIBUTE);

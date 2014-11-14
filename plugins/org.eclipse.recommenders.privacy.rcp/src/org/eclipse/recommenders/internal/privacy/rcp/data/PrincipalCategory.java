@@ -20,8 +20,9 @@ import org.eclipse.swt.graphics.Image;
 
 public class PrincipalCategory implements ICategory {
 
-    private final Set<PrivatePermission> permissionSet = new HashSet<PrivatePermission>();
     private final Principal principal;
+
+    private final Set<PrivatePermission> permissionSet = new HashSet<PrivatePermission>();
 
     public PrincipalCategory(Principal principal) {
         this.principal = checkNotNull(principal);
@@ -78,6 +79,7 @@ public class PrincipalCategory implements ICategory {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         PrincipalCategory other = (PrincipalCategory) obj;
         if (!principal.equals(other.principal)) {
             return false;

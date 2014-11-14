@@ -92,7 +92,7 @@ public class PermissionApprovalDialog extends Dialog {
 
         link.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PREF_PAGE_ID, null, null);
                 PrivacyPreferencePage preferencePage = (PrivacyPreferencePage) dialog.getSelectedPage();
                 preferencePage.checkElements(permissionWidget.getApprovedPermissions());

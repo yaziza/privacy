@@ -10,6 +10,7 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.widgets;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -18,11 +19,11 @@ import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 
 public class CategoryContentProvider implements ITreeContentProvider {
 
-    private Set<? extends ICategory> categorySet;
+    private Set<? extends ICategory> categorySet = Collections.emptySet();
 
     @SuppressWarnings("unchecked")
     @Override
-    public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         categorySet = (Set<ICategory>) newInput;
     }
 

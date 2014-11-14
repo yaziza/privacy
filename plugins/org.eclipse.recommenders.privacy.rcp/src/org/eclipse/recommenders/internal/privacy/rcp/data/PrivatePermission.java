@@ -99,6 +99,7 @@ public class PrivatePermission {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         PrivatePermission other = (PrivatePermission) obj;
         if (!datum.equals(other.datum)) {
             return false;

@@ -94,13 +94,13 @@ public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbe
     private void createDescription(Composite parent, String message) {
         Link link = new Link(parent, SWT.WRAP);
         GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).grab(true, false)
-                .applyTo(link);
+        .applyTo(link);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION, linkToPreferencePage));
 
         link.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PREF_PAGE_ID, null, null);
                 dialog.open();
             }
@@ -126,7 +126,7 @@ public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbe
         uuidButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 anonymousIdService.generateAnonymousId();
                 text.setText(anonymousIdService.getAnonymousId().toString());
             }

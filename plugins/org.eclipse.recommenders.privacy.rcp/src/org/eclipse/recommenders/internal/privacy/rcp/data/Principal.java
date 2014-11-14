@@ -52,6 +52,7 @@ public class Principal {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         Principal other = (Principal) obj;
         if (!id.equals(other.getId())) {
             return false;

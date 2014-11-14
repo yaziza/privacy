@@ -101,7 +101,7 @@ public class ApprovalDialogJob extends UIJob {
     }
 
     private boolean shouldAskForApproval(PermissionState state, ApprovalType type) {
-        return state.equals(PermissionState.UNKNOWN) && type.equals(ApprovalType.INSTALL);
+        return PermissionState.UNKNOWN.equals(state) && ApprovalType.INSTALL.equals(type);
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {

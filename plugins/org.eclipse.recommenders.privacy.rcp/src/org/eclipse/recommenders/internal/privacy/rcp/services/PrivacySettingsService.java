@@ -53,9 +53,9 @@ class PrivacySettingsService implements IPrivacySettingsService {
         Preferences root = preferences.node(PREF_ROOT_NODE);
         String state = root.node(datumId).get(principalId, ""); //$NON-NLS-1$
 
-        if (state.equals(PREF_APPROVED)) {
+        if (PREF_APPROVED.equals(state)) {
             return APPROVED;
-        } else if (state.equals(PREF_DISAPPROVED)) {
+        } else if (PREF_DISAPPROVED.equals(state)) {
             return DISAPPROVED;
         } else {
             return UNKNOWN;
@@ -76,7 +76,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
     public boolean isApproved(String principalId, String... datumsIds) {
         for (String datumId : datumsIds) {
             PermissionState state = getState(principalId, datumId);
-            if (state.equals(DISAPPROVED) || state.equals(UNKNOWN)) {
+            if (DISAPPROVED.equals(state) || UNKNOWN.equals(state)) {
                 return false;
             }
         }
@@ -98,7 +98,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
             }
             Preferences node = root.node(datumId);
             for (String principalId : node.keys()) {
-                if (node.get(principalId, "").equals(PREF_APPROVED)) { //$NON-NLS-1$
+                if (PREF_APPROVED.equals(node.get(principalId, ""))) { //$NON-NLS-1$
                     return false;
                 }
             }
@@ -126,7 +126,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     private void store(String principalId, String datumId, PermissionState state) {
-        String value = state.equals(PermissionState.APPROVED) ? PREF_APPROVED : PREF_DISAPPROVED;
+        String value = PermissionState.APPROVED.equals(state) ? PREF_APPROVED : PREF_DISAPPROVED;
 
         Preferences root = preferences.node(PREF_ROOT_NODE);
         root.node(datumId).put(principalId, value);

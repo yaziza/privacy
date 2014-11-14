@@ -1,9 +1,12 @@
 /**
- * Copyright (c) 2014 Yasser Aziza. All rights reserved. This program and the accompanying materials are made available
- * under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * Copyright (c) 2014 Yasser Aziza.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors: Yasser Aziza - initial implementation
+ * Contributors:
+ *    Yasser Aziza - initial implementation
  */
 package org.eclipse.recommenders.internal.privacy.rcp.wizards;
 
@@ -87,7 +90,7 @@ public class PermissionApprovalPage extends WizardPage {
 
         link.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PREF_PAGE_ID, null, null);
                 PrivacyPreferencePage preferencePage = (PrivacyPreferencePage) dialog.getSelectedPage();
                 preferencePage.checkElements(permissionWidget.getApprovedPermissions());

@@ -123,9 +123,9 @@ public class PermissionWidget {
         permissionLabel.setText(Messages.LABEL_GROUP_BY);
 
         createRadioButton(composite, Messages.LABEL_INFORMATION, getId(GROUP_BY_INFORMATION_BUTTON_ID),
-                topComposite.equals(DATUM));
+                DATUM.equals(topComposite));
         createRadioButton(composite, Messages.LABEL_INTERESTED_PARTY, getId(GROUP_BY_INTERESTED_PARTY_BUTTON_ID),
-                topComposite.equals(PRINCIPAL));
+                PRINCIPAL.equals(topComposite));
     }
 
     private void createRadioButton(Composite parent, final String text, String id, boolean selected) {
@@ -137,8 +137,8 @@ public class PermissionWidget {
         button.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                topComposite = text.equals(Messages.LABEL_INFORMATION) ? DATUM : PRINCIPAL;
+            public void widgetSelected(SelectionEvent event) {
+                topComposite = Messages.LABEL_INFORMATION.equals(text) ? DATUM : PRINCIPAL;
                 updateStackTopControl();
                 advancedButton.setEnabled(false);
             }
@@ -149,7 +149,7 @@ public class PermissionWidget {
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         GridDataFactory.fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true)
-                .applyTo(sourceViewer.getControl());
+        .applyTo(sourceViewer.getControl());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new CategoryContentProvider());
         sourceViewer.setInput(input);
@@ -214,7 +214,7 @@ public class PermissionWidget {
         button.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 for (ICategory datum : datumPermissionsInput) {
                     if (!datum.getPermissions().isEmpty()) {
                         datumPermissionsViewer.setSubtreeChecked(datum, checkedState);
@@ -242,9 +242,9 @@ public class PermissionWidget {
         advancedButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 CheckboxTreeViewer viewer;
-                if (topComposite.equals(DATUM)) {
+                if (DATUM.equals(topComposite)) {
                     viewer = datumPermissionsViewer;
                 } else {
                     viewer = principalPermissionsViewer;
@@ -281,9 +281,9 @@ public class PermissionWidget {
     }
 
     private void updateStackTopControl() {
-        if (topComposite.equals(DATUM)) {
+        if (DATUM.equals(topComposite)) {
             treeViewerStack.topControl = datumComposite;
-        } else if (topComposite.equals(PRINCIPAL)) {
+        } else if (PRINCIPAL.equals(topComposite)) {
             treeViewerStack.topControl = principalComposite;
         }
 
@@ -308,7 +308,7 @@ public class PermissionWidget {
         updateAncestors(datumPermissionsViewer);
     }
 
-    private final class PermissionsCheckedPredicate implements Predicate<PrivatePermission> {
+    private static final class PermissionsCheckedPredicate implements Predicate<PrivatePermission> {
 
         private final CheckboxTreeViewer viewer;
 

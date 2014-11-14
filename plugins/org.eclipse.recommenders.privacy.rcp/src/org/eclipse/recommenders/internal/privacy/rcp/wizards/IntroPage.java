@@ -81,7 +81,7 @@ public class IntroPage extends WizardPage {
         link.setText(MessageFormat.format(Messages.WIZARD_INTRO_PAGE_PREFS_LINK_DESCRIPTION, linkToPreferencePage));
         link.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PREF_PAGE_ID, null, null);
                 getWizard().performCancel();
                 getWizard().getContainer().getShell().close();
@@ -100,9 +100,9 @@ public class IntroPage extends WizardPage {
                 Messages.WIZARD_INTRO_PAGE_LINK_URI));
         link.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 try {
-                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(e.text));
+                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
                 } catch (PartInitException ex) {
                     ex.printStackTrace();
                 } catch (MalformedURLException ex) {

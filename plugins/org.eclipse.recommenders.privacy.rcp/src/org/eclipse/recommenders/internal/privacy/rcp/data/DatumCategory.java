@@ -21,8 +21,9 @@ import org.eclipse.swt.graphics.Image;
 
 public class DatumCategory implements ICategory {
 
-    private final Set<PrivatePermission> permissionSet = new HashSet<PrivatePermission>();
     private final PrivateDatum datum;
+
+    private final Set<PrivatePermission> permissionSet = new HashSet<PrivatePermission>();
 
     public DatumCategory(PrivateDatum datum) {
         this.datum = checkNotNull(datum);
@@ -83,6 +84,7 @@ public class DatumCategory implements ICategory {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         DatumCategory other = (DatumCategory) obj;
         if (!datum.equals(other.datum)) {
             return false;

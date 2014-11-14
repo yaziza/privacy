@@ -51,17 +51,20 @@ public class PrivateDatum {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         PrivateDatum other = (PrivateDatum) obj;
         if (!id.equals(other.getId())) {
             return false;
         }
-        if (!name.equals(other.getName()))
+        if (!name.equals(other.getName())) {
             return false;
+        }
         return true;
     }
 
@@ -69,8 +72,8 @@ public class PrivateDatum {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + (id == null ? 0 : id.hashCode());
+        result = prime * result + (name == null ? 0 : name.hashCode());
         return result;
     }
 }

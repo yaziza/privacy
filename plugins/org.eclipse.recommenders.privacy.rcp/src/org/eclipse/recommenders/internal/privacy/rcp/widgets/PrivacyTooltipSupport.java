@@ -49,9 +49,9 @@ public class PrivacyTooltipSupport extends ColumnViewerToolTipSupport {
         link.setForeground(event.widget.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
         link.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent event) {
                 try {
-                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(e.text));
+                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
                 } catch (PartInitException ex) {
                     ex.printStackTrace();
                 } catch (MalformedURLException ex) {

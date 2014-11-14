@@ -10,6 +10,7 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.widgets;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -18,11 +19,11 @@ import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;
 
 public class PermissionContentProvider implements ITreeContentProvider {
 
-    private Set<PrivatePermission> permissionSet;
+    private Set<PrivatePermission> permissionSet = Collections.emptySet();
 
     @SuppressWarnings("unchecked")
     @Override
-    public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         permissionSet = (Set<PrivatePermission>) newInput;
     }
 
