@@ -13,5 +13,10 @@
 			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
 			purpose="%permissions.heartbeat.purpose"
 			advancedPreferencesDialogFactory="org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatAdvancedPreferencesFactory"/>
+		<permission
+			datumId="org.eclipse.recommenders.privacy.rcp.datums.anonymousId"
+			policyUri="http://www.example.org/policy/anonymousId"
+			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
+			purpose="%permissions.anonymousId.purpose"/>
 	</extension>
 </plugin>

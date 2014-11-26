@@ -16,8 +16,13 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 
 public class AnonymousIdServiceFactory extends ContextFunction {
 
+    private AnonymousIdService anonymousIdService;
+
     @Override
-    public Object compute(IEclipseContext context) {
-        return ContextInjectionFactory.make(AnonymousIdService.class, context);
+    public synchronized Object compute(IEclipseContext context) {
+        if (anonymousIdService == null) {
+            anonymousIdService = ContextInjectionFactory.make(AnonymousIdService.class, context);
+        }
+        return anonymousIdService;
     }
 }

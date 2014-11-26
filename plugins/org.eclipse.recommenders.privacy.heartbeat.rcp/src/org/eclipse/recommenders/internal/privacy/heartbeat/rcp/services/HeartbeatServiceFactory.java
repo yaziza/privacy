@@ -16,8 +16,13 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 
 public class HeartbeatServiceFactory extends ContextFunction {
 
+    private HeartbeatService heartbeatService;
+
     @Override
-    public Object compute(IEclipseContext context) {
-        return ContextInjectionFactory.make(HeartbeatService.class, context);
+    public synchronized Object compute(IEclipseContext context) {
+        if (heartbeatService == null) {
+            heartbeatService = ContextInjectionFactory.make(HeartbeatService.class, context);
+        }
+        return heartbeatService;
     }
 }

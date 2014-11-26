@@ -20,6 +20,10 @@ public class Messages extends NLS {
 
     public static String ADVANCED_DIALOG_DESCRIPTION;
 
+    public static String LOG_INFO_SENDING_PERMISSION_APPROVED;
+    public static String LOG_INFO_SENDING_PERMISSION_DISAPPROVED;
+    public static String LOG_INFO_SENDING_PERMISSION_UNKNOWN;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

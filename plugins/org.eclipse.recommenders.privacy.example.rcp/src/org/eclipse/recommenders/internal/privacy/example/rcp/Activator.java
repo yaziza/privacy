@@ -27,6 +27,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatInterval;
 import org.eclipse.recommenders.internal.privacy.example.rcp.l10n.Messages;
 import org.eclipse.recommenders.privacy.heartbeat.rcp.IHeartbeatService;
+import org.eclipse.recommenders.privacy.rcp.IAnonymousIdService;
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.osgi.framework.BundleActivator;
@@ -35,11 +36,14 @@ import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ibm.icu.text.MessageFormat;
+
 public class Activator implements BundleActivator {
 
     private static final Logger LOG = LoggerFactory.getLogger(Activator.class);
 
     private IPrivacySettingsService settingsService;
+    private IAnonymousIdService anonymousIdService;
     private IHeartbeatService heartbeatService;
     private Job heartbeatJob;
     private HeartbeatInterval heartbeatInterval;
@@ -48,6 +52,7 @@ public class Activator implements BundleActivator {
     public void start(BundleContext bundleContext) throws Exception {
         IEclipseContext eclipseContext = EclipseContextFactory.getServiceContext(bundleContext);
         settingsService = eclipseContext.get(IPrivacySettingsService.class);
+        anonymousIdService = eclipseContext.get(IAnonymousIdService.class);
         heartbeatService = eclipseContext.get(IHeartbeatService.class);
         heartbeatInterval = getHeartbeatInterval();
         sendHeartbeat();
@@ -71,22 +76,31 @@ public class Activator implements BundleActivator {
                 PermissionState state = settingsService.getState(PRINCIPAL_ID, HEARTBEAT);
                 heartbeatInterval = getHeartbeatInterval();
                 if (APPROVED.equals(state)) {
-                    LOG.info("Sending Heartbeat approved by the user."); //$NON-NLS-1$
+                    LOG.info(MessageFormat.format(Messages.LOG_INFO_SENDING_PERMISSION_APPROVED, "Heartbeat")); //$NON-NLS-1$
                     heartbeatService.sendHeartbeat(URI_PREFIX, getValueFromHeader(BUNDLE_ID, BUNDLE_NAME),
-                            getValueFromHeader(BUNDLE_ID, BUNDLE_VERSION), monitor);
+                            getValueFromHeader(BUNDLE_ID, BUNDLE_VERSION), monitor, getAnonymousId());
                     if (ONCE.equals(heartbeatInterval)) {
                         return Status.OK_STATUS;
                     }
                 } else if (DISAPPROVED.equals(state)) {
-                    LOG.info("Sending Heartbeat disapproved by the user."); //$NON-NLS-1$
+                    LOG.info(MessageFormat.format(Messages.LOG_INFO_SENDING_PERMISSION_DISAPPROVED, "Heartbeat")); //$NON-NLS-1$
                 } else {
-                    LOG.info("Sending Heartbeat not yet approved or disapproved by the user."); //$NON-NLS-1$
+                    LOG.info(MessageFormat.format(Messages.LOG_INFO_SENDING_PERMISSION_UNKNOWN, "Heartbeat")); //$NON-NLS-1$
                 }
                 schedule(heartbeatInterval.getDelay());
                 return Status.OK_STATUS;
             }
         };
         heartbeatJob.schedule();
+    }
+
+    private String getAnonymousId() {
+        if (settingsService.isApproved(PRINCIPAL_ID, ANONYMOUS_ID)) {
+            LOG.info(MessageFormat.format(Messages.LOG_INFO_SENDING_PERMISSION_APPROVED, "anonymous ID")); //$NON-NLS-1$
+            return anonymousIdService.getAnonymousId().toString();
+        }
+        LOG.info(MessageFormat.format(Messages.LOG_INFO_SENDING_PERMISSION_DISAPPROVED, "anonymous ID")); //$NON-NLS-1$
+        return null;
     }
 
     private String getValueFromHeader(String bundleId, String key) {

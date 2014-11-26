@@ -45,5 +45,5 @@ public interface IHeartbeatService {
      *
      * It is up to the caller to decide what conditions (e.g., bundle activation) cause a heartbeat to be send.
      */
-    void sendHeartbeat(String uriPrefix, String bundleName, String bundleVersion, IProgressMonitor monitor);
+    void sendHeartbeat(String uriPrefix, String bundleName, String bundleVersion, IProgressMonitor monitor, String query);
 }

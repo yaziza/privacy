@@ -16,8 +16,13 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 
 public class PrivacySettingsServiceFactory extends ContextFunction {
 
+    private PrivacySettingsService settingsService;
+
     @Override
-    public Object compute(IEclipseContext context) {
-        return ContextInjectionFactory.make(PrivacySettingsService.class, context);
+    public synchronized Object compute(IEclipseContext context) {
+        if (settingsService == null) {
+            settingsService = ContextInjectionFactory.make(PrivacySettingsService.class, context);
+        }
+        return settingsService;
     }
 }

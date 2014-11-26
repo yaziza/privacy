@@ -31,9 +31,10 @@ public class HeartbeatService implements IHeartbeatService {
     private static final String PATH_FORMATTER = "%s-%s"; //$NON-NLS-1$
 
     @Override
-    public void sendHeartbeat(String uriPrefix, String bundleName, String bundleVersion, IProgressMonitor monitor) {
+    public void sendHeartbeat(String uriPrefix, String bundleName, String bundleVersion, IProgressMonitor monitor,
+            String query) {
         RepositoryTransport transport = new RepositoryTransport();
-        URI uri = createURI(uriPrefix, bundleName, bundleVersion);
+        URI uri = createURI(uriPrefix, query, bundleName, bundleVersion);
         try {
             transport.getLastModified(uri, monitor);
             LOG.info("Heartbeat successfuly sent to specified URI: <{}>", uri); //$NON-NLS-1$
@@ -46,12 +47,12 @@ public class HeartbeatService implements IHeartbeatService {
         }
     }
 
-    private URI createURI(String uriPrefix, String bundleName, String bundleVersion) {
+    private URI createURI(String uriPrefix, String query, String bundleName, String bundleVersion) {
         URI uri = null;
         try {
             String extension = String.format(PATH_FORMATTER, bundleName, bundleVersion);
             uri = URIUtil.append(new URI(uriPrefix), extension);
-            uri = new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), null,
+            uri = new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), query,
                     uri.getFragment());
         } catch (URISyntaxException e) {
             e.printStackTrace();
