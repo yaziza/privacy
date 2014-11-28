@@ -33,7 +33,7 @@ public final class Constants {
     public static final String ENABLE_ALL_BUTTON_ID = "enableAll"; //$NON-NLS-1$
     public static final String GROUP_BY_INTERESTED_PARTY_BUTTON_ID = "groupByInterestedParty"; //$NON-NLS-1$
     public static final String GROUP_BY_INFORMATION_BUTTON_ID = "groupByInformation"; //$NON-NLS-1$
-    public static final String ADVANCED_BUTTON_ID = "advanced"; //$NON-NLS-1$
+    public static final String CONFIGURATION_BUTTON_ID = "configuration"; //$NON-NLS-1$
 
     private Constants() {
         // Not meant to be instantiated

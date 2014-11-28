@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.extensions.Preference;
+import org.eclipse.recommenders.internal.privacy.rcp.l10n.Messages;
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.osgi.service.prefs.BackingStoreException;
@@ -103,7 +104,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
                 }
             }
         } catch (BackingStoreException e) {
-            LOG.error("Failed to load preferences", e); //$NON-NLS-1$
+            LOG.error(Messages.LOG_ERROR_LOADING_PREFERENCES, e);
         }
         return true;
     }
@@ -120,7 +121,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
                 }
             }
         } catch (BackingStoreException e) {
-            LOG.error("Failed to load preferences", e); //$NON-NLS-1$
+            LOG.error(Messages.LOG_ERROR_LOADING_PREFERENCES, e);
         }
         return datums.toArray(new String[] {});
     }
@@ -133,7 +134,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
         try {
             preferences.flush();
         } catch (BackingStoreException e) {
-            LOG.error("Failed to flush preferences", e); //$NON-NLS-1$
+            LOG.error(Messages.LOG_ERROR_SAVING_PREFERENCES, e);
         }
     }
 }

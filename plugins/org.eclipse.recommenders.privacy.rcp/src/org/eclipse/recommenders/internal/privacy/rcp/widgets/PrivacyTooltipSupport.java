@@ -52,10 +52,10 @@ public class PrivacyTooltipSupport extends ColumnViewerToolTipSupport {
             public void widgetSelected(SelectionEvent event) {
                 try {
                     PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
-                } catch (PartInitException ex) {
-                    ex.printStackTrace();
-                } catch (MalformedURLException ex) {
-                    ex.printStackTrace();
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
             }
         });

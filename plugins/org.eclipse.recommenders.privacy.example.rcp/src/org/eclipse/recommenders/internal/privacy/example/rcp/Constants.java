@@ -22,8 +22,8 @@ public class Constants {
     public static final String HEARTBEAT = "org.eclipse.recommenders.privacy.rcp.datums.heartbeat"; //$NON-NLS-1$
     public static final String ANONYMOUS_ID = "org.eclipse.recommenders.privacy.rcp.datums.anonymousId"; //$NON-NLS-1$
 
+    public static final String BUNDLE_SYMBOLIC_NAME = "Bundle-SymbolicName"; //$NON-NLS-1$
     public static final String BUNDLE_VERSION = "Bundle-Version"; //$NON-NLS-1$
-    public static final String BUNDLE_NAME = "Bundle-Name"; //$NON-NLS-1$
 
     public static final String PREF_DELAY = "delay"; //$NON-NLS-1$
 

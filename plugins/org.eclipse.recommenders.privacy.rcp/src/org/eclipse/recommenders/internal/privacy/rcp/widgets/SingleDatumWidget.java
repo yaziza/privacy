@@ -19,7 +19,7 @@ import java.util.Set;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Label;
 
 public class SingleDatumWidget {
 
-    private TreeViewer permissionsViewer;
+    private TableViewer permissionsViewer;
     private final Set<? extends ICategory> permissionsInput;
     private final String datumId;
     private Set<PrivatePermission> checkedPermissions = Collections.emptySet();
@@ -54,7 +54,7 @@ public class SingleDatumWidget {
 
         principalComposite = createTreeViewLayout(parent);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(principalComposite);
-        permissionsViewer = new TreeViewer(principalComposite, SWT.BORDER);
+        permissionsViewer = new TableViewer(principalComposite, SWT.BORDER);
 
         createPermssionsView(permissionsViewer, permissionsInput);
         createButtons(parent);
@@ -80,14 +80,13 @@ public class SingleDatumWidget {
         permissionLabel.setText(Messages.LABEL_APPROVED_INTERESTED_PARTIES);
     }
 
-    private void createPermssionsView(final TreeViewer sourceViewer, final Set<? extends ICategory> input) {
+    private void createPermssionsView(final TableViewer sourceViewer, final Set<? extends ICategory> input) {
         GridDataFactory.fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true)
                 .applyTo(sourceViewer.getControl());
         sourceViewer.setLabelProvider(new DatumLabelProvider());
         sourceViewer.setContentProvider(new PermissionContentProvider());
         sourceViewer.setInput(getShownPermissions(input));
         PrivacyTooltipSupport.enableFor(sourceViewer, ToolTip.NO_RECREATE);
-        sourceViewer.expandAll();
         sourceViewer.addFilter(getFilter());
         sourceViewer.setSorter(new PrivacySorter());
     }

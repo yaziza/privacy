@@ -38,9 +38,14 @@ import org.eclipse.recommenders.internal.privacy.rcp.wizards.PermissionApprovalW
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 import org.eclipse.recommenders.privacy.rcp.PermissionState;
 import org.eclipse.ui.progress.UIJob;
+import org.osgi.service.prefs.BackingStoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("restriction")
 public class ApprovalDialogJob extends UIJob {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApprovalDialogJob.class);
 
     public static final String PREF_FIRST_ACTIVATION = "activated"; //$NON-NLS-1$
 
@@ -110,6 +115,11 @@ public class ApprovalDialogJob extends UIJob {
 
     private void firstTimeActivation() {
         preferences.putBoolean(PREF_FIRST_ACTIVATION, true);
+        try {
+            preferences.flush();
+        } catch (BackingStoreException e) {
+            LOG.error(Messages.LOG_ERROR_SAVING_PREFERENCES, e);
+        }
     }
 
     private boolean isActivated() {

@@ -12,10 +12,10 @@ package org.eclipse.recommenders.privacy.rcp;
 
 import org.eclipse.swt.widgets.Shell;
 
-public interface IAdvancedPreferencesDialogFactory {
+public interface IConfigurationDialogFactory {
 
     /**
-     * Opens a Dialog which display advanced preferences.
+     * Opens a configuration dialog which display advanced preferences.
      */
     void open(Shell shell);
 

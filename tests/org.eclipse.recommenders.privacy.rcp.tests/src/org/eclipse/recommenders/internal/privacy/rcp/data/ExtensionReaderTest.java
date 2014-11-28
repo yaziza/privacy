@@ -43,7 +43,7 @@ public class ExtensionReaderTest {
     private static final String PURPOSE_ATTRIBUTE = "purpose";
     private static final String POLICY_URI_ATTRIBUTE = "policyUri";
     private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval";
-    private static final String ADVANCED_PREFERENCES_DIALOG_FACTORY = "advancedPreferencesDialogFactory";
+    private static final String ADVANCED_PREFERENCES_DIALOG_FACTORY = "configurationDialogFactory";
 
     private static final String DEFAULT_DATUM_ICON = "icons/obj16/defaultDatum.gif";
 

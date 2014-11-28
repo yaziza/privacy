@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.recommenders.internal.privacy.example.rcp.l10n.Messages;
-import org.eclipse.recommenders.privacy.rcp.IAdvancedPreferencesDialogFactory;
+import org.eclipse.recommenders.privacy.rcp.IConfigurationDialogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -35,23 +35,23 @@ import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HeartbeatAdvancedPreferencesFactory implements IAdvancedPreferencesDialogFactory {
+public class HeartbeatConfigurationFactory implements IConfigurationDialogFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HeartbeatAdvancedPreferencesFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HeartbeatConfigurationFactory.class);
 
     @Override
     public void open(Shell shell) {
-        AdvancedDialog advancedDialog = new AdvancedDialog(shell);
-        advancedDialog.open();
+        ConfigurationDialog configurationDialog = new ConfigurationDialog(shell);
+        configurationDialog.open();
     }
 
-    private class AdvancedDialog extends TrayDialog {
+    private class ConfigurationDialog extends TrayDialog {
 
         private ComboViewer comboViewer;
         private HeartbeatInterval heartbeatDelay;
         private ScopedPreferenceStore prefStore;
 
-        protected AdvancedDialog(Shell parentShell) {
+        protected ConfigurationDialog(Shell parentShell) {
             super(parentShell);
             Preferences rootNode = InstanceScope.INSTANCE.getNode(BUNDLE_ID);
             this.prefStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, rootNode.absolutePath());
@@ -73,7 +73,7 @@ public class HeartbeatAdvancedPreferencesFactory implements IAdvancedPreferences
             Label label = new Label(parent, SWT.WRAP);
             GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT)
                     .applyTo(label);
-            label.setText(Messages.ADVANCED_DIALOG_DESCRIPTION);
+            label.setText(Messages.CONFIGURATION_DIALOG_DESCRIPTION);
         }
 
         private void createSelectionLabel(Composite parent) {
@@ -85,7 +85,7 @@ public class HeartbeatAdvancedPreferencesFactory implements IAdvancedPreferences
                 @Override
                 public String getText(Object element) {
                     HeartbeatInterval delay = (HeartbeatInterval) element;
-                    return delay.name().toLowerCase();
+                    return delay.toString();
                 };
             });
             comboViewer.setInput(HeartbeatInterval.values());

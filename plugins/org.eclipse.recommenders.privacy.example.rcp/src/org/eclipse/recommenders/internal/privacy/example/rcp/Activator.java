@@ -45,8 +45,8 @@ public class Activator implements BundleActivator {
     private IPrivacySettingsService settingsService;
     private IAnonymousIdService anonymousIdService;
     private IHeartbeatService heartbeatService;
-    private Job heartbeatJob;
     private HeartbeatInterval heartbeatInterval;
+    private Job heartbeatJob;
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
@@ -60,7 +60,7 @@ public class Activator implements BundleActivator {
 
     private HeartbeatInterval getHeartbeatInterval() {
         Preferences preferences = InstanceScope.INSTANCE.getNode(BUNDLE_ID);
-        String delayName = preferences.get(PREF_DELAY, HOURLY.toString());
+        String delayName = preferences.get(PREF_DELAY, HOURLY.name());
         return HeartbeatInterval.valueOf(delayName);
     }
 
@@ -77,7 +77,7 @@ public class Activator implements BundleActivator {
                 heartbeatInterval = getHeartbeatInterval();
                 if (APPROVED.equals(state)) {
                     LOG.info(MessageFormat.format(Messages.LOG_INFO_SENDING_PERMISSION_APPROVED, "Heartbeat")); //$NON-NLS-1$
-                    heartbeatService.sendHeartbeat(URI_PREFIX, getValueFromHeader(BUNDLE_ID, BUNDLE_NAME),
+                    heartbeatService.sendHeartbeat(URI_PREFIX, getValueFromHeader(BUNDLE_ID, BUNDLE_SYMBOLIC_NAME),
                             getValueFromHeader(BUNDLE_ID, BUNDLE_VERSION), monitor, getAnonymousId());
                     if (ONCE.equals(heartbeatInterval)) {
                         return Status.OK_STATUS;
@@ -105,6 +105,8 @@ public class Activator implements BundleActivator {
 
     private String getValueFromHeader(String bundleId, String key) {
         Dictionary<String, String> directory = Platform.getBundle(bundleId).getHeaders();
-        return directory.get(key);
+        String value = directory.get(key);
+        int parametersIndex = value.indexOf(';');
+        return parametersIndex < 0 ? value : value.substring(0, parametersIndex);
     }
 }

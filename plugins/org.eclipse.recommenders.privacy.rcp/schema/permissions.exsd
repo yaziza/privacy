@@ -92,13 +92,13 @@ Possible values are &lt;code&gt;install&lt;/code&gt; (Ask for approval when the 
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="advancedPreferencesDialogFactory" type="string">
+         <attribute name="configurationDialogFactory" type="string">
             <annotation>
                <documentation>
                   An optional callback class which supprot users configuring advanced preferences of this permission.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.recommenders.privacy.rcp.IAdvancedPreferencesDialogFactory"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.recommenders.privacy.rcp.IConfigurationDialogFactory"/>
                </appinfo>
             </annotation>
          </attribute>

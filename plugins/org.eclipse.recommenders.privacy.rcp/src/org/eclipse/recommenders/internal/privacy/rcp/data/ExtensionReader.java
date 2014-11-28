@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.recommenders.privacy.rcp.IAdvancedPreferencesDialogFactory;
+import org.eclipse.recommenders.privacy.rcp.IConfigurationDialogFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class ExtensionReader {
     private static final String PURPOSE_ATTRIBUTE = "purpose"; //$NON-NLS-1$
     private static final String POLICY_URI_ATTRIBUTE = "policyUri"; //$NON-NLS-1$
     private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval"; //$NON-NLS-1$
-    private static final String ADVANCED_CONFIGURATION_DIALOG_ATTRIBUTE = "advancedPreferencesDialogFactory"; //$NON-NLS-1$
+    private static final String CONFIGURATION_DIALOG_ATTRIBUTE = "configurationDialogFactory"; //$NON-NLS-1$
 
     private Map<String, PrivateDatum> privateDatumMap;
     private Map<String, Principal> principalMap;
@@ -215,21 +215,21 @@ public class ExtensionReader {
 
     public boolean isAdvancedPreferencesSupported(PrivatePermission permission) {
         IConfigurationElement configElement = advancedConfigMap.get(permission);
-        String advancedConfigurationDialog = configElement.getAttribute(ADVANCED_CONFIGURATION_DIALOG_ATTRIBUTE);
+        String advancedConfigurationDialog = configElement.getAttribute(CONFIGURATION_DIALOG_ATTRIBUTE);
         return !Strings.isNullOrEmpty(advancedConfigurationDialog);
     }
 
-    public Optional<IAdvancedPreferencesDialogFactory> getAdvancedConfigurationDialog(PrivatePermission permission) {
+    public Optional<IConfigurationDialogFactory> getConfigurationDialog(PrivatePermission permission) {
         IConfigurationElement configElement = advancedConfigMap.get(permission);
 
         try {
-            Object callback = configElement.createExecutableExtension(ADVANCED_CONFIGURATION_DIALOG_ATTRIBUTE);
-            if (callback instanceof IAdvancedPreferencesDialogFactory) {
-                IAdvancedPreferencesDialogFactory factory = (IAdvancedPreferencesDialogFactory) callback;
+            Object callback = configElement.createExecutableExtension(CONFIGURATION_DIALOG_ATTRIBUTE);
+            if (callback instanceof IConfigurationDialogFactory) {
+                IConfigurationDialogFactory factory = (IConfigurationDialogFactory) callback;
                 return Optional.of(factory);
             }
         } catch (CoreException e) {
-            LOG.info("Permission does not support advanced Configuration Mechanism"); //$NON-NLS-1$
+            LOG.warn("Permission does not support configuration mechanism", e); //$NON-NLS-1$
         }
         return Optional.fromNullable(null);
     }

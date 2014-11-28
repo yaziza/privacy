@@ -64,7 +64,7 @@ public class PermissionWidget {
     private Composite datumComposite;
     private Composite principalComposite;
     private CompositeType topComposite = DATUM;
-    private Button advancedButton;
+    private Button configurationButton;
 
     public PermissionWidget(Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet) {
         datumPermissionsInput = datumSet;
@@ -140,7 +140,7 @@ public class PermissionWidget {
             public void widgetSelected(SelectionEvent event) {
                 topComposite = Messages.LABEL_INFORMATION.equals(text) ? DATUM : PRINCIPAL;
                 updateStackTopControl();
-                advancedButton.setEnabled(false);
+                configurationButton.setEnabled(false);
             }
         });
     }
@@ -187,11 +187,11 @@ public class PermissionWidget {
                 if (selection.getFirstElement() instanceof PrivatePermission) {
                     PrivatePermission permission = (PrivatePermission) selection.getFirstElement();
                     if (permission.isAdvancedPreferencesSupported()) {
-                        advancedButton.setEnabled(true);
+                        configurationButton.setEnabled(true);
                         return;
                     }
                 }
-                advancedButton.setEnabled(false);
+                configurationButton.setEnabled(false);
             }
         });
     }
@@ -203,7 +203,7 @@ public class PermissionWidget {
 
         createChangeAllButton(composite, Messages.BUTTON_ENABLE_ALL, getId(ENABLE_ALL_BUTTON_ID), true);
         createChangeAllButton(composite, Messages.BUTTON_DISABLE_ALL, getId(DISABLE_ALL_BUTTON_ID), false);
-        createAdvancedButton(composite, Messages.BUTTON_ADVANCED, getId(ADVANCED_BUTTON_ID));
+        createConfigurationButton(composite, Messages.BUTTON_CONFIGURATION, getId(CONFIGURATION_BUTTON_ID));
     }
 
     private void createChangeAllButton(Composite composite, String label, String id, final boolean checkedState) {
@@ -230,16 +230,16 @@ public class PermissionWidget {
         });
     }
 
-    private void createAdvancedButton(Composite composite, String label, String id) {
+    private void createConfigurationButton(Composite composite, String label, String id) {
         Label spacer = new Label(composite, SWT.NONE);
         GridDataFactory.swtDefaults().grab(true, false).applyTo(spacer);
 
-        advancedButton = new Button(composite, SWT.PUSH);
-        GridDataFactory.swtDefaults().align(SWT.END, SWT.END).applyTo(advancedButton);
-        advancedButton.setText(label);
-        advancedButton.setData(SWT_ID, id);
-        advancedButton.setEnabled(false);
-        advancedButton.addSelectionListener(new SelectionAdapter() {
+        configurationButton = new Button(composite, SWT.PUSH);
+        GridDataFactory.swtDefaults().align(SWT.END, SWT.END).applyTo(configurationButton);
+        configurationButton.setText(label);
+        configurationButton.setData(SWT_ID, id);
+        configurationButton.setEnabled(false);
+        configurationButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
@@ -253,7 +253,7 @@ public class PermissionWidget {
                 IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
                 PrivatePermission permission = (PrivatePermission) selection.getFirstElement();
 
-                permission.openAdvancedConfigurationDialog(parentShell);
+                permission.openConfigurationDialog(parentShell);
             }
         });
     }

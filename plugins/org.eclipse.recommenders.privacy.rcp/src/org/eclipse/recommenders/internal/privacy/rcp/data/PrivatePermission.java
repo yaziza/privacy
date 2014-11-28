@@ -12,7 +12,7 @@ package org.eclipse.recommenders.internal.privacy.rcp.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.recommenders.privacy.rcp.IAdvancedPreferencesDialogFactory;
+import org.eclipse.recommenders.privacy.rcp.IConfigurationDialogFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -79,16 +79,16 @@ public class PrivatePermission {
         return extensionReader.isAdvancedPreferencesSupported(this);
     }
 
-    public void openAdvancedConfigurationDialog(Shell shell) {
-        Optional<IAdvancedPreferencesDialogFactory> factory = getAdvancedConfigurationDialog();
+    public void openConfigurationDialog(Shell shell) {
+        Optional<IConfigurationDialogFactory> factory = getConfigurationDialog();
         if (factory.isPresent()) {
-            IAdvancedPreferencesDialogFactory advancedConfigurationDialog = factory.get();
-            advancedConfigurationDialog.open(shell);
+            IConfigurationDialogFactory configurationDialog = factory.get();
+            configurationDialog.open(shell);
         }
     }
 
-    private Optional<IAdvancedPreferencesDialogFactory> getAdvancedConfigurationDialog() {
-        return extensionReader.getAdvancedConfigurationDialog(this);
+    private Optional<IConfigurationDialogFactory> getConfigurationDialog() {
+        return extensionReader.getConfigurationDialog(this);
     }
 
     @Override

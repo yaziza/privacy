@@ -31,6 +31,8 @@ public class Messages extends NLS {
 
     public static String LOG_ERROR_ANONYMOUS_ID_FILE_READ;
     public static String LOG_ERROR_ANONYMOUS_ID_FILE_WRITE;
+    public static String LOG_ERROR_LOADING_PREFERENCES;
+    public static String LOG_ERROR_SAVING_PREFERENCES;
 
     public static String WIZARD_INTRO_PAGE_TITLE;
     public static String WIZARD_INTRO_PAGE_DESCRIPTION;
@@ -52,7 +54,7 @@ public class Messages extends NLS {
 
     public static String BUTTON_ENABLE_ALL;
     public static String BUTTON_DISABLE_ALL;
-    public static String BUTTON_ADVANCED;
+    public static String BUTTON_CONFIGURATION;
     public static String BUTTON_GENERATE;
     public static String BUTTON_OK;
     public static String BUTTON_NOT_NOW;

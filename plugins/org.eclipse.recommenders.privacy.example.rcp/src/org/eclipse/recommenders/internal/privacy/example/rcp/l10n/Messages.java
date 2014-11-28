@@ -18,11 +18,15 @@ public class Messages extends NLS {
 
     public static String JOB_SENDING_HEARTBEAT;
 
-    public static String ADVANCED_DIALOG_DESCRIPTION;
+    public static String CONFIGURATION_DIALOG_DESCRIPTION;
 
     public static String LOG_INFO_SENDING_PERMISSION_APPROVED;
     public static String LOG_INFO_SENDING_PERMISSION_DISAPPROVED;
     public static String LOG_INFO_SENDING_PERMISSION_UNKNOWN;
+
+    public static String HEARTBEAT_INTERVAL_ONCE;
+    public static String HEARTBEAT_INTERVAL_HOURLY;
+    public static String HEARTBEAT_INTERVAL_DAILY;
 
     static {
         // initialize resource bundle
