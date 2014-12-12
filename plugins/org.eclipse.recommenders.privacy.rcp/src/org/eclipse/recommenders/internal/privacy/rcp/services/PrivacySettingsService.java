@@ -85,6 +85,17 @@ class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     @Override
+    public boolean isNotYetDecided(String principalId, String... datumsIds) {
+        for (String datumId : datumsIds) {
+            PermissionState state = getState(principalId, datumId);
+            if (UNKNOWN.equals(state)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean isAllApproved(String principalId) {
         String[] datums = getDatumsForPrincipal(principalId);
         return isApproved(principalId, datums);

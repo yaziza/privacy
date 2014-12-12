@@ -74,7 +74,7 @@ public class PopupDialogTest {
         secondDatum = new PrivateDatum("com.example.secondDatum", "second datum", "second datum description", null);
         firstPermission = new PrivatePermission(firstDatum, principal, "some purpose", "some uri", INSTALL,
                 extensionReader);
-        secondPermission = new PrivatePermission(secondDatum, principal, "some purpose", "some uri", NEVER,
+        secondPermission = new PrivatePermission(secondDatum, principal, "some purpose", "some uri", CUSTOM,
                 extensionReader);
 
         firstDatumCategory = new DatumCategory(firstDatum);

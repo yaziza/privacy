@@ -73,7 +73,7 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
         permissionWidget = new PermissionWidget(datumCategorySet, principalCategorySet);
         permissionWidget.setCheckedPermission(loadPermissions(principalCategorySet));
         permissionWidget
-        .setShownPermission(PrivacySettingsSerciveHelper.getCategoriesPermissions(principalCategorySet));
+                .setShownPermission(PrivacySettingsSerciveHelper.getCategoriesPermissions(principalCategorySet));
         permissionWidget.createContents(parent);
     }
 
@@ -87,8 +87,8 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
     @Override
     public void performApply() {
-        PrivacySettingsSerciveHelper.store(service, permissionWidget.getApprovedPermissions(),
-                permissionWidget.getDisapprovedPermissions());
+        PrivacySettingsSerciveHelper.store(service, permissionWidget.getAllApprovedPermissions(),
+                permissionWidget.getAllDisapprovedPermissions());
     }
 
     @Override

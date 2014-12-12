@@ -68,11 +68,20 @@ public interface IPrivacySettingsService {
     boolean isAllApproved(String principalId);
 
     /**
-     * Tests if sending the {@link PrivateDatum} with {@code datumId} by the {@link Principal} is allowed.
+     * Tests if sending the {@link PrivateDatum} with {@code datumsIds} by the {@link Principal} is allowed.
      *
      * @return <code>true</code> when the sending the {@link PrivateDatum} is allowed
      */
     boolean isApproved(String principalId, String... datumsIds);
+
+    /**
+     * Tests if sending one of the {@link PrivateDatum} with {@code datumsIds} by the {@link Principal} is not yet
+     * decided by the user.
+     *
+     * @return <code>true</code> when one of the {@link PrivateDatum} {@link PermissionState} is not yet decided by the
+     *         user ({@link PermissionState#UNKNOWN}).
+     */
+    boolean isNotYetDecided(String principalId, String... datumsIds);
 
     /**
      * Tests if sending the {@link PrivateDatum} with {@code datumId} is never approved for all {@link Principal}.

@@ -324,7 +324,9 @@ public class PrivacySettingsServiceTest {
         assertThat(sut.isApproved("com.example.first"), is(false));
         assertThat(sut.isAllApproved("com.example.first"), is(false));
         assertThat(sut.isApproved("com.example.second", "some.id", "other.id"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id", "other.id"), is(false));
         assertThat(sut.isApproved("com.example.second"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id"), is(false));
     }
 
     @Test
@@ -365,17 +367,79 @@ public class PrivacySettingsServiceTest {
         assertThat(sut.isAllApproved("com.example.first"), is(true));
         assertThat(sut.isApproved("com.example.first"), is(false));
         assertThat(sut.isApproved("com.example.first", "some.id"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.first", "some.id"), is(false));
         assertThat(sut.isApproved("com.example.first", "some.id", "other.id", "third"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.first", "some.id", "other.id", "third"), is(false));
 
         assertThat(sut.isAllApproved("com.example.second"), is(false));
         assertThat(sut.isApproved("com.example.second"), is(false));
         assertThat(sut.isApproved("com.example.second", "some.id"), is(true));
         assertThat(sut.isApproved("com.example.second", "some.id", "other.id"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id", "other.id"), is(false));
         assertThat(sut.isApproved("com.example.second", "some.id", "other.id", "third"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id", "other.id", "third"), is(false));
 
         assertThat(sut.isAllApproved("com.example.third"), is(false));
         assertThat(sut.isApproved("com.example.third"), is(false));
         assertThat(sut.isApproved("com.example.third", "some.id"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.third", "some.id"), is(true));
         assertThat(sut.isApproved("com.example.third", "some.id", "other.id"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.third", "some.id", "other.id"), is(true));
+    }
+
+    @Test
+    public void testIsNotYetDecided() throws BackingStoreException {
+        IEclipsePreferences preferenceMock = mock(IEclipsePreferences.class);
+        Preferences root = mock(Preferences.class);
+        Preferences someId = mock(Preferences.class);
+        Preferences otherId = mock(Preferences.class);
+        Preferences third = mock(Preferences.class);
+
+        when(preferenceMock.node("approval")).thenReturn(root);
+        when(root.childrenNames()).thenReturn(new String[] { "some.id", "other.id", "third" });
+        when(root.nodeExists("some.id")).thenReturn(true);
+        when(root.nodeExists("other.id")).thenReturn(true);
+        when(root.nodeExists("third")).thenReturn(true);
+
+        when(root.node("some.id")).thenReturn(someId);
+        when(root.node("other.id")).thenReturn(otherId);
+        when(root.node("third")).thenReturn(third);
+
+        when(someId.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(someId.get("com.example.first", "")).thenReturn("+");
+        when(someId.get("com.example.second", "")).thenReturn("");
+        when(someId.get("com.example.third", "")).thenReturn("+");
+
+        when(otherId.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(otherId.get("com.example.first", "")).thenReturn("+");
+        when(otherId.get("com.example.second", "")).thenReturn("+");
+        when(otherId.get("com.example.third", "")).thenReturn("");
+
+        when(third.keys()).thenReturn(new String[] { "com.example.first", "com.example.second" });
+        when(third.get("com.example.first", "")).thenReturn("+");
+        when(third.get("com.example.second", "")).thenReturn("-");
+        when(third.get("com.example.third", "")).thenReturn("+");
+
+        PrivacySettingsService sut = new PrivacySettingsService(preferenceMock);
+
+        assertThat(sut.isAllApproved("com.example.first"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.first"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.first", "some.id"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.first", "some.id", "other.id"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.first", "some.id", "other.id", "third"), is(false));
+
+        assertThat(sut.isAllApproved("com.example.second"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.second"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id", "other.id"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.second", "other.id", "third"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.second", "some.id", "other.id", "third"), is(true));
+
+        assertThat(sut.isAllApproved("com.example.third"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.third"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.third", "some.id"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.third", "some.id", "other.id"), is(true));
+        assertThat(sut.isNotYetDecided("com.example.third", "some.id", "third"), is(false));
+        assertThat(sut.isNotYetDecided("com.example.third", "some.id", "other.id", "third"), is(true));
     }
 }

@@ -42,6 +42,7 @@ import com.ibm.icu.text.MessageFormat;
 public class PermissionApprovalPage extends WizardPage {
 
     private final PermissionWidget permissionWidget;
+    private final Set<PrivatePermission> shownPermissions;
 
     public PermissionApprovalPage(PermissionApprovalWizard permissionApprovalWizard, Set<? extends ICategory> datumSet,
             Set<? extends ICategory> principalSet, Set<PrivatePermission> shownPermissions,
@@ -53,6 +54,7 @@ public class PermissionApprovalPage extends WizardPage {
         setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Constants.BUNDLE_ID, Constants.BANNER_ICON));
 
         permissionWidget = createPermissionWidget(datumSet, principalSet, shownPermissions, enabledPermissions);
+        this.shownPermissions = shownPermissions;
     }
 
     private PermissionWidget createPermissionWidget(Set<? extends ICategory> datumSet,
@@ -93,7 +95,7 @@ public class PermissionApprovalPage extends WizardPage {
             public void widgetSelected(SelectionEvent event) {
                 PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PREF_PAGE_ID, null, null);
                 PrivacyPreferencePage preferencePage = (PrivacyPreferencePage) dialog.getSelectedPage();
-                preferencePage.checkElements(permissionWidget.getApprovedPermissions());
+                preferencePage.checkElements(permissionWidget.getAllApprovedPermissions());
                 getWizard().performCancel();
                 getWizard().getContainer().getShell().close();
                 dialog.open();
@@ -103,10 +105,10 @@ public class PermissionApprovalPage extends WizardPage {
     }
 
     public Set<PrivatePermission> getApprovedPermissions() {
-        return permissionWidget.getApprovedPermissions();
+        return permissionWidget.getApprovedPermissions(shownPermissions);
     }
 
     public Set<PrivatePermission> getDisapprovedPermissions() {
-        return permissionWidget.getDisapprovedPermissions();
+        return permissionWidget.getDisapprovedPermissions(shownPermissions);
     }
 }

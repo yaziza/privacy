@@ -11,7 +11,9 @@
 package org.eclipse.recommenders.internal.privacy.rcp.jobs;
 
 import static org.eclipse.recommenders.internal.privacy.rcp.Constants.PREF_NODE_GLOBAL_ACTIVATION_VALUE;
+import static org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType.INSTALL;
 import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeType.PRINCIPAL;
+import static org.eclipse.recommenders.privacy.rcp.PermissionState.UNKNOWN;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +27,6 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ExtensionReader;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrincipalCategory;
@@ -41,6 +42,9 @@ import org.eclipse.ui.progress.UIJob;
 import org.osgi.service.prefs.BackingStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 @SuppressWarnings("restriction")
 public class ApprovalDialogJob extends UIJob {
@@ -64,7 +68,15 @@ public class ApprovalDialogJob extends UIJob {
 
     @Override
     public boolean shouldRun() {
-        return !getDetectedPermission().isEmpty();
+        return Iterables.tryFind(getDetectedPermission(), new ContainInstallPredicate()).isPresent();
+    }
+
+    private static final class ContainInstallPredicate implements Predicate<PrivatePermission> {
+
+        @Override
+        public boolean apply(PrivatePermission permission) {
+            return INSTALL.equals(permission.getApprovalType());
+        }
     }
 
     @Override
@@ -96,17 +108,12 @@ public class ApprovalDialogJob extends UIJob {
         for (PrincipalCategory principalCategory : extensionReader.getPrincipalCategory()) {
             for (PrivatePermission permission : principalCategory.getPermissions()) {
                 PermissionState state = service.getState(principalCategory.getId(), permission.getDatumId());
-                ApprovalType type = permission.getApprovalType();
-                if (shouldAskForApproval(state, type)) {
+                if (UNKNOWN.equals(state)) {
                     detectedPermissions.add(permission);
                 }
             }
         }
         return detectedPermissions;
-    }
-
-    private boolean shouldAskForApproval(PermissionState state, ApprovalType type) {
-        return PermissionState.UNKNOWN.equals(state) && ApprovalType.INSTALL.equals(type);
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {

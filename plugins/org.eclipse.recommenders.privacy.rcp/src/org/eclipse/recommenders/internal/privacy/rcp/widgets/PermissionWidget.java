@@ -14,6 +14,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Sets.intersection;
 import static org.eclipse.recommenders.internal.privacy.rcp.Constants.*;
+import static org.eclipse.recommenders.internal.privacy.rcp.data.PrivacySettingsSerciveHelper.getCategoriesPermissions;
 import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeType.*;
 
 import java.util.Arrays;
@@ -149,7 +150,7 @@ public class PermissionWidget {
             final CheckboxTreeViewer targetViewer, ColumnLabelProvider labelProvider) {
 
         GridDataFactory.fillDefaults().hint(SWT.DEFAULT, SWT.DEFAULT).grab(true, true)
-        .applyTo(sourceViewer.getControl());
+                .applyTo(sourceViewer.getControl());
         sourceViewer.setLabelProvider(labelProvider);
         sourceViewer.setContentProvider(new CategoryContentProvider());
         sourceViewer.setInput(input);
@@ -322,24 +323,31 @@ public class PermissionWidget {
         }
     }
 
-    public Set<PrivatePermission> getApprovedPermissions() {
-        return getPermissions(true);
+    public Set<PrivatePermission> getApprovedPermissions(Set<PrivatePermission> detectedPermissions) {
+        return getPermissions(detectedPermissions, true);
     }
 
-    public Set<PrivatePermission> getDisapprovedPermissions() {
-        return getPermissions(false);
+    public Set<PrivatePermission> getAllApprovedPermissions() {
+        return getPermissions(getCategoriesPermissions(principalPermissionsInput), true);
     }
 
-    private Set<PrivatePermission> getPermissions(boolean approved) {
+    public Set<PrivatePermission> getDisapprovedPermissions(Set<PrivatePermission> detectedPermissions) {
+        return getPermissions(detectedPermissions, false);
+    }
+
+    public Set<PrivatePermission> getAllDisapprovedPermissions() {
+        return getPermissions(getCategoriesPermissions(principalPermissionsInput), false);
+    }
+
+    private Set<PrivatePermission> getPermissions(Set<PrivatePermission> detectedPermissions, boolean approved) {
         Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
 
-        for (ICategory principal : principalPermissionsInput) {
-            for (PrivatePermission permission : principal.getPermissions()) {
-                if (approved == principalPermissionsViewer.getChecked(permission)) {
-                    permissions.add(permission);
-                }
+        for (PrivatePermission permission : detectedPermissions) {
+            if (approved == principalPermissionsViewer.getChecked(permission)) {
+                permissions.add(permission);
             }
         }
+
         return permissions;
     }
 

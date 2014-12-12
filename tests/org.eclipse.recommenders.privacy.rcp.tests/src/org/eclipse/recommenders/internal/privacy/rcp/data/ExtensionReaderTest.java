@@ -238,7 +238,7 @@ public class ExtensionReaderTest {
 
         IConfigurationElement secondUse = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(DATUM_ID_ATTRIBUTE,
                 "some id", PRINCIPAL_ID_ATTRIBUTE, "principal id", PURPOSE_ATTRIBUTE, "other purpose",
-                POLICY_URI_ATTRIBUTE, "other policy", APPROVAL_TYPE_ATTRIBUTE, "never"));
+                POLICY_URI_ATTRIBUTE, "other policy", APPROVAL_TYPE_ATTRIBUTE, "custom"));
 
         sut.readRegisteredPermissions(firstUse, secondUse);
         Set<PrincipalCategory> principals = sut.getPrincipalCategory();
@@ -276,7 +276,7 @@ public class ExtensionReaderTest {
 
         IConfigurationElement secondPermission = mockConfigElement(PERMISSION_ELEMENT, ImmutableMap.of(
                 DATUM_ID_ATTRIBUTE, "some id", PRINCIPAL_ID_ATTRIBUTE, "second principal id", PURPOSE_ATTRIBUTE,
-                "third purpose", POLICY_URI_ATTRIBUTE, "third policy", APPROVAL_TYPE_ATTRIBUTE, "never"));
+                "third purpose", POLICY_URI_ATTRIBUTE, "third policy", APPROVAL_TYPE_ATTRIBUTE, "custom"));
 
         sut.readRegisteredPermissions(firstPermission, brokenPermission, secondPermission);
         Set<PrincipalCategory> principals = sut.getPrincipalCategory();

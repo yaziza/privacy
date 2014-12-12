@@ -49,6 +49,11 @@ public class PermissionApprovalDialog extends Dialog {
 
     private PermissionWidget permissionWidget;
 
+    private String title = Messages.APPROVAL_DIALOG_TITLE;
+    private String description = Messages.APPROVAL_DIALOG_MESSAGE;
+    private String okButtonText = Messages.BUTTON_OK;
+    private String cancelButtonText = Messages.BUTTON_NOT_NOW;
+
     public PermissionApprovalDialog(Shell parentShell, IPrivacySettingsService service,
             Set<? extends ICategory> datumSet, Set<? extends ICategory> principalSet,
             Set<PrivatePermission> detectedPermissions) {
@@ -59,11 +64,27 @@ public class PermissionApprovalDialog extends Dialog {
         this.detectedPermissions = detectedPermissions;
     }
 
+    public void setTitle(String customTitle) {
+        title = customTitle != null ? customTitle : Messages.APPROVAL_DIALOG_TITLE;
+    }
+
+    public void setDescription(String customDesc) {
+        description = customDesc != null ? customDesc : Messages.APPROVAL_DIALOG_MESSAGE;
+    }
+
+    public void setOkButtonText(String customOk) {
+        okButtonText = customOk != null ? customOk : Messages.BUTTON_OK;
+    }
+
+    public void setCancelButtonText(String customCancel) {
+        cancelButtonText = customCancel != null ? customCancel : Messages.BUTTON_NOT_NOW;
+    }
+
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
 
-        createDescription(container, Messages.APPROVAL_DIALOG_MESSAGE);
+        createDescription(container, description);
         createPermissionWidget(container);
         createLink(container);
 
@@ -95,7 +116,7 @@ public class PermissionApprovalDialog extends Dialog {
             public void widgetSelected(SelectionEvent event) {
                 PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PREF_PAGE_ID, null, null);
                 PrivacyPreferencePage preferencePage = (PrivacyPreferencePage) dialog.getSelectedPage();
-                preferencePage.checkElements(permissionWidget.getApprovedPermissions());
+                preferencePage.checkElements(permissionWidget.getAllApprovedPermissions());
                 cancelPressed();
                 dialog.open();
             }
@@ -107,18 +128,18 @@ public class PermissionApprovalDialog extends Dialog {
         super.createButtonsForButtonBar(parent);
 
         Button ok = getButton(IDialogConstants.OK_ID);
-        ok.setText(Messages.BUTTON_OK);
+        ok.setText(okButtonText);
         setButtonLayoutData(ok);
 
         Button cancel = getButton(IDialogConstants.CANCEL_ID);
-        cancel.setText(Messages.BUTTON_NOT_NOW);
+        cancel.setText(cancelButtonText);
         setButtonLayoutData(cancel);
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.APPROVAL_DIALOG_TITLE);
+        newShell.setText(title);
     }
 
     private Set<PrivatePermission> loadPermissions(Set<? extends ICategory> input) {
@@ -127,8 +148,8 @@ public class PermissionApprovalDialog extends Dialog {
 
     @Override
     protected void okPressed() {
-        PrivacySettingsSerciveHelper.store(service, permissionWidget.getApprovedPermissions(),
-                permissionWidget.getDisapprovedPermissions());
+        PrivacySettingsSerciveHelper.store(service, permissionWidget.getApprovedPermissions(detectedPermissions),
+                permissionWidget.getDisapprovedPermissions(detectedPermissions));
         super.okPressed();
     }
 }

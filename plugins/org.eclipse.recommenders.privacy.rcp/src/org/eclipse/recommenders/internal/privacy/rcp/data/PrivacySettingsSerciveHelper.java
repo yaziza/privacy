@@ -13,12 +13,12 @@ package org.eclipse.recommenders.internal.privacy.rcp.data;
 import static com.google.common.collect.Sets.filter;
 import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.recommenders.privacy.rcp.IPrivacySettingsService;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 public final class PrivacySettingsSerciveHelper {
 
@@ -43,7 +43,7 @@ public final class PrivacySettingsSerciveHelper {
     }
 
     public static Set<PrivatePermission> getCategoriesPermissions(Set<? extends ICategory> categories) {
-        Set<PrivatePermission> permissions = new HashSet<PrivatePermission>();
+        Set<PrivatePermission> permissions = Sets.newHashSet();
 
         for (ICategory principal : categories) {
             for (PrivatePermission permission : principal.getPermissions()) {
@@ -51,6 +51,11 @@ public final class PrivacySettingsSerciveHelper {
             }
         }
         return permissions;
+    }
+
+    public static Set<PrivatePermission> getPermissions(Set<PrivatePermission> permissionSet, String principalId,
+            String... datumsIds) {
+        return filter(permissionSet, new ExtractPermissionsPredicate(principalId, datumsIds));
     }
 
     public static final class LoadApprovedPredicate implements Predicate<PrivatePermission> {
@@ -79,7 +84,27 @@ public final class PrivacySettingsSerciveHelper {
         public boolean apply(PrivatePermission permission) {
             return !service.isNeverApproved(permission.getDatumId());
         }
+    }
 
+    public static final class ExtractPermissionsPredicate implements Predicate<PrivatePermission> {
+
+        private final String principalId;
+        private final String[] datumIds;
+
+        private ExtractPermissionsPredicate(String principalId, String[] datumIds) {
+            this.principalId = principalId;
+            this.datumIds = datumIds;
+        }
+
+        @Override
+        public boolean apply(PrivatePermission permission) {
+            for (String datumId : datumIds) {
+                if (permission.getPrincipalId().equals(principalId) && permission.getDatumId().equals(datumId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     private PrivacySettingsSerciveHelper() {

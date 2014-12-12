@@ -11,8 +11,8 @@
 package org.eclipse.recommenders.internal.privacy.rcp.data;
 
 public enum ApprovalType {
-    INSTALL,
-    NEVER;
+    CUSTOM,
+    INSTALL;
 
     public static boolean isValidType(String type) {
         for (ApprovalType approvalType : ApprovalType.values()) {
