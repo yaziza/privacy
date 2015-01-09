@@ -35,23 +35,16 @@ public class PermissionApprovalHelper {
         extensionReader = new ExtensionReader();
     }
 
-    public static boolean isApproved(Shell shell, String principalId, String... datumsIds) {
-        return showCustomDialog(shell, null, null, principalId, datumsIds);
+    public static void showDefaultApprovalDialog(Shell shell, String principalId, String... datumsIds) {
+        showDialog(shell, null, null, principalId, datumsIds);
     }
 
-    public static boolean showCustomDialog(Shell shell, String title, String description, String principalId,
+    public static void showCustomApprovedDialog(Shell shell, String title, String description, String principalId,
             String... datumsIds) {
-        if (settingsService.isApproved(principalId, datumsIds)) {
-            return true;
-        } else if (settingsService.isNotYetDecided(principalId, datumsIds)) {
-            askForApproval(shell, title, description, principalId, datumsIds);
-            return settingsService.isApproved(principalId, datumsIds);
-        } else {
-            return false;
-        }
+        showDialog(shell, title, description, principalId, datumsIds);
     }
 
-    private static void askForApproval(Shell shell, String title, String description, String principalId,
+    private static void showDialog(Shell shell, String title, String description, String principalId,
             String... datumsIds) {
         Set<PrivatePermission> permissionSet = getPermissions(
                 getCategoriesPermissions(extensionReader.getDatumCategory()), principalId, datumsIds);
