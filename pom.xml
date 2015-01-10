@@ -9,7 +9,7 @@
 	<name>Aggregator for Code Recommenders Privacy Preferences</name>
 	<modules>
 		<module>releng/licenses</module>
-		<module>targets/luna</module>
+		<module>targets</module>
 		<module>plugins</module>
 		<module>tests/org.eclipse.recommenders.privacy.rcp.tests</module>
 		<module>features</module>

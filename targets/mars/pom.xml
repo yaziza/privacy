@@ -8,7 +8,7 @@
 		<version>0.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>luna</artifactId>
+	<artifactId>mars</artifactId>
 	<packaging>eclipse-target-definition</packaging>
-	<name>Target Definition for Eclipse Luna (4.4)</name>
+	<name>Target Definition for Eclipse Mars (4.5)</name>
 </project>
