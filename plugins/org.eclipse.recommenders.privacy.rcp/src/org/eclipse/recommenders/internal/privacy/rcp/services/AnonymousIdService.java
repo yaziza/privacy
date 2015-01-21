@@ -13,9 +13,7 @@ package org.eclipse.recommenders.internal.privacy.rcp.services;
 import static org.eclipse.recommenders.internal.privacy.rcp.Constants.BUNDLE_ID;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.UUID;
 
 import org.eclipse.recommenders.internal.privacy.rcp.l10n.Messages;
@@ -24,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import com.ibm.icu.text.MessageFormat;
 
 public class AnonymousIdService implements IAnonymousIdService {
@@ -61,12 +61,6 @@ public class AnonymousIdService implements IAnonymousIdService {
     @Override
     public synchronized void generateAnonymousId() {
         anonymousId = generateFreshAnonymousId();
-
-        try {
-            writeAnonymousIdToFile(anonymousIdFile, anonymousId);
-        } catch (IOException e) {
-            LOG.error(MessageFormat.format(Messages.LOG_ERROR_ANONYMOUS_ID_FILE_WRITE, anonymousIdFile), e);
-        }
     }
 
     @Override
@@ -88,23 +82,21 @@ public class AnonymousIdService implements IAnonymousIdService {
         do {
             freshAnonymousId = UUID.randomUUID();
         } while (freshAnonymousId.equals(anonymousId));
-        return freshAnonymousId;
-    }
 
-    private void writeAnonymousIdToFile(File file, UUID anonymousId) throws IOException {
-        final FileOutputStream out = new FileOutputStream(file);
         try {
-            out.write(anonymousId.toString().getBytes());
-        } finally {
-            out.close();
+            Files.write(freshAnonymousId.toString(), anonymousIdFile, Charsets.UTF_8);
+        } catch (IOException e) {
+            LOG.error(MessageFormat.format(Messages.LOG_ERROR_ANONYMOUS_ID_FILE_WRITE, anonymousIdFile), e);
         }
+
+        return freshAnonymousId;
     }
 
     private UUID readOrCreateAnonymousId() {
         if (anonymousIdFile.exists() && anonymousIdFile.canRead()) {
             try {
                 return readAnonymousIdFromFile(anonymousIdFile);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error(MessageFormat.format(Messages.LOG_ERROR_ANONYMOUS_ID_FILE_READ, anonymousIdFile), e);
                 return generateFreshAnonymousId();
             }
@@ -114,15 +106,7 @@ public class AnonymousIdService implements IAnonymousIdService {
     }
 
     private UUID readAnonymousIdFromFile(File file) throws IOException {
-        final RandomAccessFile raf = new RandomAccessFile(file, "r"); //$NON-NLS-1$
-        final byte[] bytes = new byte[(int) raf.length()];
-        try {
-            raf.readFully(bytes);
-            return UUID.fromString(new String(bytes));
-        } catch (IllegalArgumentException e) {
-            throw new IOException(e);
-        } finally {
-            raf.close();
-        }
+        String anonymousIdString = Files.readFirstLine(file, Charsets.UTF_8);
+        return UUID.fromString(new String(anonymousIdString));
     }
 }

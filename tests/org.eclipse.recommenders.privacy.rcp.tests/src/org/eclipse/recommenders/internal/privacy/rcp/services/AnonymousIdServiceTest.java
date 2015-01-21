@@ -22,6 +22,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 public class AnonymousIdServiceTest {
 
     private static final String ANONYMOUS_ID_FILE_NAME = "anonymousId"; //$NON-NLS-1$
@@ -33,28 +36,33 @@ public class AnonymousIdServiceTest {
     public void testGetAnonymousIdIsNotNull() throws IOException {
         AnonymousIdService sut = new AnonymousIdService(folder.newFile());
         UUID anonymousId = sut.getAnonymousId();
+
         assertThat(anonymousId, is(notNullValue()));
     }
 
     @Test
     public void testGetAnonymousIdIsIdempotent() throws IOException {
         AnonymousIdService sut = new AnonymousIdService(folder.newFile());
+
         UUID firstAnonymousId = sut.getAnonymousId();
         UUID secondAnonymousId = sut.getAnonymousId();
+
         assertThat(secondAnonymousId, is(equalTo(firstAnonymousId)));
     }
 
     @Test
     public void testGenerateAnonymousId() throws IOException {
         AnonymousIdService sut = new AnonymousIdService(folder.newFile());
+
         UUID firstAnonymousId = sut.getAnonymousId();
         sut.generateAnonymousId();
         UUID secondAnonymousId = sut.getAnonymousId();
+
         assertThat(secondAnonymousId, is(not(equalTo(firstAnonymousId))));
     }
 
     @Test
-    public void testGetAnonymousIdWithWriteProtectedAnonymousIdFile() throws IOException {
+    public void testGetAnonymousIdWithWriteProtectedFile() throws IOException {
         File writeProtectedFolder = folder.newFolder();
         writeProtectedFolder.setWritable(false);
         AnonymousIdService sut = new AnonymousIdService(new File(writeProtectedFolder, ANONYMOUS_ID_FILE_NAME));
@@ -62,25 +70,93 @@ public class AnonymousIdServiceTest {
         assertThat(writeProtectedFolder.canWrite(), is(false));
 
         UUID firstAnonymousId = sut.getAnonymousId();
+
         assertThat(firstAnonymousId, is(notNullValue()));
 
         UUID secondAnonymousId = sut.getAnonymousId();
+
         assertThat(secondAnonymousId, is(equalTo(firstAnonymousId)));
     }
 
     @Test
-    public void testGetAnonymousIdWithReadProtectedAnonymousIdFile() throws IOException {
+    public void testGenerateAnonymousIdWithWriteProtectedFile() throws IOException {
+        File writeProtectedFolder = folder.newFile();
+        writeProtectedFolder.setWritable(false);
+
+        AnonymousIdService sut = new AnonymousIdService(new File(writeProtectedFolder, ANONYMOUS_ID_FILE_NAME));
+
+        assertThat(writeProtectedFolder.canWrite(), is(false));
+
+        UUID firstAnonymousId = sut.getAnonymousId();
+        sut.generateAnonymousId();
+        UUID secondAnonymousId = sut.getAnonymousId();
+
+        assertThat(secondAnonymousId, is(not(equalTo(firstAnonymousId))));
+    }
+
+    @Test
+    public void testGetAnonymousIdWithReadProtectedFile() throws IOException {
         File anonymousIdFile = folder.newFile();
         AnonymousIdService firstSession = new AnonymousIdService(anonymousIdFile);
-
-        firstSession.generateAnonymousId();
-
-        anonymousIdFile.setReadable(false);
-        assertThat(anonymousIdFile.canRead(), is(false));
-
         AnonymousIdService secondSession = new AnonymousIdService(anonymousIdFile);
 
+        firstSession.generateAnonymousId();
+        anonymousIdFile.setReadable(false);
+
+        assertThat(anonymousIdFile.canRead(), is(false));
+
         UUID firstAnonymousId = secondSession.getAnonymousId();
+
         assertThat(firstAnonymousId, is(notNullValue()));
+    }
+
+    @Test
+    public void testGenerateAnonymousIdWithReadProtectedFile() throws IOException {
+        File anonymousIdFile = folder.newFile();
+        anonymousIdFile.setReadable(false);
+
+        AnonymousIdService sut = new AnonymousIdService(anonymousIdFile);
+        UUID firstAnonymousId = sut.getAnonymousId();
+
+        assertThat(firstAnonymousId, is(notNullValue()));
+
+        sut.generateAnonymousId();
+        UUID secondAnonymousId = sut.getAnonymousId();
+
+        assertThat(secondAnonymousId, is(not(equalTo(firstAnonymousId))));
+    }
+
+    @Test
+    public void testGetAnonymousIdOverwritesMalformedFile() throws IOException {
+        File anonymousIdFile = folder.newFile();
+        Files.write("malformed", anonymousIdFile, Charsets.UTF_8);
+
+        AnonymousIdService sut = new AnonymousIdService(anonymousIdFile);
+
+        UUID inMemoryAnonymousId = sut.getAnonymousId();
+
+        assertThat(inMemoryAnonymousId, is(notNullValue()));
+
+        String anonymousIdString = Files.readFirstLine(anonymousIdFile, Charsets.UTF_8);
+        UUID onDiskAnonymousId = UUID.fromString(anonymousIdString);
+
+        assertThat(onDiskAnonymousId, is(equalTo(inMemoryAnonymousId)));
+    }
+
+    @Test
+    public void testGenerateAnonymousIdOverwritesMalformedFile() throws IOException {
+        File anonymousIdFile = folder.newFile();
+        Files.write("malformed", anonymousIdFile, Charsets.UTF_8);
+
+        AnonymousIdService sut = new AnonymousIdService(anonymousIdFile);
+        sut.generateAnonymousId();
+        UUID inMemoryAnonymousId = sut.getAnonymousId();
+
+        assertThat(inMemoryAnonymousId, is(notNullValue()));
+
+        String anonymousIdString = Files.readFirstLine(anonymousIdFile, Charsets.UTF_8);
+        UUID onDiskAnonymousId = UUID.fromString(anonymousIdString);
+
+        assertThat(onDiskAnonymousId, is(equalTo(inMemoryAnonymousId)));
     }
 }
