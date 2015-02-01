@@ -67,11 +67,15 @@ public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbe
 
     @Override
     protected Control createContents(Composite parent) {
-        createDescription(parent, Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION);
-        createAnonymousIdLabel(parent);
-        createPermissionWidget(parent);
+        Composite composite = new Composite(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(composite);
+        GridLayoutFactory.fillDefaults().applyTo(composite);
 
-        applyDialogFont(parent);
+        createDescription(composite, Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION);
+        createAnonymousIdLabel(composite);
+        createPermissionWidget(composite);
+
+        applyDialogFont(composite);
         return parent;
     }
 
@@ -94,7 +98,7 @@ public class AnonymousIdPreferencePage extends PreferencePage implements IWorkbe
     private void createDescription(Composite parent, String message) {
         Link link = new Link(parent, SWT.WRAP);
         GridDataFactory.fillDefaults().hint(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH, SWT.DEFAULT).grab(true, false)
-        .applyTo(link);
+                .applyTo(link);
         final String linkToPreferencePage = PreferencesHelper.createLinkLabelToPreferencePage(PREF_PAGE_ID);
         link.setText(MessageFormat.format(Messages.ANONYMOUS_ID_PREFPAGE_DESCRIPTION, linkToPreferencePage));
 

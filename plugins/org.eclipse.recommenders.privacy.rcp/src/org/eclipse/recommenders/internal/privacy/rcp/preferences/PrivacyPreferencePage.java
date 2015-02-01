@@ -17,6 +17,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.recommenders.internal.privacy.rcp.data.DatumCategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ExtensionReader;
@@ -53,10 +54,14 @@ public class PrivacyPreferencePage extends PreferencePage implements IWorkbenchP
 
     @Override
     protected Control createContents(Composite parent) {
-        createDescription(parent, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
-        createPermissionWidget(parent);
+        Composite composite = new Composite(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(composite);
+        GridLayoutFactory.fillDefaults().applyTo(composite);
 
-        Dialog.applyDialogFont(parent);
+        createDescription(composite, Messages.PRIVACY_PREFPAGE_DESCRIPTION);
+        createPermissionWidget(composite);
+
+        Dialog.applyDialogFont(composite);
         return parent;
     }
 
