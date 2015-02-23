@@ -14,7 +14,7 @@
 		<module>releng/licenses</module>
 		<module>targets</module>
 		<module>plugins</module>
-		<module>tests/org.eclipse.recommenders.privacy.rcp.tests</module>
+		<module>tests</module>
 		<module>features</module>
 		<module>repositories</module>
 	</modules>

@@ -23,6 +23,7 @@
 
 	<properties>
 		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>
+		<simrel>luna</simrel>
 	</properties>
 
 	<repositories>

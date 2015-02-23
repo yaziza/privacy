@@ -8,16 +8,15 @@ Source Code
 
 The source code is available [here](http://git.eclipse.org/c/recommenders.incubator/org.eclipse.recommenders.privacy.git/).
 
-
-Developer resources:
---------------------
+Developer Resources
+-------------------
 
 Information regarding source code management, builds, coding standards, and more.
 
 - https://projects.eclipse.org/projects/technology.recommenders.incubator
 
-Contributor License Agreement:
-------------------------------
+Contributor License Agreement
+-----------------------------
 
 Before your contribution can be accepted by the project, you need to create and electronically sign the Eclipse Foundation Contributor License Agreement (CLA).
 
@@ -37,7 +36,7 @@ The Eclipse Code Recommenders Privacy project uses Bugzilla to track ongoing dev
 Be sure to search for existing issue before you create another one.
 Remember that contributions are always welcome!
 
-Build Code Recommenders Privacy from Source:
+Build Code Recommenders Privacy from Source
 -------------------------------------------
 
 Building Code Recommenders Privacy from source is straight-forward.
@@ -95,8 +94,31 @@ Congratulations, you have contributed your first change to Code Recommenders Pri
 Other committers will look at your code and provide feedback.
 Do not be alarmed if your change is not immediately merged; most changes require a bit of back-and-forth between contributors and committers.
 
-Contact:
---------
+Release a new Version
+---------------------
 
-Contact the project developers via the project's ["dev" list](https://dev.eclipse.org/mailman/listinfo/recommenders-dev "Developer Mailing List").
+Please follow this steps to release a new version of the project:
 
+- `export RELEASE_VERSION=x.y.z`
+- `git clean -df`
+- `mvn org.eclipse.tycho:tycho-versions-plugin:set-version -Dartifacts=aggregator,licenses,targets,plugins,tests,features,repositories -Dproperties=privacyVersion -DnewVersion=${RELEASE_VERSION}`
+- `mvn org.eclipse.tycho:tycho-versions-plugin:set-version -Dartifacts=$(basename plugins/*/ tests/*/ features/*/ | paste -sd "," - ) -DnewVersion=${RELEASE_VERSION}-SNAPSHOT`
+- `mvn org.codehaus.mojo:tidy-maven-plugin:1.0-beta-1:pom`
+- `git commit -a -m "[releng] ${RELEASE_VERSION}"`
+- `git push origin HEAD:refs/for/master`
+
+Thereafter, switch to the next (SNAPSHOT) version:
+
+- `export NEXT_VERSION=x.y.(z+1)`
+- `git checkout HEAD^ -- '*'`
+- `mvn org.eclipse.tycho:tycho-versions-plugin:set-version -Dartifacts=aggregator,licenses,targets,plugins,tests,features,repositories -Dproperties=privacyVersion -DnewVersion=${NEXT_VERSION}-SNAPSHOT`
+
+Manually bump the version in the `feature/requires/import` elements of `features/*/feature.xml` to `${NEXT_VERSION}`.
+
+- `git commit -a -m "[releng] ${NEXT_VERSION}_VERSION"`
+- `git push origin HEAD:refs/for/master`
+
+Contact
+-------
+
+Contact the project developers via the project's [developer mailing list](https://dev.eclipse.org/mailman/listinfo/recommenders-dev).

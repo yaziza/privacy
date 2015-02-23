@@ -20,7 +20,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.recommenders.privacy.rcp.feature" version="0.1.0.qualifier" match="compatible"/>
+      <import feature="org.eclipse.recommenders.privacy.rcp.feature" version="0.1.0" match="compatible"/>
    </requires>
 
    <plugin
