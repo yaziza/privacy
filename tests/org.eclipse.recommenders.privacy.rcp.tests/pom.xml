@@ -2,18 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.eclipse.recommenders</groupId>
 		<artifactId>tests</artifactId>
 		<version>2.1.11</version>
 	</parent>
+
 	<groupId>org.eclipse.recommenders.privacy</groupId>
 	<artifactId>org.eclipse.recommenders.privacy.rcp.tests</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
+
 	<properties>
 		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>repo.eclipse.org</id>
@@ -27,6 +31,7 @@
 			<url>https://repo.eclipse.org/content/repositories/recommenders/</url>
 		</pluginRepository>
 	</pluginRepositories>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -79,6 +84,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>mac</id>

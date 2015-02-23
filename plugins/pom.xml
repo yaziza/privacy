@@ -2,24 +2,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.eclipse.recommenders</groupId>
 		<artifactId>plugins</artifactId>
 		<version>2.1.11</version>
 	</parent>
+
 	<groupId>org.eclipse.recommenders.privacy</groupId>
 	<artifactId>plugins</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
 	<name>Plugins</name>
+
 	<modules>
 		<module>org.eclipse.recommenders.privacy.rcp</module>
 		<module>org.eclipse.recommenders.privacy.example.rcp</module>
 		<module>org.eclipse.recommenders.privacy.heartbeat.rcp</module>
 	</modules>
+
 	<properties>
 		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>
+		<simrel>luna</simrel>
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>repo.eclipse.org</id>
@@ -32,6 +39,7 @@
 			<url>https://repo.eclipse.org/content/repositories/recommenders/</url>
 		</pluginRepository>
 	</pluginRepositories>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -41,7 +49,7 @@
 					<target>
 						<artifact>
 							<groupId>org.eclipse.recommenders.privacy</groupId>
-							<artifactId>luna</artifactId>
+							<artifactId>${simrel}</artifactId>
 							<version>${privacyVersion}</version>
 						</artifact>
 					</target>
