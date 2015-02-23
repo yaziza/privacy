@@ -41,7 +41,7 @@
 					<target>
 						<artifact>
 							<groupId>org.eclipse.recommenders.privacy</groupId>
-							<artifactId>luna</artifactId>
+							<artifactId>${simrel}</artifactId>
 							<version>${privacyVersion}</version>	
 						</artifact>
 					</target>

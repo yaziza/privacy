@@ -16,6 +16,6 @@
 		<module>plugins</module>
 		<module>tests/org.eclipse.recommenders.privacy.rcp.tests</module>
 		<module>features</module>
-		<module>repositories/head</module>
+		<module>repositories</module>
 	</modules>
 </project>

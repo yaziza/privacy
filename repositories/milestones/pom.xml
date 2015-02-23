@@ -10,7 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>head</artifactId>
+	<artifactId>milestones</artifactId>
 	<packaging>eclipse-repository</packaging>
 
 	<name>Privacy Preferences (Incubator) Milestones Update Site</name>
