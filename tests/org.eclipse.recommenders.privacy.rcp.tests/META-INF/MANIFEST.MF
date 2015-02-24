@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.recommenders.privacy.rcp.tests
 Fragment-Host: org.eclipse.recommenders.privacy.rcp
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-Name: Code Recommenders Privacy Preferences UI Tests (Incubator)
 Bundle-Vendor: Eclipse Code Recommenders
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

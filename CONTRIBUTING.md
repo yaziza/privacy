@@ -115,7 +115,7 @@ Thereafter, switch to the next (SNAPSHOT) version:
 
 Manually bump the version in the `feature/requires/import` elements of `features/*/feature.xml` to `${NEXT_VERSION}`.
 
-- `git commit -a -m "[releng] ${NEXT_VERSION}_VERSION"`
+- `git commit -a -m "[releng] ${NEXT_VERSION}-SNAPSHOT"`
 - `git push origin HEAD:refs/for/master`
 
 Contact
