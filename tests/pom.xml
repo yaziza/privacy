@@ -11,7 +11,7 @@
 
 	<groupId>org.eclipse.recommenders.privacy</groupId>
 	<artifactId>tests</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<packaging>pom</packaging>
 
 	<name>Tests</name>
@@ -21,7 +21,7 @@
 	</modules>
 
 	<properties>
-		<privacyVersion>0.1.0-SNAPSHOT</privacyVersion>
+		<privacyVersion>0.1.0</privacyVersion>
 		<simrel>luna</simrel>
 	</properties>
 
