@@ -14,12 +14,8 @@ public final class Constants {
 
     public static final String BUNDLE_ID = "org.eclipse.recommenders.privacy.rcp"; //$NON-NLS-1$
 
-    public static final String PREF_NODE_GLOBAL_PERMISSIONS_PATH = "org.eclipse.recommenders.privacy.rcp.permissions"; //$NON-NLS-1$
-    public static final String PREF_NODE_GLOBAL_PERMISSIONS_VALUE = "permissions"; //$NON-NLS-1$
-    public static final String PREF_NODE_GLOBAL_ACTIVATION_VALUE = "activation"; //$NON-NLS-1$
-    public static final String PREF_ROOT_NODE = "approval"; //$NON-NLS-1$
-    public static final String PREF_ROOT_NODE_GENERAL = "general"; //$NON-NLS-1$
-    public static final String PREF_ROOT_NODE_ADVANCED = "advanced"; //$NON-NLS-1$
+    public static final String PREF_NODE_ACTIVATION = "activated"; //$NON-NLS-1$
+    public static final String PREF_NODE_APPROVAL = "approval"; //$NON-NLS-1$
 
     public static final String DEFAULT_PRINCIPAL_ICON = "icons/obj16/defaultPrincipal.gif"; //$NON-NLS-1$
     public static final String DEFAULT_DATUM_ICON = "icons/obj16/defaultDatum.gif"; //$NON-NLS-1$

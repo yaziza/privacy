@@ -10,7 +10,7 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.jobs;
 
-import static org.eclipse.recommenders.internal.privacy.rcp.Constants.PREF_NODE_GLOBAL_ACTIVATION_VALUE;
+import static org.eclipse.recommenders.internal.privacy.rcp.Constants.PREF_NODE_ACTIVATION;
 import static org.eclipse.recommenders.internal.privacy.rcp.data.ApprovalType.INSTALL;
 import static org.eclipse.recommenders.internal.privacy.rcp.widgets.CompositeType.PRINCIPAL;
 import static org.eclipse.recommenders.privacy.rcp.PermissionState.UNKNOWN;
@@ -51,14 +51,12 @@ public class ApprovalDialogJob extends UIJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApprovalDialogJob.class);
 
-    public static final String PREF_FIRST_ACTIVATION = "activated"; //$NON-NLS-1$
-
     private final IPrivacySettingsService service;
     private final ExtensionReader extensionReader;
     private final IEclipsePreferences preferences;
 
     @Inject
-    public ApprovalDialogJob(@Preference(value = PREF_NODE_GLOBAL_ACTIVATION_VALUE) IEclipsePreferences preferences,
+    public ApprovalDialogJob(@Preference IEclipsePreferences preferences,
             IPrivacySettingsService privacySettingsService, IEclipseContext eclipseContext) {
         super(Messages.JOB_APPROVAL_DIALOG);
         this.preferences = preferences;
@@ -121,7 +119,7 @@ public class ApprovalDialogJob extends UIJob {
     }
 
     private void firstTimeActivation() {
-        preferences.putBoolean(PREF_FIRST_ACTIVATION, true);
+        preferences.putBoolean(PREF_NODE_ACTIVATION, true);
         try {
             preferences.flush();
         } catch (BackingStoreException e) {
@@ -130,6 +128,6 @@ public class ApprovalDialogJob extends UIJob {
     }
 
     private boolean isActivated() {
-        return preferences.getBoolean(PREF_FIRST_ACTIVATION, false);
+        return preferences.getBoolean(PREF_NODE_ACTIVATION, false);
     }
 }

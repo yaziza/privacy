@@ -10,7 +10,7 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.services;
 
-import static org.eclipse.recommenders.internal.privacy.rcp.Constants.*;
+import static org.eclipse.recommenders.internal.privacy.rcp.Constants.PREF_NODE_APPROVAL;
 import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
 
 import java.util.ArrayList;
@@ -39,8 +39,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
     private final IEclipsePreferences preferences;
 
     @Inject
-    public PrivacySettingsService(
-            @Preference(nodePath = PREF_NODE_GLOBAL_PERMISSIONS_PATH, value = PREF_NODE_GLOBAL_PERMISSIONS_VALUE) IEclipsePreferences preferences) {
+    public PrivacySettingsService(@Preference IEclipsePreferences preferences) {
         this.preferences = preferences;
     }
 
@@ -51,7 +50,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
 
     @Override
     public PermissionState getState(String principalId, String datumId) {
-        Preferences root = preferences.node(PREF_ROOT_NODE);
+        Preferences root = preferences.node(PREF_NODE_APPROVAL);
         String state = root.node(datumId).get(principalId, ""); //$NON-NLS-1$
 
         if (PREF_APPROVED.equals(state)) {
@@ -103,7 +102,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
 
     @Override
     public boolean isNeverApproved(String datumId) {
-        Preferences root = preferences.node(PREF_ROOT_NODE);
+        Preferences root = preferences.node(PREF_NODE_APPROVAL);
         try {
             if (!root.nodeExists(datumId)) {
                 return true;
@@ -121,7 +120,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
     }
 
     private String[] getDatumsForPrincipal(String principalId) {
-        Preferences root = preferences.node(PREF_ROOT_NODE);
+        Preferences root = preferences.node(PREF_NODE_APPROVAL);
         ArrayList<String> datums = new ArrayList<String>();
 
         try {
@@ -140,7 +139,7 @@ class PrivacySettingsService implements IPrivacySettingsService {
     private void store(String principalId, String datumId, PermissionState state) {
         String value = PermissionState.APPROVED.equals(state) ? PREF_APPROVED : PREF_DISAPPROVED;
 
-        Preferences root = preferences.node(PREF_ROOT_NODE);
+        Preferences root = preferences.node(PREF_NODE_APPROVAL);
         root.node(datumId).put(principalId, value);
         try {
             preferences.flush();

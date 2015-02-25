@@ -20,7 +20,7 @@
 			name="%preferenceTransfer.permissions.name">
 			<description>%preferenceTransfer.permissions.description</description>
 			<mapping scope="instance">
-				<entry node="org.eclipse.recommenders.privacy.rcp.permissions"/>
+				<entry node="org.eclipse.recommenders.privacy.rcp/approval"/>
 			</mapping>
 		</transfer>
 	</extension>
