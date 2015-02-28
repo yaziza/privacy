@@ -12,6 +12,7 @@ package org.eclipse.recommenders.internal.privacy.example.rcp;
 
 import static org.eclipse.recommenders.internal.privacy.example.rcp.Constants.*;
 import static org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatInterval.*;
+import static org.eclipse.recommenders.privacy.rcp.DatumIds.ANONYMOUS_ID;
 import static org.eclipse.recommenders.privacy.rcp.PermissionState.*;
 
 import java.util.Dictionary;

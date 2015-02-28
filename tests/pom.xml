@@ -49,7 +49,7 @@
 						<artifact>
 							<groupId>org.eclipse.recommenders.privacy</groupId>
 							<artifactId>${simrel}</artifactId>
-							<version>${privacyVersion}</version>	
+							<version>${privacyVersion}</version>
 						</artifact>
 					</target>
 				</configuration>
@@ -70,7 +70,6 @@
 						<configuration>
 							<validHeaders>
 								<validHeader>header-aziza-2014.txt</validHeader>
-								<validHeader>header-codetrails-2014.txt</validHeader>
 							</validHeaders>
 						</configuration>
 					</execution>

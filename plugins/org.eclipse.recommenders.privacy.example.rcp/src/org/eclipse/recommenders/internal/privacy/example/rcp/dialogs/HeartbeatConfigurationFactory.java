@@ -54,7 +54,8 @@ public class HeartbeatConfigurationFactory implements IConfigurationDialogFactor
         protected ConfigurationDialog(Shell parentShell) {
             super(parentShell);
             Preferences rootNode = InstanceScope.INSTANCE.getNode(BUNDLE_ID);
-            this.prefStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, rootNode.absolutePath());
+            this.prefStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, rootNode.node(PREF_NODE_ADVANCED)
+                    .absolutePath());
             setHelpAvailable(false);
             setShellStyle(getShellStyle() | SWT.SHEET);
         }

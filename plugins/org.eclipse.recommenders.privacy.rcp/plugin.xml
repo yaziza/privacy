@@ -41,6 +41,9 @@
 			icon="icons/obj16/anonymousId.gif"
 			name="%datums.anonymousId.name"
 			description="%datums.anonymousId.description"/>
+		<datum id="org.eclipse.recommenders.privacy.rcp.datums.email"
+			name="%datums.email.name"
+			description="%datums.email.description"/>
 	</extension>
 	<extension point="org.eclipse.ui.startup">
 		<startup class="org.eclipse.recommenders.internal.privacy.rcp.Startup"/>
