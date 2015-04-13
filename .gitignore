@@ -1,33 +1,13 @@
-## no archives
-*.jar
-*.zip
-*.gz
-
-## no derived resources
-*.class
-bin/
+# No derived resources
 target/
-workspace/
-.recommenders/
-aggregators/
-screenshots/
 
-## jrebel project config files
-rebel.xml
-
-## No Eclipse settings (except Xtend)
+# No Eclipse settings
 .project
 .classpath
 .settings/
-!.settings/org.eclipse.xtend.core.Xtend.prefs
 
-## No Checkstyle plugin settings
+# No Checkstyle plugin settings
 .checkstyle
 
-## various other file types we don't want to have in the repository:
+# No magic files used by the OS
 .DS_Store
-*~
-*#
-*.licensed
-*.aux
-*_trace
