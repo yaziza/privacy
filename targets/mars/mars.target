@@ -25,9 +25,9 @@
 <!-- https://dev.eclipse.org/ipzilla/show_bug.cgi?id=8197 -->
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
 <!-- TODO CQ missing! -->
-<unit id="com.ibm.icu.base" version="52.1.0.v201404171520"/>
+<unit id="com.ibm.icu.base" version="54.1.1.v201501272100"/>
 <!-- Tests-only dependency -->
-<unit id="org.junit" version="4.11.0.v201303080030"/>
+<unit id="org.junit" version="4.12.0.v201504281640"/>
 <!-- Tests-only dependency -->
 <unit id="org.mockito" version="1.9.5.v201311280930"/>
 <!-- Tests-only dependency -->
