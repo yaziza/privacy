@@ -10,7 +10,9 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.data;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
+
+import java.util.Objects;
 
 import org.eclipse.recommenders.privacy.rcp.IConfigurationDialogFactory;
 import org.eclipse.swt.graphics.Image;
@@ -18,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Optional;
 
-public class PrivatePermission {
+public final class PrivatePermission {
 
     private final PrivateDatum datum;
     private final Principal principal;
@@ -30,13 +32,13 @@ public class PrivatePermission {
 
     public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri,
             ApprovalType approvalType, ExtensionReader extensionReader) {
-        this.datum = checkNotNull(datum);
-        this.principal = checkNotNull(principal);
-        this.purpose = checkNotNull(purpose);
-        this.policyUri = checkNotNull(policyUri);
+        this.datum = requireNonNull(datum);
+        this.principal = requireNonNull(principal);
+        this.purpose = requireNonNull(purpose);
+        this.policyUri = requireNonNull(policyUri);
 
-        this.approvalType = checkNotNull(approvalType);
-        this.extensionReader = checkNotNull(extensionReader);
+        this.approvalType = requireNonNull(approvalType);
+        this.extensionReader = requireNonNull(extensionReader);
     }
 
     public String getDatumId() {
@@ -92,42 +94,25 @@ public class PrivatePermission {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != other.getClass()) {
             return false;
         }
 
-        PrivatePermission other = (PrivatePermission) obj;
-        if (!datum.equals(other.datum)) {
-            return false;
-        }
-        if (!principal.equals(other.principal)) {
-            return false;
-        }
-        if (!purpose.equals(other.getPurpose())) {
-            return false;
-        }
-        if (!policyUri.equals(other.getPolicyUri())) {
-            return false;
-        }
-        if (!approvalType.equals(other.getApprovalType())) {
-            return false;
-        }
-        return true;
+        PrivatePermission that = (PrivatePermission) other;
+        return Objects.equals(this.datum, that.datum) && Objects.equals(this.principal, that.principal)
+                && Objects.equals(this.purpose, that.purpose) && Objects.equals(this.policyUri, that.policyUri)
+                && Objects.equals(this.approvalType, that.approvalType);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (datum == null ? 0 : datum.hashCode());
-        result = prime * result + (principal == null ? 0 : principal.hashCode());
-        result = prime * result + (purpose == null ? 0 : purpose.hashCode());
-        result = prime * result + (policyUri == null ? 0 : policyUri.hashCode());
-        result = prime * result + (approvalType == null ? 0 : approvalType.hashCode());
-        return result;
+        return Objects.hash(datum, principal, purpose, policyUri, approvalType);
     }
 }

@@ -10,11 +10,13 @@
  */
 package org.eclipse.recommenders.internal.privacy.rcp.data;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
+
+import java.util.Objects;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public class PrivateDatum {
+public final class PrivateDatum {
 
     private final String id;
     private final String name;
@@ -22,9 +24,9 @@ public class PrivateDatum {
     private final ImageDescriptor icon;
 
     public PrivateDatum(String id, String name, String description, ImageDescriptor icon) {
-        this.id = checkNotNull(id);
-        this.name = checkNotNull(name);
-        this.description = checkNotNull(description);
+        this.id = requireNonNull(id);
+        this.name = requireNonNull(name);
+        this.description = requireNonNull(description);
         this.icon = icon;
     }
 
@@ -50,30 +52,24 @@ public class PrivateDatum {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != other.getClass()) {
             return false;
         }
 
-        PrivateDatum other = (PrivateDatum) obj;
-        if (!id.equals(other.getId())) {
-            return false;
-        }
-        if (!name.equals(other.getName())) {
-            return false;
-        }
-        return true;
+        PrivateDatum that = (PrivateDatum) other;
+        return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
+                && Objects.equals(this.description, that.description) && Objects.equals(this.icon, that.icon);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (id == null ? 0 : id.hashCode());
-        result = prime * result + (name == null ? 0 : name.hashCode());
-        return result;
+        return Objects.hash(id, name, description, icon);
     }
 }

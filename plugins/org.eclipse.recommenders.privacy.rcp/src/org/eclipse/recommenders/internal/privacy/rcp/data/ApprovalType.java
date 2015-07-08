@@ -11,6 +11,7 @@
 package org.eclipse.recommenders.internal.privacy.rcp.data;
 
 public enum ApprovalType {
+
     CUSTOM,
     INSTALL;
 
