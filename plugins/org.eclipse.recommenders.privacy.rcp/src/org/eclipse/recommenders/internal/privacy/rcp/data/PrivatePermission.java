@@ -27,16 +27,23 @@ public final class PrivatePermission {
     private final String purpose;
     private final String policyUri;
 
+    private final boolean suggestApproval;
     private final ApprovalType approvalType;
     private final ExtensionReader extensionReader;
 
     public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri,
             ApprovalType approvalType, ExtensionReader extensionReader) {
+        this(datum, principal, purpose, policyUri, false, approvalType, extensionReader);
+    }
+
+    public PrivatePermission(PrivateDatum datum, Principal principal, String purpose, String policyUri,
+            boolean suggestApproval, ApprovalType approvalType, ExtensionReader extensionReader) {
         this.datum = requireNonNull(datum);
         this.principal = requireNonNull(principal);
         this.purpose = requireNonNull(purpose);
         this.policyUri = requireNonNull(policyUri);
 
+        this.suggestApproval = suggestApproval;
         this.approvalType = requireNonNull(approvalType);
         this.extensionReader = requireNonNull(extensionReader);
     }
@@ -71,6 +78,10 @@ public final class PrivatePermission {
 
     public String getPolicyUri() {
         return this.policyUri;
+    }
+
+    public boolean isSuggestApproval() {
+        return suggestApproval;
     }
 
     public ApprovalType getApprovalType() {
@@ -108,11 +119,12 @@ public final class PrivatePermission {
         PrivatePermission that = (PrivatePermission) other;
         return Objects.equals(this.datum, that.datum) && Objects.equals(this.principal, that.principal)
                 && Objects.equals(this.purpose, that.purpose) && Objects.equals(this.policyUri, that.policyUri)
+                && Objects.equals(this.suggestApproval, that.suggestApproval)
                 && Objects.equals(this.approvalType, that.approvalType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(datum, principal, purpose, policyUri, approvalType);
+        return Objects.hash(datum, principal, purpose, policyUri, suggestApproval, approvalType);
     }
 }

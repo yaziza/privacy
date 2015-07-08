@@ -82,7 +82,15 @@ public final class PrivacySettingsSerciveHelper {
 
         @Override
         public boolean apply(PrivatePermission permission) {
-            return !service.isNeverApproved(permission.getDatumId());
+            if (permission.isSuggestApproval()) {
+                // The registering plugin explicitly suggests that the permission be approved.
+                return true;
+            } else if (!service.isNeverApproved(permission.getDatumId())) {
+                // The user has previously approved a permission for the datum in question.
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

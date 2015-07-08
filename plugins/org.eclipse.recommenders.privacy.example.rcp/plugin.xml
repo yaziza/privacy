@@ -12,6 +12,7 @@
 			policyUri="http://www.example.org/policy/heartbeat"
 			principalId="org.eclipse.recommenders.privacy.example.rcp.principals.example"
 			purpose="%permissions.heartbeat.purpose"
+			suggestApproval="true"
 			configurationDialogFactory="org.eclipse.recommenders.internal.privacy.example.rcp.dialogs.HeartbeatConfigurationFactory"/>
 		<permission
 			datumId="org.eclipse.recommenders.privacy.rcp.datums.anonymousId"

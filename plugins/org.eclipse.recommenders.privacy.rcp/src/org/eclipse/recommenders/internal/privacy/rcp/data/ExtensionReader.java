@@ -53,6 +53,7 @@ public class ExtensionReader {
     private static final String PURPOSE_ATTRIBUTE = "purpose"; //$NON-NLS-1$
     private static final String POLICY_URI_ATTRIBUTE = "policyUri"; //$NON-NLS-1$
     private static final String APPROVAL_TYPE_ATTRIBUTE = "askForApproval"; //$NON-NLS-1$
+    private static final String SUGGEST_APPROVAL_ATTRIBUTE = "suggestApproval"; //$NON-NLS-1$
     private static final String CONFIGURATION_DIALOG_ATTRIBUTE = "configurationDialogFactory"; //$NON-NLS-1$
 
     private Map<String, PrivateDatum> privateDatumMap;
@@ -178,15 +179,17 @@ public class ExtensionReader {
                 final String purpose = configurationElement.getAttribute(PURPOSE_ATTRIBUTE);
                 final String policy = configurationElement.getAttribute(POLICY_URI_ATTRIBUTE);
 
-                final String type = configurationElement.getAttribute(APPROVAL_TYPE_ATTRIBUTE);
-                ApprovalType approvalType = getApprovalType(type);
+                final ApprovalType approvalType = toApprovalType(
+                        configurationElement.getAttribute(APPROVAL_TYPE_ATTRIBUTE));
+                final boolean suggestApproval = Boolean
+                        .parseBoolean(configurationElement.getAttribute(SUGGEST_APPROVAL_ATTRIBUTE));
 
                 try {
                     PrivatePermission permission = null;
                     if (isValidAttribute(datumId) && isValidAttribute(principalId) && isValidAttribute(purpose)
                             && isValidAttribute(policy) && approvalType != null) {
                         permission = new PrivatePermission(privateDatumMap.get(datumId), principalMap.get(principalId),
-                                purpose, policy, approvalType, this);
+                                purpose, policy, suggestApproval, approvalType, this);
 
                         advancedConfigMap.put(permission, configurationElement);
                         datumCategoryMap.get(datumId).addPermissions(permission);
@@ -244,7 +247,7 @@ public class ExtensionReader {
         return imageDescriptor;
     }
 
-    private ApprovalType getApprovalType(String type) {
+    private ApprovalType toApprovalType(String type) {
         ApprovalType approvalType;
         if (type == null) {
             approvalType = INSTALL;

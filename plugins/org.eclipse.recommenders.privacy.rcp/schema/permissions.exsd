@@ -84,6 +84,14 @@ This can either point to a broad, general-purpose policy used by the principal o
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="suggestApproval" type="boolean">
+            <annotation>
+               <documentation>
+                  Whether the privacy framework should suggest that the user approves this permission.
+The default value is &lt;code&gt;false&lt;/code&gt;.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="askForApproval" type="string" use="default" value="install">
             <annotation>
                <documentation>

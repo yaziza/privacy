@@ -18,5 +18,4 @@ public interface IConfigurationDialogFactory {
      * Opens a configuration dialog which display advanced preferences.
      */
     void open(Shell shell);
-
 }
