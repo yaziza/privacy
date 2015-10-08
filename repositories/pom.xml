@@ -23,7 +23,10 @@
 
 	<properties>
 		<privacyVersion>0.2.0-SNAPSHOT</privacyVersion>
-		<simrel>luna</simrel>
+		<simrel>mars</simrel>
+		<p2MirrorsURL>http://www.eclipse.org/downloads/download.php?file=/recommenders.incubator/privacy/updates/${project.artifactId}&amp;format=xml</p2MirrorsURL>
+		<p2StatsURL>http://download.eclipse.org/stats/recommenders.incubator/privacy/${project.artifactId}</p2StatsURL>
+		<statsTrackedArtifacts>org.eclipse.recommenders.privacy.3rd.feature,org.eclipse.recommenders.privacy.example.rcp.feature,org.eclipse.recommenders.privacy.rcp.feature</statsTrackedArtifacts>
 	</properties>
 
 	<repositories>
