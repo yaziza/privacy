@@ -11,7 +11,7 @@
 package org.eclipse.recommenders.internal.privacy.rcp.widgets;
 
 import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Sets.intersection;
 import static org.eclipse.recommenders.internal.privacy.rcp.Constants.*;
 import static org.eclipse.recommenders.internal.privacy.rcp.data.PrivacySettingsSerciveHelper.getCategoriesPermissions;
@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 
 public class PermissionWidget {
@@ -185,14 +186,13 @@ public class PermissionWidget {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                if (selection.getFirstElement() instanceof PrivatePermission) {
-                    PrivatePermission permission = (PrivatePermission) selection.getFirstElement();
-                    if (permission.isAdvancedPreferencesSupported()) {
-                        configurationButton.setEnabled(true);
-                        return;
-                    }
+
+                Optional<PrivatePermission> permission = getSelectedPermission(selection);
+                if (permission.isPresent()) {
+                    configurationButton.setEnabled(permission.get().isAdvancedPreferencesSupported());
+                } else {
+                    configurationButton.setEnabled(false);
                 }
-                configurationButton.setEnabled(false);
             }
         });
     }
@@ -252,11 +252,24 @@ public class PermissionWidget {
                 }
 
                 IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                PrivatePermission permission = (PrivatePermission) selection.getFirstElement();
 
-                permission.openConfigurationDialog(parentShell);
+                Optional<PrivatePermission> permission = getSelectedPermission(selection);
+                if (permission.isPresent() && permission.get().isAdvancedPreferencesSupported()) {
+                    permission.get().openConfigurationDialog(parentShell);
+                }
             }
+
         });
+    }
+
+    private Optional<PrivatePermission> getSelectedPermission(IStructuredSelection selection) {
+        if (selection.getFirstElement() instanceof ICategory) {
+            ICategory category = (ICategory) selection.getFirstElement();
+            return category.getPermissions().size() == 1 ? Optional.of(getOnlyElement(category.getPermissions()))
+                    : Optional.fromNullable((PrivatePermission) null);
+        } else {
+            return Optional.of((PrivatePermission) selection.getFirstElement());
+        }
     }
 
     private Composite createTreeViewLayout(Composite parent) {

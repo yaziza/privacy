@@ -52,6 +52,7 @@ public class PopupDialogTest {
     private static final String GROUP_BY_INFORMATION_BUTTON_ID = PERMISSION_WIDGET + ".groupByInformation";
     private static final String DISABLE_ALL_BUTTON_ID = PERMISSION_WIDGET + ".disableAll";
     private static final String ENABLE_ALL_BUTTON_ID = PERMISSION_WIDGET + ".enableAll";
+    private static final String CONFIGURATION_BUTTON_ID = PERMISSION_WIDGET + ".configuration";
 
     private Principal principal;
     private PrincipalCategory principalCategory;
@@ -103,9 +104,12 @@ public class PopupDialogTest {
 
         SWTBotButton enableAllButton = bot.buttonWithId(SWT_ID, ENABLE_ALL_BUTTON_ID);
         SWTBotButton disableAllButton = bot.buttonWithId(SWT_ID, DISABLE_ALL_BUTTON_ID);
+        SWTBotButton configureButton = bot.buttonWithId(SWT_ID, CONFIGURATION_BUTTON_ID);
 
         enableAllButton.click();
         disableAllButton.click();
+
+        assertThat(configureButton.isEnabled(), is(false));
     }
 
     @Test
@@ -307,6 +311,121 @@ public class PopupDialogTest {
         assertThat(principalItem.getText(), is("some principal"));
         assertThat(firstDatumNode.getText(), is("first datum"));
         assertThat(secondDatumNode.getText(), is("second datum"));
+    }
+
+    @Test
+    public void testConfigureButtonEnabledWithOnePermission() {
+        testConfigureButtonWithOnePermission(true);
+    }
+
+    @Test
+    public void testConfigureButtonDisabledWithOnePermission() {
+        testConfigureButtonWithOnePermission(false);
+    }
+
+    private void testConfigureButtonWithOnePermission(boolean enabled) {
+        HashSet<DatumCategory> datumSet = Sets.newHashSet(firstDatumCategory);
+        HashSet<PrincipalCategory> principalSet = Sets.newHashSet(principalCategory);
+        HashSet<PrivatePermission> permissionSet = Sets.newHashSet(firstPermission);
+
+        firstDatumCategory.addPermissions(firstPermission);
+        principalCategory.addPermissions(firstPermission);
+
+        when(firstPermission.isAdvancedPreferencesSupported()).thenReturn(enabled);
+
+        sut = createSUT(datumSet, principalSet, permissionSet);
+        SWTBot bot = createBot(sut.getShell());
+
+        SWTBotTree tree = bot.tree(0);
+        assertThat(tree.hasItems(), is(true));
+
+        SWTBotButton configureButton = bot.buttonWithId(SWT_ID, CONFIGURATION_BUTTON_ID);
+        assertThat(configureButton.isEnabled(), is(false));
+
+        SWTBotTreeItem principalItem = tree.getTreeItem("some principal");
+        SWTBotTreeItem firstDatumNode = principalItem.getNode("first datum");
+
+        principalItem.select();
+        assertThat(configureButton.isEnabled(), is(enabled));
+
+        firstDatumNode.select();
+        assertThat(configureButton.isEnabled(), is(enabled));
+
+        // Switch to the group by information view
+        deselectDefaultSelection(bot, 1);
+        SWTBotRadio informationButton = bot.radioWithId(SWT_ID, GROUP_BY_INFORMATION_BUTTON_ID);
+
+        informationButton.click();
+        tree = bot.tree(0);
+        assertThat(tree.hasItems(), is(true));
+
+        SWTBotTreeItem firstDatumItem = tree.getTreeItem("first datum");
+        SWTBotTreeItem principalNode = firstDatumItem.getNode("some principal");
+
+        firstDatumItem.select();
+        assertThat(configureButton.isEnabled(), is(enabled));
+
+        principalNode.select();
+        assertThat(configureButton.isEnabled(), is(enabled));
+    }
+
+    @Test
+    public void testConfigureButtonWithMultiplePermissions() {
+        HashSet<DatumCategory> datumSet = Sets.newHashSet(firstDatumCategory, secondDatumCategory);
+        HashSet<PrincipalCategory> principalSet = Sets.newHashSet(principalCategory);
+        HashSet<PrivatePermission> permissionSet = Sets.newHashSet(firstPermission, secondPermission);
+
+        firstDatumCategory.addPermissions(firstPermission);
+        secondDatumCategory.addPermissions(secondPermission);
+        principalCategory.addPermissions(firstPermission, secondPermission);
+
+        when(firstPermission.isAdvancedPreferencesSupported()).thenReturn(true);
+        when(secondPermission.isAdvancedPreferencesSupported()).thenReturn(false);
+
+        sut = createSUT(datumSet, principalSet, permissionSet);
+        SWTBot bot = createBot(sut.getShell());
+
+        SWTBotTree tree = bot.tree(0);
+        assertThat(tree.hasItems(), is(true));
+        SWTBotButton configureButton = bot.buttonWithId(SWT_ID, CONFIGURATION_BUTTON_ID);
+
+        SWTBotTreeItem principalItem = tree.getTreeItem("some principal");
+        SWTBotTreeItem firstDatumNode = principalItem.getNode("first datum");
+        SWTBotTreeItem secondDatumNode = principalItem.getNode("second datum");
+
+        principalItem.select();
+        assertThat(configureButton.isEnabled(), is(false));
+
+        firstDatumNode.select();
+        assertThat(configureButton.isEnabled(), is(true));
+
+        secondDatumNode.select();
+        assertThat(configureButton.isEnabled(), is(false));
+
+        // Switch to the group by information view
+        deselectDefaultSelection(bot, 1);
+        SWTBotRadio informationButton = bot.radioWithId(SWT_ID, GROUP_BY_INFORMATION_BUTTON_ID);
+
+        informationButton.click();
+        tree = bot.tree(0);
+        assertThat(tree.hasItems(), is(true));
+
+        SWTBotTreeItem firstDatumItem = tree.getTreeItem("first datum");
+        SWTBotTreeItem secondDatumItem = tree.getTreeItem("second datum");
+        SWTBotTreeItem firstPrincipalNode = firstDatumItem.getNode("some principal");
+        SWTBotTreeItem secondPrincipalNode = secondDatumItem.getNode("some principal");
+
+        firstDatumItem.select();
+        assertThat(configureButton.isEnabled(), is(true));
+
+        firstPrincipalNode.select();
+        assertThat(configureButton.isEnabled(), is(true));
+
+        secondDatumItem.select();
+        assertThat(configureButton.isEnabled(), is(false));
+
+        secondPrincipalNode.select();
+        assertThat(configureButton.isEnabled(), is(false));
     }
 
     /**
