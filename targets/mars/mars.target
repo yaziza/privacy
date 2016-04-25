@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Target Definition for Eclipse Mars" sequenceNumber="3">
+<target name="Target Definition for Eclipse Mars" sequenceNumber="4">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.junit4_x" version="0.0.0"/>
@@ -9,7 +9,8 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/mars/201510021000/"/>
+<!-- Stable build for Mars.2 -->
+<repository location="http://download.eclipse.org/releases/mars/201602261000/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
@@ -42,8 +43,9 @@
 <unit id="org.objenesis" version="1.0.0.v201505121915"/>
 <!-- https://dev.eclipse.org/ipzilla/show_bug.cgi?id=8201 -->
 <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>i
-<!-- This location points to the R-build for Mars.1 -->
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150821153341/repository/"/>
+<!-- Recommended Orbit build for Mars.2+ -->
+<!-- See https://bugs.eclipse.org/bugs/show_bug.cgi?id=487833#c29 as to why this is Mars.2+ rather than Mars.2 -->
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
