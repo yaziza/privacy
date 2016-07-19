@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Target Definition for Eclipse Neon" sequenceNumber="3">
+<target name="Target Definition for Eclipse Neon" sequenceNumber="4">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.junit4_x" version="0.0.0"/>
@@ -9,8 +9,8 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<!-- Latest platform integration build for Neon -->
-<repository location="http://download.eclipse.org/eclipse/updates/4.6-I-builds/"/>
+<!-- Stable build for Neon -->
+<repository location="http://download.eclipse.org/releases/neon/201606221000/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
@@ -43,8 +43,8 @@
 <unit id="org.objenesis" version="1.0.0.v201505121915"/>
 <!-- https://dev.eclipse.org/ipzilla/show_bug.cgi?id=8201 -->
 <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>i
-<!-- Latest Orbit integration build for Neon -->
-<repository location="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-I/"/>
+<!-- Recommended Orbit build for Neon -->
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
