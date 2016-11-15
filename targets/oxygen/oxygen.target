@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="Target Definition for Eclipse Oxygen (4.7)" sequenceNumber="1">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.junit4_x" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.finder" version="0.0.0"/>
+<repository location="http://download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<!-- Stable platform build for Oxygen M3 -->
+<repository location="http://download.eclipse.org/eclipse/updates/4.7milestones/S-4.7M3-201610270700/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/cbi/updates/license"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<!-- http://dev.eclipse.org/ipzilla/show_bug.cgi?id=8272 -->
+<unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
+<!-- http://dev.eclipse.org/ipzilla/show_bug.cgi?id=8272 -->
+<unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
+<!-- http://dev.eclipse.org/ipzilla/show_bug.cgi?id=8272 -->
+<unit id="ch.qos.logback.slf4j" version="1.0.7.v201505121915"/>
+<!-- https://dev.eclipse.org/ipzilla/show_bug.cgi?id=8197 -->
+<unit id="com.google.guava" version="15.0.0.v201403281430"/>
+<!-- TODO CQ missing! -->
+<unit id="com.ibm.icu.base" version="56.1.0.v201601250100"/>
+<!-- Tests-only dependency -->
+<unit id="org.junit" version="4.12.0.v201504281640"/>
+<!-- Tests-only dependency -->
+<unit id="org.mockito" version="1.9.5.v201605172210"/>
+<!-- Tests-only dependency -->
+<unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+<!-- Tests-only dependency -->
+<unit id="org.hamcrest.integration" version="1.1.0.v201303031500"/>
+<!-- Tests-only dependency -->
+<unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
+<!-- Tests-only dependency -->
+<unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
+<!-- Tests-only dependency -->
+<unit id="org.objenesis" version="1.0.0.v201505121915"/>
+<!-- https://dev.eclipse.org/ipzilla/show_bug.cgi?id=8201 -->
+<unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
+<!-- Stable Orbit build for Oxygen M3 -->
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20161021172207/repository/"/>
+</location>
+</locations>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+</target>
