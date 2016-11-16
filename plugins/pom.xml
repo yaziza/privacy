@@ -28,14 +28,15 @@
 
 	<repositories>
 		<repository>
-			<id>repo.eclipse.org</id>
-			<url>https://repo.eclipse.org/content/repositories/recommenders/</url>
+			<id>recommenders-releases</id>
+			<url>https://repo.eclipse.org/content/repositories/recommenders-releases/</url>
 		</repository>
 	</repositories>
+	<!-- Plugin repositories are also used to locate plugin dependencies. -->
 	<pluginRepositories>
 		<pluginRepository>
-			<id>repo.eclipse.org</id>
-			<url>https://repo.eclipse.org/content/repositories/recommenders/</url>
+			<id>recommenders-releases</id>
+			<url>https://repo.eclipse.org/content/repositories/recommenders-releases/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
