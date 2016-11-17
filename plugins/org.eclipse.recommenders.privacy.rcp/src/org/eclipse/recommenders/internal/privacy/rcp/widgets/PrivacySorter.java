@@ -11,13 +11,13 @@
 package org.eclipse.recommenders.internal.privacy.rcp.widgets;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.recommenders.internal.privacy.rcp.data.ICategory;
 import org.eclipse.recommenders.internal.privacy.rcp.data.PrivatePermission;
 
 import com.ibm.icu.text.Collator;
 
-public class PrivacySorter extends ViewerSorter {
+public class PrivacySorter extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object first, Object second) {

@@ -160,7 +160,7 @@ public class PermissionWidget {
         sourceViewer.setCheckedElements(checkedPermissions.toArray());
         updateAncestors(sourceViewer);
         sourceViewer.addFilter(getFilter());
-        sourceViewer.setSorter(new PrivacySorter());
+        sourceViewer.setComparator(new PrivacySorter());
 
         sourceViewer.addCheckStateListener(new ICheckStateListener() {
 

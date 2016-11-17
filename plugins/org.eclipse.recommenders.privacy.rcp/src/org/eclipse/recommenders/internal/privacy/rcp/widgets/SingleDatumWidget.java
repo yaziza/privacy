@@ -88,7 +88,7 @@ public class SingleDatumWidget {
         sourceViewer.setInput(getShownPermissions(input));
         PrivacyTooltipSupport.enableFor(sourceViewer, ToolTip.NO_RECREATE);
         sourceViewer.addFilter(getFilter());
-        sourceViewer.setSorter(new PrivacySorter());
+        sourceViewer.setComparator(new PrivacySorter());
     }
 
     private void createButtons(Composite parent) {
