@@ -265,10 +265,11 @@ public class PermissionWidget {
     private Optional<PrivatePermission> getSelectedPermission(IStructuredSelection selection) {
         if (selection.getFirstElement() instanceof ICategory) {
             ICategory category = (ICategory) selection.getFirstElement();
-            return category.getPermissions().size() == 1 ? Optional.of(getOnlyElement(category.getPermissions()))
+            return category.getPermissions().size() == 1
+                    ? Optional.fromNullable(getOnlyElement(category.getPermissions()))
                     : Optional.fromNullable((PrivatePermission) null);
         } else {
-            return Optional.of((PrivatePermission) selection.getFirstElement());
+            return Optional.fromNullable((PrivatePermission) selection.getFirstElement());
         }
     }
 
